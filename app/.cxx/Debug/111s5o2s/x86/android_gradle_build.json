@@ -1,0 +1,40 @@
+{
+  "stringTable": {},
+  "buildFiles": [
+    "E:\\ANDROID_NATIVE\\BGD\\FlizApp\\app\\src\\main\\jni\\CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "D:\\AndroidSDK\\cmake\\3.10.2.4988404\\bin\\ninja.exe",
+      "-C",
+      "E:\\ANDROID_NATIVE\\BGD\\FlizApp\\app\\.cxx\\Debug\\111s5o2s\\x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "D:\\AndroidSDK\\cmake\\3.10.2.4988404\\bin\\ninja.exe",
+    "-C",
+    "E:\\ANDROID_NATIVE\\BGD\\FlizApp\\app\\.cxx\\Debug\\111s5o2s\\x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "api_config-Debug-x86": {
+      "buildCommandComponents": [
+        "D:\\AndroidSDK\\cmake\\3.10.2.4988404\\bin\\ninja.exe",
+        "-C",
+        "E:\\ANDROID_NATIVE\\BGD\\FlizApp\\app\\.cxx\\Debug\\111s5o2s\\x86",
+        "api_config"
+      ],
+      "buildType": "debug",
+      "abi": "x86",
+      "artifactName": "api_config",
+      "output": "E:\\ANDROID_NATIVE\\BGD\\FlizApp\\app\\build\\intermediates\\cxx\\Debug\\111s5o2s\\obj\\x86\\libapi_config.so",
+      "runtimeFiles": []
+    }
+  },
+  "toolchains": {},
+  "cFileExtensions": [],
+  "cppFileExtensions": [
+    "cpp"
+  ]
+}

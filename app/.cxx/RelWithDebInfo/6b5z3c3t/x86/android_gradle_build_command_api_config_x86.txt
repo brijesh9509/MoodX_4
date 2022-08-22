@@ -1,0 +1,7 @@
+Executable : E:\Android\sdk\cmake\3.10.2.4988404\bin\ninja.exe
+arguments : 
+-C
+F:\AndroidNative\BGD\MoodX_2\app\.cxx\RelWithDebInfo\6b5z3c3t\x86
+api_config
+jvmArgs : 
+

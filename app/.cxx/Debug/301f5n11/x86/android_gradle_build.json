@@ -1,0 +1,40 @@
+{
+  "stringTable": {},
+  "buildFiles": [
+    "F:\\AndroidStudioProjects\\QfonApp\\MoodX\\app\\src\\main\\jni\\CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "F:\\AndroidSDK\\Sdk\\cmake\\3.10.2.4988404\\bin\\ninja.exe",
+      "-C",
+      "F:\\AndroidStudioProjects\\QfonApp\\MoodX\\app\\.cxx\\Debug\\301f5n11\\x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "F:\\AndroidSDK\\Sdk\\cmake\\3.10.2.4988404\\bin\\ninja.exe",
+    "-C",
+    "F:\\AndroidStudioProjects\\QfonApp\\MoodX\\app\\.cxx\\Debug\\301f5n11\\x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "api_config-Debug-x86": {
+      "buildCommandComponents": [
+        "F:\\AndroidSDK\\Sdk\\cmake\\3.10.2.4988404\\bin\\ninja.exe",
+        "-C",
+        "F:\\AndroidStudioProjects\\QfonApp\\MoodX\\app\\.cxx\\Debug\\301f5n11\\x86",
+        "api_config"
+      ],
+      "buildType": "debug",
+      "abi": "x86",
+      "artifactName": "api_config",
+      "output": "F:\\AndroidStudioProjects\\QfonApp\\MoodX\\app\\build\\intermediates\\cxx\\Debug\\301f5n11\\obj\\x86\\libapi_config.so",
+      "runtimeFiles": []
+    }
+  },
+  "toolchains": {},
+  "cFileExtensions": [],
+  "cppFileExtensions": [
+    "cpp"
+  ]
+}

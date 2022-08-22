@@ -1,0 +1,12 @@
+# ninja log v5
+4	11015	677347700	CMakeFiles/api_config.dir/api_config.cpp.o	e35418024dbadade
+11018	11650	677347701	F:/AndroidStudioProjects/QfonApp/Fliz App/app/build/intermediates/cxx/Debug/2y4ge4t5/obj/arm64-v8a/libapi_config.so	12ec4a30ab7e3a98
+2	909	677348414	CMakeFiles/api_config.dir/api_config.cpp.o	e35418024dbadade
+909	1161	677348414	F:/AndroidStudioProjects/QfonApp/Fliz App/app/build/intermediates/cxx/Debug/2y4ge4t5/obj/arm64-v8a/libapi_config.so	12ec4a30ab7e3a98
+3	729	677349117	CMakeFiles/api_config.dir/api_config.cpp.o	e35418024dbadade
+730	974	677349117	F:/AndroidStudioProjects/QfonApp/Fliz App/app/build/intermediates/cxx/Debug/2y4ge4t5/obj/arm64-v8a/libapi_config.so	12ec4a30ab7e3a98
+2	405	677355000	CMakeFiles/api_config.dir/api_config.cpp.o	e35418024dbadade
+405	536	677355000	F:/AndroidStudioProjects/QfonApp/Fliz App/app/build/intermediates/cxx/Debug/2y4ge4t5/obj/arm64-v8a/libapi_config.so	12ec4a30ab7e3a98
+0	42	0	clean	bf7f04d26f8701e0
+4	1107	678926420	CMakeFiles/api_config.dir/api_config.cpp.o	e35418024dbadade
+1108	1391	678926421	F:/AndroidStudioProjects/QfonApp/Fliz App/app/build/intermediates/cxx/Debug/2y4ge4t5/obj/arm64-v8a/libapi_config.so	12ec4a30ab7e3a98

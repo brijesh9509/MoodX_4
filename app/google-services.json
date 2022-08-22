@@ -1,0 +1,214 @@
+{
+  "project_info": {
+    "project_number": "1012761226062",
+    "project_id": "mood-x",
+    "storage_bucket": "mood-x.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1012761226062:android:3576cb3ec9a77a268b0c1f",
+        "android_client_info": {
+          "package_name": "com.app.moodX"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1012761226062-ba53uor88gri5sq6ui8v57rnjjofsnvm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.moodX",
+            "certificate_hash": "ceee115fe94b1999c5f7a28d84346691442695fb"
+          }
+        },
+        {
+          "client_id": "1012761226062-g6so9hh8ii591r4bi2qmpmj1j7t72lo9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.moodX",
+            "certificate_hash": "f845913821961dd660a67a7bfe5fa85e27e39510"
+          }
+        },
+        {
+          "client_id": "1012761226062-nlaqmi1tj9llhmd1g8a48g1udtbrjqup.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.moodX",
+            "certificate_hash": "6c921bd0eec343466df1d0a95958122270378e5f"
+          }
+        },
+        {
+          "client_id": "1012761226062-s5ms5t6kmkcn0jle9t3ahop8s80uf99n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.app.moodX",
+            "certificate_hash": "2fb3f185a11a0de691641d1ee8950eaea74fc811"
+          }
+        },
+        {
+          "client_id": "1012761226062-tis26pqf7cl47irt02kgm5am4nmg2bcc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlsLyz8IwQK2gsAvTB3Ll9PI8JJBew37k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1012761226062-tis26pqf7cl47irt02kgm5am4nmg2bcc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1012761226062:android:ce6edc0a9678da418b0c1f",
+        "android_client_info": {
+          "package_name": "com.moodX.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1012761226062-luqj7q3tq2b7iagh7r5qsgbf4mb57ant.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.moodX.app",
+            "certificate_hash": "f845913821961dd660a67a7bfe5fa85e27e39510"
+          }
+        },
+        {
+          "client_id": "1012761226062-tis26pqf7cl47irt02kgm5am4nmg2bcc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlsLyz8IwQK2gsAvTB3Ll9PI8JJBew37k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1012761226062-tis26pqf7cl47irt02kgm5am4nmg2bcc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1012761226062:android:7c86301fad7d028d8b0c1f",
+        "android_client_info": {
+          "package_name": "com.moodX.ott"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1012761226062-08cj89271hs3kg1bg0dgbodpcmf1gou4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.moodX.ott",
+            "certificate_hash": "011e1ddac62faf46c51e1d0408ef5518ebf63623"
+          }
+        },
+        {
+          "client_id": "1012761226062-evv1ceek7mus5t3a0q9sqks0hau4vu1g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.moodX.ott",
+            "certificate_hash": "05fc830af53306ffc51c34a4d293a4c562cb94f7"
+          }
+        },
+        {
+          "client_id": "1012761226062-g10ulkfg15psj03k2j3qb1hknsu1gv4a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.moodX.ott",
+            "certificate_hash": "f845913821961dd660a67a7bfe5fa85e27e39510"
+          }
+        },
+        {
+          "client_id": "1012761226062-tis26pqf7cl47irt02kgm5am4nmg2bcc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlsLyz8IwQK2gsAvTB3Ll9PI8JJBew37k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1012761226062-tis26pqf7cl47irt02kgm5am4nmg2bcc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1012761226062:android:c0c83a90354915628b0c1f",
+        "android_client_info": {
+          "package_name": "com.ott.moodX"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1012761226062-8mjaj8h2iqltqbh6mook6lvs7p633q7r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ott.moodX",
+            "certificate_hash": "16ce8c26fd3914c0b11837269314a53bf474a580"
+          }
+        },
+        {
+          "client_id": "1012761226062-ohd6pch9stede605m9vg5i78nrbq7k9d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ott.moodX",
+            "certificate_hash": "bf6f314918f92153c632f89f51d398478a750476"
+          }
+        },
+        {
+          "client_id": "1012761226062-r1f78io6mm6b6dlo35r6nscde17elrvu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ott.moodX",
+            "certificate_hash": "f845913821961dd660a67a7bfe5fa85e27e39510"
+          }
+        },
+        {
+          "client_id": "1012761226062-tis26pqf7cl47irt02kgm5am4nmg2bcc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlsLyz8IwQK2gsAvTB3Ll9PI8JJBew37k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1012761226062-tis26pqf7cl47irt02kgm5am4nmg2bcc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

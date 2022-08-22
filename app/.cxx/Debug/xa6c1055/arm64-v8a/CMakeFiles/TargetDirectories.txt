@@ -1,0 +1,3 @@
+F:/AndroidNative/BGD/MoodX_3/app/.cxx/Debug/xa6c1055/arm64-v8a/CMakeFiles/api_config.dir
+F:/AndroidNative/BGD/MoodX_3/app/.cxx/Debug/xa6c1055/arm64-v8a/CMakeFiles/edit_cache.dir
+F:/AndroidNative/BGD/MoodX_3/app/.cxx/Debug/xa6c1055/arm64-v8a/CMakeFiles/rebuild_cache.dir
