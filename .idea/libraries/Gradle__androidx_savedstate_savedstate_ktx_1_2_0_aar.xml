@@ -7,6 +7,9 @@
       <root url="file://E:/AndroidGradle/caches/transforms-3/fe9229668e50488bccf68ffbcef0aff6/transformed/jetified-savedstate-ktx-1.2.0/res" />
       <root url="jar://E:/AndroidGradle/caches/transforms-3/fe9229668e50488bccf68ffbcef0aff6/transformed/jetified-savedstate-ktx-1.2.0/jars/classes.jar!/" />
       <root url="file://E:/AndroidGradle/caches/transforms-3/fe9229668e50488bccf68ffbcef0aff6/transformed/jetified-savedstate-ktx-1.2.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/39bc305311448a772a5241322a98ad3d/transformed/jetified-savedstate-ktx-1.2.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/39bc305311448a772a5241322a98ad3d/transformed/jetified-savedstate-ktx-1.2.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/39bc305311448a772a5241322a98ad3d/transformed/jetified-savedstate-ktx-1.2.0/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

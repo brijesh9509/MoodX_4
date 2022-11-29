@@ -1,0 +1,3 @@
+F:/AndroidStudioProjects/QfonApp/MoodX_4/app/.cxx/Debug/u1t1l1c2/arm64-v8a/CMakeFiles/api_config.dir
+F:/AndroidStudioProjects/QfonApp/MoodX_4/app/.cxx/Debug/u1t1l1c2/arm64-v8a/CMakeFiles/edit_cache.dir
+F:/AndroidStudioProjects/QfonApp/MoodX_4/app/.cxx/Debug/u1t1l1c2/arm64-v8a/CMakeFiles/rebuild_cache.dir

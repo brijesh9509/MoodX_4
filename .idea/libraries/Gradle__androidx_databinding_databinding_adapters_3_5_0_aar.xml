@@ -10,6 +10,9 @@
       <root url="file://E:/AndroidGradle/caches/transforms-3/e1ac9b441703bdb5554b1c48a95f0ac0/transformed/databinding-adapters-3.5.0/res" />
       <root url="file://E:/AndroidGradle/caches/transforms-3/e1ac9b441703bdb5554b1c48a95f0ac0/transformed/databinding-adapters-3.5.0/AndroidManifest.xml" />
       <root url="jar://E:/AndroidGradle/caches/transforms-3/e1ac9b441703bdb5554b1c48a95f0ac0/transformed/databinding-adapters-3.5.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/c6bdd56b1b411bc517f31f0cc613be72/transformed/databinding-adapters-3.5.0/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/c6bdd56b1b411bc517f31f0cc613be72/transformed/databinding-adapters-3.5.0/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/c6bdd56b1b411bc517f31f0cc613be72/transformed/databinding-adapters-3.5.0/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

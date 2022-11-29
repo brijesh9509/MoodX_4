@@ -15,6 +15,8 @@
       <root url="file://E:/AndroidGradle/caches/transforms-3/63ad592c5cb7be82697ca582a116d625/transformed/jetified-extension-rtmp-2.14.1/res" />
       <root url="jar://E:/AndroidGradle/caches/transforms-3/63ad592c5cb7be82697ca582a116d625/transformed/jetified-extension-rtmp-2.14.1/jars/classes.jar!/" />
       <root url="file://E:/AndroidGradle/caches/transforms-3/63ad592c5cb7be82697ca582a116d625/transformed/jetified-extension-rtmp-2.14.1/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/64072b0bdafa6e1e60c7664531bd6920/transformed/jetified-extension-rtmp-2.14.1/AndroidManifest.xml" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/64072b0bdafa6e1e60c7664531bd6920/transformed/jetified-extension-rtmp-2.14.1/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

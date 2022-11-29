@@ -28,7 +28,7 @@ public class HelperUtils {
     }
 
     public boolean isVpnConnectionAvailable(){
-        String iface = "";
+        /*String iface = "";
         try {
             for (NetworkInterface networkInst : Collections.list(NetworkInterface.getNetworkInterfaces())){
                 if (networkInst.isUp())
@@ -41,7 +41,7 @@ public class HelperUtils {
 
         }catch (SocketException e){
             e.printStackTrace();
-        }
+        }*/
         return false;
     }
 

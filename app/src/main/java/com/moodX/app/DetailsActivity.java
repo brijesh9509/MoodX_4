@@ -2324,7 +2324,8 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         CommentApi api = retrofit.create(CommentApi.class);
-        Call<List<GetCommentsModel>> call = api.getAllComments(AppConfig.API_KEY, id, BuildConfig.VERSION_CODE, PreferenceUtils.getUserId(this));
+        Call<List<GetCommentsModel>> call = api.getAllComments(AppConfig.API_KEY, id, BuildConfig.VERSION_CODE,
+                PreferenceUtils.getUserId(this));
         call.enqueue(new Callback<List<GetCommentsModel>>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override

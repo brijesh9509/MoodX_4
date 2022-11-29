@@ -10,14 +10,19 @@
       <root url="jar://E:/AndroidGradle/caches/transforms-3/9ffcc6cc883b8c17a3a8fa2e4ea4232f/transformed/jetified-glide-4.13.2/jars/classes.jar!/" />
       <root url="file://E:/AndroidGradle/caches/transforms-3/9ffcc6cc883b8c17a3a8fa2e4ea4232f/transformed/jetified-glide-4.13.2/AndroidManifest.xml" />
       <root url="file://E:/AndroidGradle/caches/transforms-3/9ffcc6cc883b8c17a3a8fa2e4ea4232f/transformed/jetified-glide-4.13.2/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/6eb2208e1d3c32b69bedd0614e825ed7/transformed/jetified-glide-4.13.2/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/6eb2208e1d3c32b69bedd0614e825ed7/transformed/jetified-glide-4.13.2/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/6eb2208e1d3c32b69bedd0614e825ed7/transformed/jetified-glide-4.13.2/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://D:/AndroidGradle/caches/modules-2/files-2.1/com.github.bumptech.glide/glide/4.13.2/1828a78cc2b1e66f14ef2601a00d6b221a9ca54c/glide-4.13.2-javadoc.jar!/" />
       <root url="jar://E:/AndroidGradle/caches/modules-2/files-2.1/com.github.bumptech.glide/glide/4.13.2/1828a78cc2b1e66f14ef2601a00d6b221a9ca54c/glide-4.13.2-javadoc.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.bumptech.glide/glide/4.13.2/1828a78cc2b1e66f14ef2601a00d6b221a9ca54c/glide-4.13.2-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
       <root url="jar://D:/AndroidGradle/caches/modules-2/files-2.1/com.github.bumptech.glide/glide/4.13.2/10a63bdb8dc741035110ec2df0a935b2007fa033/glide-4.13.2-sources.jar!/" />
       <root url="jar://E:/AndroidGradle/caches/modules-2/files-2.1/com.github.bumptech.glide/glide/4.13.2/10a63bdb8dc741035110ec2df0a935b2007fa033/glide-4.13.2-sources.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.bumptech.glide/glide/4.13.2/10a63bdb8dc741035110ec2df0a935b2007fa033/glide-4.13.2-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
