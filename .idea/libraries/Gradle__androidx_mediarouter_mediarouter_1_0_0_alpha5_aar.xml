@@ -5,6 +5,7 @@
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/b07307f49f4a76b79b067c01d6bc8b7f/transformed/mediarouter-1.0.0-alpha5/annotations.zip!/" />
       <root url="jar://E:/AndroidGradle/caches/transforms-3/0df7c341504ca5c9d89d95cabcfcd97c/transformed/mediarouter-1.0.0-alpha5/annotations.zip!/" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/340482613369a90874ae91ab15baec13/transformed/mediarouter-1.0.0-alpha5/annotations.zip!/" />
+      <root url="jar://E:/AndroidGradle/caches/transforms-3/340482613369a90874ae91ab15baec13/transformed/mediarouter-1.0.0-alpha5/annotations.zip!/" />
     </ANNOTATIONS>
     <CLASSES>
       <root url="jar://D:/AndroidGradle/caches/transforms-3/b05f2d792ce4de211401eb883f3c7d65/transformed/mediarouter-1.0.0-alpha5/jars/classes.jar!/" />
@@ -19,6 +20,9 @@
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/340482613369a90874ae91ab15baec13/transformed/mediarouter-1.0.0-alpha5/res" />
       <root url="file://$USER_HOME$/.gradle/caches/transforms-3/340482613369a90874ae91ab15baec13/transformed/mediarouter-1.0.0-alpha5/AndroidManifest.xml" />
       <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/340482613369a90874ae91ab15baec13/transformed/mediarouter-1.0.0-alpha5/jars/classes.jar!/" />
+      <root url="file://E:/AndroidGradle/caches/transforms-3/340482613369a90874ae91ab15baec13/transformed/mediarouter-1.0.0-alpha5/AndroidManifest.xml" />
+      <root url="jar://E:/AndroidGradle/caches/transforms-3/340482613369a90874ae91ab15baec13/transformed/mediarouter-1.0.0-alpha5/jars/classes.jar!/" />
+      <root url="file://E:/AndroidGradle/caches/transforms-3/340482613369a90874ae91ab15baec13/transformed/mediarouter-1.0.0-alpha5/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

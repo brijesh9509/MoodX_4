@@ -11,6 +11,7 @@ public interface HomeContentApi {
 
     @GET("home_content_for_android")
     Call<HomeContent> getHomeContent(@Header("API-KEY") String apiKey,
-                                     @Query("version") Integer vId,
-                                     @Query("user_id") String userID);
+                                     @Query("version") Integer id,
+                                     @Query("user_id") String userId,
+                                     @Query("udid") String uDID);
 }

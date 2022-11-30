@@ -13,8 +13,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.moodX.app.R;
-
 public class PapalPaymentActivity extends AppCompatActivity {
 
     private String plantId;

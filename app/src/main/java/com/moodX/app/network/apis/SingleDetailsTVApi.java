@@ -13,5 +13,6 @@ public interface SingleDetailsTVApi {
                                            @Query("type") String type,
                                            @Query("id") String id,
                                            @Query("version") Integer vId,
-                                           @Query("user_id") String userID);
+                                           @Query("user_id") String userId,
+                                           @Query("udid") String uDID);
 }

@@ -1,8 +1,11 @@
 package com.moodX.app.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import androidx.annotation.NonNull;
 
 import com.moodX.app.AppConfig;
 import com.moodX.app.database.DatabaseHelper;
@@ -51,7 +54,7 @@ public class PreferenceUtils {
     }
 
     public static long getCurrentTime() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy:MM:dd:HH:mm");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy:MM:dd:HH:mm");
         String currentDateAndTime = sdf.format(new Date());
 
         Date date = null;
@@ -67,7 +70,7 @@ public class PreferenceUtils {
     }
 
     public static long getExpireTime() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy:MM:dd:HH:mm");
+        @SuppressLint("SimpleDateFormat") SimpleDateFormat sdf = new SimpleDateFormat("yyyy:MM:dd:HH:mm");
         String currentDateAndTime = sdf.format(new Date());
 
         Date date = null;
@@ -100,10 +103,11 @@ public class PreferenceUtils {
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SubscriptionApi subscriptionApi = retrofit.create(SubscriptionApi.class);
 
-        Call<ActiveStatus> call = subscriptionApi.getActiveStatus(AppConfig.API_KEY, userId, BuildConfig.VERSION_CODE);
+        Call<ActiveStatus> call = subscriptionApi.getActiveStatus(AppConfig.API_KEY,
+                userId, BuildConfig.VERSION_CODE,Constants.getDeviceId(context));
         call.enqueue(new Callback<ActiveStatus>() {
             @Override
-            public void onResponse(Call<ActiveStatus> call, Response<ActiveStatus> response) {
+            public void onResponse(@NonNull Call<ActiveStatus> call, @NonNull Response<ActiveStatus> response) {
                 if (response.code() == 200) {
                     ActiveStatus activeStatus = response.body();
                     DatabaseHelper db = new DatabaseHelper(context);
@@ -113,7 +117,7 @@ public class PreferenceUtils {
             }
 
             @Override
-            public void onFailure(Call<ActiveStatus> call, Throwable t) {
+            public void onFailure(@NonNull Call<ActiveStatus> call, @NonNull Throwable t) {
                 t.printStackTrace();
             }
         });

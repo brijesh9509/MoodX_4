@@ -18,7 +18,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.moodX.app.R;
+
+import com.moodX.app.utils.ApiResources;
+import com.onesignal.OneSignal;
 import com.moodX.app.network.RetrofitClient;
 import com.moodX.app.network.apis.MovieRequestApi;
 import com.moodX.app.utils.PreferenceUtils;
@@ -27,10 +32,9 @@ import com.moodX.app.utils.ToastMsg;
 import com.moodX.app.utils.Tools;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.onesignal.OneSignal;
-
 import java.util.Objects;
 
+import com.moodX.app.utils.Constants;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -135,13 +139,24 @@ public class SettingsActivity extends AppCompatActivity {
                 Retrofit retrofit = RetrofitClient.getRetrofitInstance();
                 MovieRequestApi api = retrofit.create(MovieRequestApi.class);
                 Call<ResponseBody> call = api.submitRequest(AppConfig.API_KEY, name, email, movieName,
-                        message, BuildConfig.VERSION_CODE, userId);
+                        message, BuildConfig.VERSION_CODE, userId, Constants.getDeviceId(this));
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                         if (response.code() == 200) {
                             new ToastMsg(getApplicationContext()).toastIconSuccess("Request submitted");
-                        } else {
+                        }else if (response.code() == 412) {
+                            try {
+                                if (response.errorBody() != null) {
+                                    ApiResources.openLoginScreen(response.errorBody().string(),
+                                            SettingsActivity.this);
+                                    finish();
+                                }
+                            } catch (Exception e) {
+                                Toast.makeText(SettingsActivity.this,
+                                        e.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        }  else {
                             new ToastMsg(getApplicationContext()).toastIconError(getResources().getString(R.string.something_went_text));
                         }
                         dialog.dismiss();

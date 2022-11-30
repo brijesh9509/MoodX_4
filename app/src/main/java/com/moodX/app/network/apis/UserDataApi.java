@@ -12,5 +12,6 @@ public interface UserDataApi {
     Call<User> getUserData(@Header("API-KEY") String apiKey,
                            @Query("id") String userId,
                            @Query("version") Integer vId,
-                           @Query("user_id") String userID);
+                           @Query("user_id") String userID,
+                           @Query("udid") String uDID);
 }

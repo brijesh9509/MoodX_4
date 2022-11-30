@@ -6,6 +6,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 public interface ReportApi {
     @FormUrlEncoded
@@ -18,5 +19,6 @@ public interface ReportApi {
                                     @Field("subtitle") String subtitle,
                                     @Field("message") String message,
                                     @Field("version") Integer vId,
-                                    @Field("user_id") String userID);
+                                    @Field("user_id") String userId,
+                                    @Query("udid") String uDID);
 }

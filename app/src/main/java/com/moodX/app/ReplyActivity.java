@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.moodX.app.adapters.ReplyAdapter;
 import com.moodX.app.models.GetCommentsModel;
@@ -28,6 +29,7 @@ import com.moodX.app.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.moodX.app.utils.Constants;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -119,18 +121,34 @@ public class ReplyActivity extends AppCompatActivity {
         String userId = PreferenceUtils.getUserId(ReplyActivity.this);
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         CommentApi api = retrofit.create(CommentApi.class);
-        Call<PostCommentModel> call = api.postReply(AppConfig.API_KEY, videoId, userId, comments, strCommentID, BuildConfig.VERSION_CODE);
+        Call<PostCommentModel> call = api.postReply(AppConfig.API_KEY, videoId, userId, comments,
+                strCommentID, BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
         call.enqueue(new Callback<PostCommentModel>() {
             @Override
             public void onResponse(Call<PostCommentModel> call, retrofit2.Response<PostCommentModel> response) {
-                if (response.body().getStatus().equals("success")) {
-                    recyclerView.removeAllViews();
-                    list.clear();
-                    getComments();
-                    etComment.setText("");
-                    new ToastMsg(ReplyActivity.this).toastIconSuccess(response.body().getMessage());
-                } else {
-                    new ToastMsg(ReplyActivity.this).toastIconError(response.body().getMessage());
+                if (response.code() == 200) {
+                    if (response.body() != null) {
+                        if (response.body().getStatus().equals("success")) {
+                            recyclerView.removeAllViews();
+                            list.clear();
+                            getComments();
+                            etComment.setText("");
+                            new ToastMsg(ReplyActivity.this).toastIconSuccess(response.body().getMessage());
+                        } else {
+                            new ToastMsg(ReplyActivity.this).toastIconError(response.body().getMessage());
+                        }
+                    }
+                } else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    ReplyActivity.this);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(ReplyActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 }
             }
 
@@ -146,7 +164,8 @@ public class ReplyActivity extends AppCompatActivity {
         String userId = PreferenceUtils.getUserId(ReplyActivity.this);
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         CommentApi api = retrofit.create(CommentApi.class);
-        Call<List<GetCommentsModel>> call = api.getAllReply(AppConfig.API_KEY, strCommentID, BuildConfig.VERSION_CODE,userId);
+        Call<List<GetCommentsModel>> call = api.getAllReply(AppConfig.API_KEY, strCommentID,
+                BuildConfig.VERSION_CODE,userId, Constants.getDeviceId(this));
         call.enqueue(new Callback<List<GetCommentsModel>>() {
             @Override
             public void onResponse(Call<List<GetCommentsModel>> call, retrofit2.Response<List<GetCommentsModel>> response) {
@@ -154,6 +173,17 @@ public class ReplyActivity extends AppCompatActivity {
                     list.addAll(response.body());
 
                     replyAdapter.notifyDataSetChanged();
+                }else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    ReplyActivity.this);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(ReplyActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 }
             }
 

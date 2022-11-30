@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -32,11 +33,12 @@ import com.moodX.app.network.model.ActiveStatus;
 import com.moodX.app.network.model.ActiveSubscription;
 import com.moodX.app.network.model.SubscriptionHistory;
 import com.moodX.app.network.model.User;
+import com.moodX.app.utils.ApiResources;
+import com.moodX.app.utils.Constants;
 import com.moodX.app.utils.NetworkInst;
 import com.moodX.app.utils.PreferenceUtils;
 import com.moodX.app.utils.RtlUtils;
 import com.facebook.shimmer.ShimmerFrameLayout;
-import com.moodX.app.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,14 +68,13 @@ public class SubscriptionActivity extends AppCompatActivity implements ActiveSub
     private String userId;
 
     private List<ActiveSubscription> activeSubscriptions = new ArrayList<>();
-    private boolean isDark;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         RtlUtils.setScreenDirection(this);
         super.onCreate(savedInstanceState);
         SharedPreferences sharedPreferences = getSharedPreferences("push", MODE_PRIVATE);
-        isDark = sharedPreferences.getBoolean("dark", false);
+        boolean isDark = sharedPreferences.getBoolean("dark", false);
 
         if (isDark) {
             setTheme(R.style.AppThemeDark);
@@ -113,10 +114,11 @@ public class SubscriptionActivity extends AppCompatActivity implements ActiveSub
     private void getSubscriptionHistory() {
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SubscriptionApi subscriptionApi = retrofit.create(SubscriptionApi.class);
-        Call<SubscriptionHistory> call = subscriptionApi.getSubscriptionHistory(AppConfig.API_KEY, userId, BuildConfig.VERSION_CODE);
+        Call<SubscriptionHistory> call = subscriptionApi.getSubscriptionHistory(AppConfig.API_KEY, userId,
+                BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
         call.enqueue(new Callback<SubscriptionHistory>() {
             @Override
-            public void onResponse(Call<SubscriptionHistory> call, Response<SubscriptionHistory> response) {
+            public void onResponse(@NonNull Call<SubscriptionHistory> call, @NonNull Response<SubscriptionHistory> response) {
                 SubscriptionHistory subscriptionHistory = response.body();
                 if (response.code() == 200) {
 
@@ -144,11 +146,22 @@ public class SubscriptionActivity extends AppCompatActivity implements ActiveSub
                         mSubHistoryLayout.setVisibility(View.GONE);
                     }
                     progressBar.setVisibility(View.GONE);
+                }else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    SubscriptionActivity.this);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(SubscriptionActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 }
             }
 
             @Override
-            public void onFailure(Call<SubscriptionHistory> call, Throwable t) {
+            public void onFailure(@NonNull Call<SubscriptionHistory> call, @NonNull Throwable t) {
                 progressBar.setVisibility(View.GONE);
                 t.printStackTrace();
             }
@@ -291,7 +304,8 @@ public class SubscriptionActivity extends AppCompatActivity implements ActiveSub
 
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SubscriptionApi api = retrofit.create(SubscriptionApi.class);
-        Call<ResponseBody> call = api.cancelSubscription(AppConfig.API_KEY, userId, subscriptionId, BuildConfig.VERSION_CODE);
+        Call<ResponseBody> call = api.cancelSubscription(AppConfig.API_KEY, userId, subscriptionId,
+                BuildConfig.VERSION_CODE,PreferenceUtils.getUserId(this));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -308,7 +322,18 @@ public class SubscriptionActivity extends AppCompatActivity implements ActiveSub
                         recreate();
 
                         Toast.makeText(SubscriptionActivity.this, "Subscription canceled successfully.", Toast.LENGTH_SHORT).show();
-                    } else {
+                    } else if (response.code() == 412) {
+                        try {
+                            if (response.errorBody() != null) {
+                                ApiResources.openLoginScreen(response.errorBody().string(),
+                                        SubscriptionActivity.this);
+                                finish();
+                            }
+                        } catch (Exception e) {
+                            Toast.makeText(SubscriptionActivity.this,
+                                    e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }else {
                         Toast.makeText(SubscriptionActivity.this, "Subscription canceled Failed. code:"+ response.code(), Toast.LENGTH_SHORT).show();
                     }
 

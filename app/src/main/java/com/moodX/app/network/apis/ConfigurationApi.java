@@ -8,9 +8,9 @@ import retrofit2.http.Header;
 import retrofit2.http.Query;
 
 public interface ConfigurationApi {
-
     @GET("config")
     Call<Configuration> getConfigurationData(@Header("API-KEY") String apiKey,
-                                             @Query("version") Integer vId,
-                                             @Query("user_id") String userID);
+                                             @Query("version") Integer id,
+                                             @Query("user_id") String userId
+                                             /*@Query("udid") String uDID*/);
 }

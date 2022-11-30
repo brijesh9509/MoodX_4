@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.moodX.app.R;
+
 import com.moodX.app.adapters.LiveTVAdapter;
 import com.moodX.app.models.CommonModels;
 import com.moodX.app.network.RetrofitClient;
@@ -32,6 +34,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.moodX.app.utils.Constants;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -186,7 +189,8 @@ public class ItemTVActivity extends AppCompatActivity {
         String userId = PreferenceUtils.getUserId(this);
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         LiveTvApi api = retrofit.create(LiveTvApi.class);
-        Call<List<Channel>> call = api.getFeaturedTV(AppConfig.API_KEY, pageNum, BuildConfig.VERSION_CODE, userId);
+        Call<List<Channel>> call = api.getFeaturedTV(AppConfig.API_KEY, pageNum,
+                BuildConfig.VERSION_CODE, userId, Constants.getDeviceId(this));
         call.enqueue(new Callback<List<Channel>>() {
             @Override
             public void onResponse(Call<List<Channel>> call, retrofit2.Response<List<Channel>> response) {

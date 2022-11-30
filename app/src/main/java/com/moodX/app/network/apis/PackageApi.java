@@ -12,6 +12,7 @@ public interface PackageApi {
     @GET("all_package")
     Call<AllPackage> getAllPackage(@Header("API-KEY") String apiKey,
                                    @Query("version") Integer vId,
-                                   @Query("user_id") String userID);
+                                   @Query("user_id") String userId,
+                                   @Query("udid") String uDID);
 
 }

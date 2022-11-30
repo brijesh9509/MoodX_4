@@ -1,14 +1,16 @@
 package com.moodX.app.utils;
 
+import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.moodX.app.AppConfig;
 import com.moodX.app.NotificationClickHandler;
@@ -31,6 +33,7 @@ public class MyAppClass extends Application {
 
     public static final String NOTIFICATION_CHANNEL_ID = "download_channel_id";
     public static final String NOTIFICATION_CHANNEL_NAME = "download_channel";
+    @SuppressLint("StaticFieldLeak")
     private static Context mContext;
 
     @Override
@@ -66,21 +69,10 @@ public class MyAppClass extends Application {
         //set 12% of available app memory for image cachecc
         builder.memoryCache(new LruCache(getBytesForMemCache(12)));
         //set request transformer
-        Picasso.RequestTransformer requestTransformer = new Picasso.RequestTransformer() {
-            @Override
-            public Request transformRequest(Request request) {
-                return request;
-            }
-        };
+        Picasso.RequestTransformer requestTransformer = request -> request;
         builder.requestTransformer(requestTransformer);
 
-        builder.listener(new Picasso.Listener() {
-            @Override
-            public void onImageLoadFailed(Picasso picasso, Uri uri,
-                                          Exception exception) {
-                Log.d("image load error", uri.getPath());
-            }
-        });
+        builder.listener((picasso, uri, exception) -> Log.d("image load error", uri.getPath()));
 
         return builder.build();
     }
@@ -134,10 +126,11 @@ public class MyAppClass extends Application {
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SubscriptionApi subscriptionApi = retrofit.create(SubscriptionApi.class);
 
-        Call<ActiveStatus> call = subscriptionApi.getActiveStatus(AppConfig.API_KEY, userId, BuildConfig.VERSION_CODE);
+        Call<ActiveStatus> call = subscriptionApi.getActiveStatus(AppConfig.API_KEY,
+                userId, BuildConfig.VERSION_CODE,Constants.getDeviceId(mContext));
         call.enqueue(new Callback<ActiveStatus>() {
             @Override
-            public void onResponse(Call<ActiveStatus> call, Response<ActiveStatus> response) {
+            public void onResponse(@NonNull Call<ActiveStatus> call, @NonNull Response<ActiveStatus> response) {
                 if (response.code() == 200) {
                     ActiveStatus activeStatus = response.body();
                     DatabaseHelper db = new DatabaseHelper(getApplicationContext());
@@ -147,7 +140,7 @@ public class MyAppClass extends Application {
             }
 
             @Override
-            public void onFailure(Call<ActiveStatus> call, Throwable t) {
+            public void onFailure(@NonNull Call<ActiveStatus> call, @NonNull Throwable t) {
                 t.printStackTrace();
             }
         });

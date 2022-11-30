@@ -50,6 +50,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.moodX.app.R;
+
 import com.moodX.app.models.single_details_tv.AllTvChannel;
 import com.moodX.app.models.single_details_tv.ProgramGuide;
 import com.balysv.materialripple.MaterialRippleLayout;
@@ -134,6 +136,7 @@ import com.moodX.app.models.single_details.Video;
 import com.moodX.app.models.single_details_tv.AdditionalMediaSource;
 import com.moodX.app.models.single_details_tv.SingleDetailsTV;
 import com.moodX.app.network.RetrofitClient;
+import com.moodX.app.utils.ApiResources;
 import com.moodX.app.utils.HelperUtils;
 import com.moodX.app.utils.PreferenceUtils;
 import com.moodX.app.utils.RtlUtils;
@@ -147,6 +150,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.moodX.app.utils.Constants;
 import at.huber.youtubeExtractor.VideoMeta;
 import at.huber.youtubeExtractor.YouTubeExtractor;
 import at.huber.youtubeExtractor.YtFile;
@@ -158,16 +162,6 @@ import retrofit2.Retrofit;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static com.moodX.app.utils.Constants.CATEGORY_TYPE;
-import static com.moodX.app.utils.Constants.CONTENT_ID;
-import static com.moodX.app.utils.Constants.CONTENT_TITLE;
-import static com.moodX.app.utils.Constants.IMAGE_URL;
-import static com.moodX.app.utils.Constants.IS_FROM_CONTINUE_WATCHING;
-import static com.moodX.app.utils.Constants.POSITION;
-import static com.moodX.app.utils.Constants.SERVER_TYPE;
-import static com.moodX.app.utils.Constants.STREAM_URL;
-import static com.moodX.app.utils.Constants.YOUTUBE;
-import static com.moodX.app.utils.Constants.YOUTUBE_LIVE;
 
 @SuppressLint("StaticFieldLeak")
 public class DetailsActivity extends AppCompatActivity implements CastPlayer.SessionAvailabilityListener,
@@ -220,6 +214,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     private Button btnComment;
     private EditText etComment;
     private CommentsAdapter commentsAdapter;
+
     public static SimpleExoPlayer player;
     public static PlayerView simpleExoPlayerView;
     public static FrameLayout youtubePlayerView;
@@ -283,7 +278,6 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     private AudioManager mAudioManager;
     private int aspectClickCount = 1;
 
-    private DatabaseHelper db;
     private HelperUtils helperUtils;
     private boolean vpnStatus;
     private ContinueWatchingViewModel viewModel;
@@ -318,7 +312,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
             return;
         }
 
-        db = new DatabaseHelper(DetailsActivity.this);
+        DatabaseHelper db = new DatabaseHelper(DetailsActivity.this);
 
         mAudioManager = (AudioManager) getApplicationContext().getSystemService(Context.AUDIO_SERVICE);
 
@@ -383,16 +377,16 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         castSession = getIntent().getBooleanExtra("castSession", false);
 
         //handle Continue watching task
-        isFromContinueWatching = getIntent().getBooleanExtra(IS_FROM_CONTINUE_WATCHING, false);
+        isFromContinueWatching = getIntent().getBooleanExtra(Constants.IS_FROM_CONTINUE_WATCHING, false);
         try {
             if (isFromContinueWatching) {
-                id = getIntent().getStringExtra(CONTENT_ID);
-                title = getIntent().getStringExtra(CONTENT_TITLE);
-                castImageUrl = getIntent().getStringExtra(IMAGE_URL);
-                categoryType = getIntent().getStringExtra(CATEGORY_TYPE);
-                serverType = getIntent().getStringExtra(SERVER_TYPE);
-                mediaUrl = getIntent().getStringExtra(STREAM_URL);
-                playerCurrentPosition = getIntent().getLongExtra(POSITION, 0);
+                id = getIntent().getStringExtra(Constants.CONTENT_ID);
+                title = getIntent().getStringExtra(Constants.CONTENT_TITLE);
+                castImageUrl = getIntent().getStringExtra(Constants.IMAGE_URL);
+                categoryType = getIntent().getStringExtra(Constants.CATEGORY_TYPE);
+                serverType = getIntent().getStringExtra(Constants.SERVER_TYPE);
+                mediaUrl = getIntent().getStringExtra(Constants.STREAM_URL);
+                playerCurrentPosition = getIntent().getLongExtra(Constants.POSITION, 0);
                 resumePosition = playerCurrentPosition;
             }
         } catch (NullPointerException e) {
@@ -467,6 +461,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
             clear_previous();
             initGetData();
         });
+
     }
 
     public void initViews() {
@@ -709,11 +704,11 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
         trailerBt.setOnClickListener(v -> {
             if (trailerUrl != null && !trailerUrl.equalsIgnoreCase("")) {
-                serverType = YOUTUBE;
+                serverType = Constants.YOUTUBE;
                 mediaUrl = trailerUrl;
                 CommonModels commonModels = new CommonModels();
                 commonModels.setStremURL(trailerUrl);
-                commonModels.setServerType(YOUTUBE);
+                commonModels.setServerType(Constants.YOUTUBE);
                 lPlay.setVisibility(VISIBLE);
                 releasePlayer();
                 preparePlayer(commonModels);
@@ -874,12 +869,25 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
             messageReport = message.getText().toString().trim();
             Retrofit retrofit = RetrofitClient.getRetrofitInstance();
             ReportApi api = retrofit.create(ReportApi.class);
-            Call<ResponseBody> call = api.submitReport(AppConfig.API_KEY, categoryType, id, videoReport, audioReport, subtitleReport, messageReport, BuildConfig.VERSION_CODE, PreferenceUtils.getUserId(DetailsActivity.this));
+            Call<ResponseBody> call = api.submitReport(AppConfig.API_KEY, categoryType, id, videoReport,
+                    audioReport, subtitleReport, messageReport, BuildConfig.VERSION_CODE,
+                    PreferenceUtils.getUserId(DetailsActivity.this), Constants.getDeviceId(this));
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                     if (response.code() == 200) {
                         new ToastMsg(getApplicationContext()).toastIconSuccess("Report submitted");
+                    }else if (response.code() == 412) {
+                        try {
+                            if (response.errorBody() != null) {
+                                ApiResources.openLoginScreen(response.errorBody().string(),
+                                        DetailsActivity.this);
+                                finish();
+                            }
+                        } catch (Exception e) {
+                            Toast.makeText(DetailsActivity.this,
+                                    e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
                     } else {
                         new ToastMsg(getApplicationContext()).toastIconError(getResources().getString(R.string.something_went_text));
                     }
@@ -1200,15 +1208,15 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
         @NonNull
         @Override
-        public SubtitleAdapter.OriginalViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            SubtitleAdapter.OriginalViewHolder vh;
+        public OriginalViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            OriginalViewHolder vh;
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_subtitle, parent, false);
-            vh = new SubtitleAdapter.OriginalViewHolder(v);
+            vh = new OriginalViewHolder(v);
             return vh;
         }
 
         @Override
-        public void onBindViewHolder(SubtitleAdapter.OriginalViewHolder holder, final int position) {
+        public void onBindViewHolder(OriginalViewHolder holder, final int position) {
             final SubtitleModel obj = items.get(position);
             holder.name.setText(obj.getLanguage());
 
@@ -1462,12 +1470,12 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
             case "hls":
                 mediaSource = hlsMediaSource(uri, context);
                 break;
-            case YOUTUBE:
+            case Constants.YOUTUBE:
                 /**tag 18 : 360p, tag: 22 : 720p, 133: live*/
                 extractYoutubeUrl(url, context, 18);
                 // initYoutubePlayer(url);
                 break;
-            case YOUTUBE_LIVE:
+            case Constants.YOUTUBE_LIVE:
                 /**play Youtube-live video**/
                 initYoutubePlayer(url);
                 break;
@@ -1479,8 +1487,8 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                 break;
         }
 
-        if (!type.equalsIgnoreCase(YOUTUBE) &&
-                !type.equalsIgnoreCase(YOUTUBE_LIVE)) {
+        if (!type.equalsIgnoreCase(Constants.YOUTUBE) &&
+                !type.equalsIgnoreCase(Constants.YOUTUBE_LIVE)) {
             try {
                 player.prepare(mediaSource, true, false);
                 simpleExoPlayerView.setPlayer(player);
@@ -1589,6 +1597,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     }
 
 
+    @SuppressLint("StaticFieldLeak")
     private void extractYoutubeUrl(String url, final Context context, final int tag) {
         Log.e("Trailer", "onExtractUrl");
         new YouTubeExtractor(context) {
@@ -1654,7 +1663,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                     "en"); // The subtitle language. May be null.
 
             DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(context,
-                    Util.getUserAgent(context, getResources().getString(R.string.app_name)), new DefaultBandwidthMeter());
+                    Util.getUserAgent(context, BuildConfig.APPLICATION_ID), new DefaultBandwidthMeter());
 
 
             MediaSource subtitleSource = new SingleSampleMediaSource
@@ -1675,10 +1684,11 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     private void addToFav() {
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         FavouriteApi api = retrofit.create(FavouriteApi.class);
-        Call<FavoriteModel> call = api.addToFavorite(AppConfig.API_KEY, userId, id, BuildConfig.VERSION_CODE);
+        Call<FavoriteModel> call = api.addToFavorite(AppConfig.API_KEY, userId, id,
+                BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
         call.enqueue(new Callback<FavoriteModel>() {
             @Override
-            public void onResponse(@NonNull Call<FavoriteModel> call, @NonNull retrofit2.Response<FavoriteModel> response) {
+            public void onResponse(@NonNull Call<FavoriteModel> call, @NonNull Response<FavoriteModel> response) {
                 if (response.code() == 200) {
                     if (response.body().getStatus().equalsIgnoreCase("success")) {
                         new ToastMsg(DetailsActivity.this).toastIconSuccess(response.body().getMessage());
@@ -1687,6 +1697,17 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         imgAddFav.setImageResource(R.drawable.ic_favorite_white);
                     } else {
                         new ToastMsg(DetailsActivity.this).toastIconError(response.body().getMessage());
+                    }
+                }else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    DetailsActivity.this);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(DetailsActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 } else {
                     new ToastMsg(DetailsActivity.this).toastIconError(getString(R.string.error_toast));
@@ -1732,11 +1753,11 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SingleDetailsTVApi api = retrofit.create(SingleDetailsTVApi.class);
         Call<SingleDetailsTV> call = api.getSingleDetails(AppConfig.API_KEY, vType, vId,
-                BuildConfig.VERSION_CODE, PreferenceUtils.getUserId(this));
+                BuildConfig.VERSION_CODE, PreferenceUtils.getUserId(this), Constants.getDeviceId(this));
         call.enqueue(new Callback<SingleDetailsTV>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
-            public void onResponse(@NonNull Call<SingleDetailsTV> call, @NonNull retrofit2.Response<SingleDetailsTV> response) {
+            public void onResponse(@NonNull Call<SingleDetailsTV> call, @NonNull Response<SingleDetailsTV> response) {
                 if (response.code() == 200) {
                     if (response.body() != null) {
                         swipeRefreshLayout.setRefreshing(false);
@@ -1826,6 +1847,17 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         }
                         serverAdapter.notifyDataSetChanged();
                     }
+                }else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    DetailsActivity.this);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(DetailsActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 }
             }
 
@@ -1844,11 +1876,11 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SingleDetailsApi api = retrofit.create(SingleDetailsApi.class);
         Call<SingleDetails> call = api.getSingleDetails(AppConfig.API_KEY, vType, vId,
-                BuildConfig.VERSION_CODE, PreferenceUtils.getUserId(this));
+                BuildConfig.VERSION_CODE, PreferenceUtils.getUserId(this), Constants.getDeviceId(this));
         call.enqueue(new Callback<SingleDetails>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
-            public void onResponse(@NonNull Call<SingleDetails> call, @NonNull retrofit2.Response<SingleDetails> response) {
+            public void onResponse(@NonNull Call<SingleDetails> call, @NonNull Response<SingleDetails> response) {
                 if (response.code() == 200) {
                     swipeRefreshLayout.setRefreshing(false);
                     shimmerFrameLayout.stopShimmer();
@@ -1979,6 +2011,17 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                     } else {
                         seasonSpinnerContainer.setVisibility(GONE);
                     }
+                }else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    DetailsActivity.this);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(DetailsActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 }
             }
 
@@ -2053,11 +2096,11 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SingleDetailsApi api = retrofit.create(SingleDetailsApi.class);
         Call<SingleDetails> call = api.getSingleDetails(AppConfig.API_KEY, vType, vId,
-                BuildConfig.VERSION_CODE, PreferenceUtils.getUserId(this));
+                BuildConfig.VERSION_CODE, PreferenceUtils.getUserId(this), Constants.getDeviceId(this));
         call.enqueue(new Callback<SingleDetails>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
-            public void onResponse(@NonNull Call<SingleDetails> call, @NonNull retrofit2.Response<SingleDetails> response) {
+            public void onResponse(@NonNull Call<SingleDetails> call, @NonNull Response<SingleDetails> response) {
                 if (response.code() == 200) {
                     shimmerFrameLayout.stopShimmer();
                     shimmerFrameLayout.setVisibility(GONE);
@@ -2217,6 +2260,17 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         }
                     }
 
+                }else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    DetailsActivity.this);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(DetailsActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 } else {
                     swipeRefreshLayout.setRefreshing(false);
                 }
@@ -2232,10 +2286,11 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     private void getFavStatus() {
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         FavouriteApi api = retrofit.create(FavouriteApi.class);
-        Call<FavoriteModel> call = api.verifyFavoriteList(AppConfig.API_KEY, userId, id, BuildConfig.VERSION_CODE);
+        Call<FavoriteModel> call = api.verifyFavoriteList(AppConfig.API_KEY, userId, id, BuildConfig.VERSION_CODE,
+                Constants.getDeviceId(this));
         call.enqueue(new Callback<FavoriteModel>() {
             @Override
-            public void onResponse(@NonNull Call<FavoriteModel> call, @NonNull retrofit2.Response<FavoriteModel> response) {
+            public void onResponse(@NonNull Call<FavoriteModel> call, @NonNull Response<FavoriteModel> response) {
                 if (response.code() == 200) {
                     if (response.body().getStatus().equalsIgnoreCase("success")) {
                         isFav = true;
@@ -2247,6 +2302,17 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         imgAddFav.setImageResource(R.drawable.ic_favorite_border_white);
                     }
                     imgAddFav.setVisibility(VISIBLE);
+                }else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    DetailsActivity.this);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(DetailsActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 }
             }
 
@@ -2261,10 +2327,11 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     private void removeFromFav() {
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         FavouriteApi api = retrofit.create(FavouriteApi.class);
-        Call<FavoriteModel> call = api.removeFromFavorite(AppConfig.API_KEY, userId, id, BuildConfig.VERSION_CODE);
+        Call<FavoriteModel> call = api.removeFromFavorite(AppConfig.API_KEY, userId, id,
+                BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
         call.enqueue(new Callback<FavoriteModel>() {
             @Override
-            public void onResponse(@NonNull Call<FavoriteModel> call, @NonNull retrofit2.Response<FavoriteModel> response) {
+            public void onResponse(@NonNull Call<FavoriteModel> call, @NonNull Response<FavoriteModel> response) {
                 if (response.code() == 200) {
                     if (response.body().getStatus().equalsIgnoreCase("success")) {
                         isFav = false;
@@ -2276,6 +2343,17 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         new ToastMsg(DetailsActivity.this).toastIconError(response.body().getMessage());
                         //imgAddFav.setBackgroundResource(R.drawable.ic_favorite_white);
                         imgAddFav.setImageResource(R.drawable.ic_favorite_white);
+                    }
+                }else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    DetailsActivity.this);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(DetailsActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -2298,18 +2376,32 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         CommentApi api = retrofit.create(CommentApi.class);
-        Call<PostCommentModel> call = api.postComment(AppConfig.API_KEY, videoId, userId, comments, BuildConfig.VERSION_CODE);
+        Call<PostCommentModel> call = api.postComment(AppConfig.API_KEY, videoId, userId, comments,
+                BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
         call.enqueue(new Callback<PostCommentModel>() {
             @Override
-            public void onResponse(@NonNull Call<PostCommentModel> call, @NonNull retrofit2.Response<PostCommentModel> response) {
-                if (response.body().getStatus().equals("success")) {
-                    rvComment.removeAllViews();
-                    listComment.clear();
-                    getComments();
-                    etComment.setText("");
-                    new ToastMsg(DetailsActivity.this).toastIconSuccess(response.body().getMessage());
-                } else {
-                    new ToastMsg(DetailsActivity.this).toastIconError(response.body().getMessage());
+            public void onResponse(@NonNull Call<PostCommentModel> call, @NonNull Response<PostCommentModel> response) {
+                if (response.code() == 200) {
+                    if (response.body().getStatus().equals("success")) {
+                        rvComment.removeAllViews();
+                        listComment.clear();
+                        getComments();
+                        etComment.setText("");
+                        new ToastMsg(DetailsActivity.this).toastIconSuccess(response.body().getMessage());
+                    } else {
+                        new ToastMsg(DetailsActivity.this).toastIconError(response.body().getMessage());
+                    }
+                } else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    DetailsActivity.this);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(DetailsActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 }
             }
 
@@ -2325,16 +2417,27 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         CommentApi api = retrofit.create(CommentApi.class);
         Call<List<GetCommentsModel>> call = api.getAllComments(AppConfig.API_KEY, id, BuildConfig.VERSION_CODE,
-                PreferenceUtils.getUserId(this));
+                PreferenceUtils.getUserId(this), Constants.getDeviceId(this));
         call.enqueue(new Callback<List<GetCommentsModel>>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onResponse(@NonNull Call<List<GetCommentsModel>> call,
-                                   @NonNull retrofit2.Response<List<GetCommentsModel>> response) {
+                                   @NonNull Response<List<GetCommentsModel>> response) {
                 if (response.code() == 200) {
                     listComment.addAll(response.body());
 
                     commentsAdapter.notifyDataSetChanged();
+                }else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    DetailsActivity.this);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(DetailsActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 }
             }
 

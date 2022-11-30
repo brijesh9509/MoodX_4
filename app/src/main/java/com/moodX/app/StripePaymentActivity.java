@@ -49,6 +49,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import com.moodX.app.utils.Constants;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -277,15 +278,27 @@ public class StripePaymentActivity extends AppCompatActivity {
     public void saveChargeData(Charge charge, String token) {
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         PaymentApi paymentApi = retrofit.create(PaymentApi.class);
-        Call<ResponseBody> call = paymentApi.savePayment(AppConfig.API_KEY, aPackage.getPlanId(), userId, String.valueOf(charge.getAmount()),
-                token, "Stripe", BuildConfig.VERSION_CODE);
+        Call<ResponseBody> call = paymentApi.savePayment(AppConfig.API_KEY,
+                aPackage.getPlanId(), userId, String.valueOf(charge.getAmount()),
+                token, "Stripe", BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.code() == 200) {
                     updateActiveStatus();
 
-                } else {
+                } else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    StripePaymentActivity.this);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(StripePaymentActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }else {
                     new ToastMsg(StripePaymentActivity.this).toastIconError(getString(R.string.something_went_wrong));
                 }
             }
@@ -304,7 +317,8 @@ public class StripePaymentActivity extends AppCompatActivity {
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SubscriptionApi subscriptionApi = retrofit.create(SubscriptionApi.class);
 
-        Call<ActiveStatus> call = subscriptionApi.getActiveStatus(AppConfig.API_KEY, PreferenceUtils.getUserId(StripePaymentActivity.this), BuildConfig.VERSION_CODE);
+        Call<ActiveStatus> call = subscriptionApi.getActiveStatus(AppConfig.API_KEY,
+                PreferenceUtils.getUserId(this), BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
         call.enqueue(new Callback<ActiveStatus>() {
             @Override
             public void onResponse(Call<ActiveStatus> call, Response<ActiveStatus> response) {
@@ -319,6 +333,17 @@ public class StripePaymentActivity extends AppCompatActivity {
                     Intent intent = new Intent(StripePaymentActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
+                }else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    StripePaymentActivity.this);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(StripePaymentActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 }
             }
 

@@ -15,5 +15,6 @@ public interface SetPasswordApi {
                                      @Field("user_id") String userId,
                                      @Field("password") String password,
                                      @Field("firebase_auth_uid") String firebaseUID,
-                                     @Field("version") Integer vId);
+                                     @Field("version") Integer vId,
+                                     @Field("udid") String uDID);
 }

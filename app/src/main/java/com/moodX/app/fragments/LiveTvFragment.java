@@ -1,11 +1,15 @@
 package com.moodX.app.fragments;
 
+import static com.moodX.app.utils.Constants.getDeviceId;
+
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -18,18 +22,19 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.moodX.app.BuildConfig;
+import com.moodX.app.utils.ApiResources;
 import com.moodX.app.utils.PreferenceUtils;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.moodX.app.AppConfig;
 import com.moodX.app.MainActivity;
-import com.moodX.app.BuildConfig;
 import com.moodX.app.R;
 import com.moodX.app.adapters.LiveTvCategoryAdapter;
 import com.moodX.app.network.RetrofitClient;
 import com.moodX.app.network.apis.LiveTvApi;
 import com.moodX.app.network.model.LiveTvCategory;
-import com.moodX.app.utils.ApiResources;
 import com.moodX.app.utils.NetworkInst;
 import com.moodX.app.utils.ToastMsg;
 
@@ -45,12 +50,13 @@ public class LiveTvFragment extends Fragment {
     private ShimmerFrameLayout shimmerFrameLayout;
     private RecyclerView recyclerView;
     private LiveTvCategoryAdapter adapter;
-    private List<LiveTvCategory> liveTvCategories = new ArrayList<>();
-    private ApiResources apiResources;
+    private final List<LiveTvCategory> liveTvCategories = new ArrayList<>();
     private ProgressBar progressBar;
     private SwipeRefreshLayout swipeRefreshLayout;
     private CoordinatorLayout coordinatorLayout;
     private TextView tvNoItem;
+
+
     private MainActivity activity;
     private LinearLayout searchRootLayout;
 
@@ -62,6 +68,7 @@ public class LiveTvFragment extends Fragment {
     private int scrolledDistance = 0;
     private boolean controlsVisible = true;
 
+    @SuppressLint("InflateParams")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -81,14 +88,14 @@ public class LiveTvFragment extends Fragment {
         if (activity.isDark) {
             pageTitle.setTextColor(activity.getResources().getColor(R.color.white));
             searchBar.setCardBackgroundColor(activity.getResources().getColor(R.color.black_window_light));
-            menuIv.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_menu));
-            searchIv.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_search_white));
+            menuIv.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.ic_menu));
+            searchIv.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.ic_search_white));
         }
     }
 
 
+    @SuppressLint("NotifyDataSetChanged")
     private void initComponent(View view) {
-        apiResources = new ApiResources();
         shimmerFrameLayout = view.findViewById(R.id.shimmer_view_container);
         shimmerFrameLayout.startShimmer();
         progressBar = view.findViewById(R.id.item_progress_bar);
@@ -143,43 +150,31 @@ public class LiveTvFragment extends Fragment {
         }
 
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
+        swipeRefreshLayout.setOnRefreshListener(() -> {
 
-                coordinatorLayout.setVisibility(View.GONE);
-                liveTvCategories.clear();
-                recyclerView.removeAllViews();
-                adapter.notifyDataSetChanged();
-                if (new NetworkInst(activity).isNetworkAvailable()) {
-                    getLiveTvData();
-                } else {
-                    tvNoItem.setText(getString(R.string.no_internet));
-                    shimmerFrameLayout.stopShimmer();
-                    shimmerFrameLayout.setVisibility(View.GONE);
-                    swipeRefreshLayout.setRefreshing(false);
-                    coordinatorLayout.setVisibility(View.VISIBLE);
-                }
+            coordinatorLayout.setVisibility(View.GONE);
+            liveTvCategories.clear();
+            recyclerView.removeAllViews();
+            adapter.notifyDataSetChanged();
+            if (new NetworkInst(activity).isNetworkAvailable()) {
+                getLiveTvData();
+            } else {
+                tvNoItem.setText(getString(R.string.no_internet));
+                shimmerFrameLayout.stopShimmer();
+                shimmerFrameLayout.setVisibility(View.GONE);
+                swipeRefreshLayout.setRefreshing(false);
+                coordinatorLayout.setVisibility(View.VISIBLE);
             }
         });
+
     }
 
     @Override
     public void onStart() {
         super.onStart();
 
-        menuIv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                activity.openDrawer();
-            }
-        });
-        searchIv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                activity.goToSearchActivity();
-            }
-        });
+        menuIv.setOnClickListener(view -> activity.openDrawer());
+        searchIv.setOnClickListener(view -> activity.goToSearchActivity());
 
     }
 
@@ -187,10 +182,12 @@ public class LiveTvFragment extends Fragment {
         String userId = PreferenceUtils.getUserId(requireActivity());
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         LiveTvApi api = retrofit.create(LiveTvApi.class);
-        api.getLiveTvCategories(AppConfig.API_KEY, BuildConfig.VERSION_CODE,userId)
+        api.getLiveTvCategories(AppConfig.API_KEY, BuildConfig.VERSION_CODE,userId,getDeviceId(requireContext()))
                 .enqueue(new Callback<List<LiveTvCategory>>() {
+                    @SuppressLint("NotifyDataSetChanged")
                     @Override
-                    public void onResponse(Call<List<LiveTvCategory>> call, retrofit2.Response<List<LiveTvCategory>> response) {
+                    public void onResponse(@NonNull Call<List<LiveTvCategory>> call,
+                                           @NonNull retrofit2.Response<List<LiveTvCategory>> response) {
                         swipeRefreshLayout.setRefreshing(false);
                         progressBar.setVisibility(View.GONE);
                         shimmerFrameLayout.stopShimmer();
@@ -204,6 +201,17 @@ public class LiveTvFragment extends Fragment {
                                 adapter.notifyDataSetChanged();
                             }
 
+                        }else if (response.code() == 412) {
+                            try {
+                                if (response.errorBody() != null) {
+                                    ApiResources.openLoginScreen(response.errorBody().string(),
+                                            requireActivity());
+                                    requireActivity().finish();
+                                }
+                            } catch (Exception e) {
+                                Toast.makeText(requireActivity(),
+                                        e.getMessage(), Toast.LENGTH_LONG).show();
+                            }
                         } else {
                             swipeRefreshLayout.setRefreshing(false);
                             progressBar.setVisibility(View.GONE);
@@ -218,7 +226,7 @@ public class LiveTvFragment extends Fragment {
                     }
 
                     @Override
-                    public void onFailure(Call<List<LiveTvCategory>> call, Throwable t) {
+                    public void onFailure(@NonNull Call<List<LiveTvCategory>> call, @NonNull Throwable t) {
                         swipeRefreshLayout.setRefreshing(false);
                         progressBar.setVisibility(View.GONE);
                         shimmerFrameLayout.stopShimmer();

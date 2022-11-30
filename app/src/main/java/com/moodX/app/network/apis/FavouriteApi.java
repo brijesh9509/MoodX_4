@@ -1,8 +1,7 @@
 package com.moodX.app.network.apis;
 
-import com.moodX.app.network.model.FavoriteModel;
 import com.moodX.app.models.Movie;
-
+import com.moodX.app.network.model.FavoriteModel;
 
 import java.util.List;
 
@@ -17,23 +16,27 @@ public interface FavouriteApi {
     Call<List<Movie>> getFavoriteList(@Header("API-KEY") String apiKey,
                                       @Query("user_id") String userId,
                                       @Query("page") int page,
-                                      @Query("version") Integer vId);
+                                      @Query("version") Integer vId,
+                                      @Query("udid") String uDID);
 
     @GET("add_favorite")
     Call<FavoriteModel> addToFavorite(@Header("API-KEY") String apiKey,
                                       @Query("user_id") String userId,
                                       @Query("videos_id") String videoId,
-                                      @Query("version") Integer vId);
+                                      @Query("version") Integer vId,
+                                      @Query("udid") String uDID);
 
     @GET("remove_favorite")
     Call<FavoriteModel> removeFromFavorite(@Header("API-KEY") String apiKey,
                                            @Query("user_id") String userId,
                                            @Query("videos_id") String videoId,
-                                           @Query("version") Integer vId);
+                                           @Query("version") Integer vId,
+                                           @Query("udid") String uDID);
 
     @GET("verify_favorite_list")
     Call<FavoriteModel> verifyFavoriteList(@Header("API-KEY") String apiKey,
                                            @Query("user_id") String userId,
                                            @Query("videos_id") String videoId,
-                                           @Query("version") Integer vId);
+                                           @Query("version") Integer vId,
+                                           @Query("udid") String uDID);
 }

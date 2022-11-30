@@ -15,7 +15,8 @@ public interface TvSeriesApi {
     Call<List<Video>> getTvSeries(@Header("API-KEY") String apiKey,
                                   @Query("page") int page,
                                   @Query("version") Integer vId,
-                                  @Query("user_id") String userID);
+                                  @Query("user_id") String userId,
+                                  @Query("udid") String uDID);
 
 
 }

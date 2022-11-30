@@ -1,6 +1,9 @@
 package com.moodX.app.fragments;
 
 
+import static com.moodX.app.utils.Constants.getDeviceId;
+
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -8,9 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
 import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -27,8 +30,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.moodX.app.AppConfig;
+import com.moodX.app.BuildConfig;
 import com.moodX.app.adapters.ContinueWatchingAdapter;
 import com.moodX.app.adapters.CountryAdapter;
 import com.moodX.app.adapters.GenreAdapter;
@@ -38,14 +43,13 @@ import com.moodX.app.adapters.LiveTvHomeAdapter;
 import com.moodX.app.adapters.PopularStarAdapter;
 import com.moodX.app.adapters.SliderAdapter;
 import com.moodX.app.database.DatabaseHelper;
-import com.moodX.app.database.continueWatching.ContinueWatchingModel;
 import com.moodX.app.database.continueWatching.ContinueWatchingViewModel;
 import com.moodX.app.database.homeContent.HomeContentViewModel;
 import com.moodX.app.network.apis.HomeContentApi;
+import com.moodX.app.utils.ApiResources;
 import com.moodX.app.utils.PreferenceUtils;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.github.islamkhsh.CardSliderViewPager;
-import com.moodX.app.BuildConfig;
 import com.moodX.app.ItemMovieActivity;
 import com.moodX.app.ItemSeriesActivity;
 import com.moodX.app.ItemTVActivity;
@@ -70,6 +74,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Timer;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -78,7 +83,7 @@ import retrofit2.Retrofit;
 public class HomeFragment extends Fragment {
 
     CardSliderViewPager cViewPager;
-    private ArrayList<CommonModels> listSlider = new ArrayList<>();
+    private final ArrayList<CommonModels> listSlider = new ArrayList<>();
     private Timer timer;
 
     private ShimmerFrameLayout shimmerFrameLayout;
@@ -90,15 +95,14 @@ public class HomeFragment extends Fragment {
     private GenreAdapter genreAdapter;
     private CountryAdapter countryAdapter;
     private PopularStarAdapter popularStarAdapter;
-    private RelativeLayout genreLayout, countryLayout;
     private HomePageAdapter adapterMovie, adapterSeries;
     private LiveTvHomeAdapter adapterTv;
-    private List<CommonModels> listMovie = new ArrayList<>();
-    private List<CommonModels> listTv = new ArrayList<>();
-    private List<CommonModels> listSeries = new ArrayList<>();
-    private List<CommonModels> genreList = new ArrayList<>();
-    private List<CommonModels> countryList = new ArrayList<>();
-    private List<PopularStars> popularStarsList = new ArrayList<>();
+    private final List<CommonModels> listMovie = new ArrayList<>();
+    private final List<CommonModels> listTv = new ArrayList<>();
+    private final List<CommonModels> listSeries = new ArrayList<>();
+    private final List<CommonModels> genreList = new ArrayList<>();
+    private final List<CommonModels> countryList = new ArrayList<>();
+    private final List<PopularStars> popularStarsList = new ArrayList<>();
     private Button btnMoreMovie, btnMoreTv, btnMoreSeries, btnContinueWatchingClear;
 
     private TextView tvNoItem;
@@ -106,7 +110,7 @@ public class HomeFragment extends Fragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private NestedScrollView scrollView;
 
-    private List<GenreModel> listGenre = new ArrayList<>();
+    private final List<GenreModel> listGenre = new ArrayList<>();
 
     private GenreHomeAdapter genreHomeAdapter;
     private View sliderLayout;
@@ -114,9 +118,7 @@ public class HomeFragment extends Fragment {
     private MainActivity activity;
     private LinearLayout searchRootLayout;
 
-    private CardView searchBar;
     private ImageView menuIv, searchIv;
-    private TextView pageTitle;
     private DatabaseHelper db = new DatabaseHelper(getContext());
     private HomeContentViewModel homeContentViewModel;
     private HomeContent homeContent = null;
@@ -124,6 +126,7 @@ public class HomeFragment extends Fragment {
     private ContinueWatchingViewModel continueWatchingViewModel;
 
 
+    @SuppressLint("InflateParams")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -150,14 +153,14 @@ public class HomeFragment extends Fragment {
         sliderLayout = view.findViewById(R.id.slider_layout);
         genreRv = view.findViewById(R.id.genre_rv);
         countryRv = view.findViewById(R.id.country_rv);
-        genreLayout = view.findViewById(R.id.genre_layout);
+        RelativeLayout genreLayout = view.findViewById(R.id.genre_layout);
         popularStarsRv = view.findViewById(R.id.popular_stars_rv);
-        countryLayout = view.findViewById(R.id.country_layout);
+        RelativeLayout countryLayout = view.findViewById(R.id.country_layout);
         cViewPager = view.findViewById(R.id.c_viewPager);
         searchRootLayout = view.findViewById(R.id.search_root_layout);
-        searchBar = view.findViewById(R.id.search_bar);
+        CardView searchBar = view.findViewById(R.id.search_bar);
         menuIv = view.findViewById(R.id.bt_menu);
-        pageTitle = view.findViewById(R.id.page_title_tv);
+        TextView pageTitle = view.findViewById(R.id.page_title_tv);
         searchIv = view.findViewById(R.id.search_iv);
         continueWatchingLayout = view.findViewById(R.id.continueWatchingLayout);
         recyclerViewContinueWatching = view.findViewById(R.id.recyclerViewContinueWatching);
@@ -179,8 +182,8 @@ public class HomeFragment extends Fragment {
         if (activity.isDark) {
             pageTitle.setTextColor(activity.getResources().getColor(R.color.white));
             searchBar.setCardBackgroundColor(activity.getResources().getColor(R.color.black_window_light));
-            menuIv.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_menu));
-            searchIv.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_search_white));
+            menuIv.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.ic_menu));
+            searchIv.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.ic_search_white));
         }
 
         //----init timer slider--------------------
@@ -191,22 +194,19 @@ public class HomeFragment extends Fragment {
 
         /*----continue Watching view----*/
         continueWatchingViewModel = ViewModelProviders.of(getActivity()).get(ContinueWatchingViewModel.class);
-        continueWatchingViewModel.getAllContents().observe(getActivity(), new Observer<List<ContinueWatchingModel>>() {
-            @Override
-            public void onChanged(List<ContinueWatchingModel> items) {
-                if (items.size() > 0) {
-                    Collections.reverse(items);
-                    continueWatchingLayout.setVisibility(View.VISIBLE);
-                    ContinueWatchingAdapter adapter = new ContinueWatchingAdapter(getContext(), items);
-                    recyclerViewContinueWatching.setLayoutManager(new LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false));
-                    recyclerViewContinueWatching.setHasFixedSize(true);
-                    recyclerViewContinueWatching.setNestedScrollingEnabled(false);
-                    recyclerViewContinueWatching.setAdapter(adapter);
+        continueWatchingViewModel.getAllContents().observe(getActivity(), items -> {
+            if (items.size() > 0) {
+                Collections.reverse(items);
+                continueWatchingLayout.setVisibility(View.VISIBLE);
+                ContinueWatchingAdapter adapter = new ContinueWatchingAdapter(getContext(), items);
+                recyclerViewContinueWatching.setLayoutManager(new LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false));
+                recyclerViewContinueWatching.setHasFixedSize(true);
+                recyclerViewContinueWatching.setNestedScrollingEnabled(false);
+                recyclerViewContinueWatching.setAdapter(adapter);
 
-                } else {
-                    recyclerViewContinueWatching.removeAllViews();
-                    continueWatchingLayout.setVisibility(View.GONE);
-                }
+            } else {
+                recyclerViewContinueWatching.removeAllViews();
+                continueWatchingLayout.setVisibility(View.GONE);
             }
         });
 
@@ -269,73 +269,60 @@ public class HomeFragment extends Fragment {
 
         //home content live data
         homeContentViewModel = new ViewModelProvider(getActivity()).get(HomeContentViewModel.class);
-        homeContentViewModel.getAllContents().observe(getActivity(), new Observer<HomeContent>() {
-            @Override
-            public void onChanged(HomeContent data) {
-                if (data != null) {
-                    //populate screen with data
-                    homeContent = data;
-                    populateViews();
-                    Log.e("HomeContentDatabase", "onChanged");
-                }
+        homeContentViewModel.getAllContents().observe(getActivity(), data -> {
+            if (data != null) {
+                //populate screen with data
+                homeContent = data;
+                populateViews();
+                Log.e("HomeContentDatabase", "onChanged");
             }
         });
 
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                recyclerViewMovie.removeAllViews();
-                recyclerViewTv.removeAllViews();
-                recyclerViewTvSeries.removeAllViews();
-                recyclerViewGenre.removeAllViews();
-                genreRv.removeAllViews();
-                countryRv.removeAllViews();
-                popularStarsRv.removeAllViews();
-                genreList.clear();
-                countryList.clear();
-                listMovie.clear();
-                listSeries.clear();
-                listSlider.clear();
-                listTv.clear();
-                listGenre.clear();
-                popularStarsList.clear();
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            recyclerViewMovie.removeAllViews();
+            recyclerViewTv.removeAllViews();
+            recyclerViewTvSeries.removeAllViews();
+            recyclerViewGenre.removeAllViews();
+            genreRv.removeAllViews();
+            countryRv.removeAllViews();
+            popularStarsRv.removeAllViews();
+            genreList.clear();
+            countryList.clear();
+            listMovie.clear();
+            listSeries.clear();
+            listSlider.clear();
+            listTv.clear();
+            listGenre.clear();
+            popularStarsList.clear();
 
-                if (new NetworkInst(getContext()).isNetworkAvailable()) {
-                    getHomeContentDataFromServer();
-                } else {
-                    tvNoItem.setText(getString(R.string.no_internet));
-                    shimmerFrameLayout.stopShimmer();
-                    shimmerFrameLayout.setVisibility(View.GONE);
-                    swipeRefreshLayout.setRefreshing(false);
-                    coordinatorLayout.setVisibility(View.VISIBLE);
-                    scrollView.setVisibility(View.GONE);
-                }
-            }
-        });
-
-
-        scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if (scrollY < oldScrollY) { // up
-                    animateSearchBar(false);
-                }
-                if (scrollY > oldScrollY) { // down
-                    animateSearchBar(true);
-                }
-            }
-        });
-
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
+            if (new NetworkInst(getContext()).isNetworkAvailable()) {
                 getHomeContentDataFromServer();
+            } else {
+                tvNoItem.setText(getString(R.string.no_internet));
+                shimmerFrameLayout.stopShimmer();
+                shimmerFrameLayout.setVisibility(View.GONE);
+                swipeRefreshLayout.setRefreshing(false);
+                coordinatorLayout.setVisibility(View.VISIBLE);
+                scrollView.setVisibility(View.GONE);
             }
-        }, 1000);
+        });
+
+
+        scrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
+            if (scrollY < oldScrollY) { // up
+                animateSearchBar(false);
+            }
+            if (scrollY > oldScrollY) { // down
+                animateSearchBar(true);
+            }
+        });
+
+        new Handler().postDelayed(this::getHomeContentDataFromServer, 1000);
 
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void populateViews() {
         if (homeContent == null) {
             //tvNoItem.setText(getString(R.string.no_internet));
@@ -507,10 +494,11 @@ public class HomeFragment extends Fragment {
         String userId = PreferenceUtils.getUserId(requireActivity());
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         HomeContentApi api = retrofit.create(HomeContentApi.class);
-        Call<HomeContent> call = api.getHomeContent(AppConfig.API_KEY, BuildConfig.VERSION_CODE,userId);
+        Call<HomeContent> call = api.getHomeContent(AppConfig.API_KEY, BuildConfig.VERSION_CODE,userId,
+                getDeviceId(requireContext()));
         call.enqueue(new Callback<HomeContent>() {
             @Override
-            public void onResponse(Call<HomeContent> call, retrofit2.Response<HomeContent> response) {
+            public void onResponse(@NonNull Call<HomeContent> call, @NonNull retrofit2.Response<HomeContent> response) {
                 if (response.code() == 200) {
 
                     //insert data to room database
@@ -526,7 +514,18 @@ public class HomeFragment extends Fragment {
                     coordinatorLayout.setVisibility(View.GONE);
                     scrollView.setVisibility(View.VISIBLE);
 
-                } else {
+                } else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    requireActivity());
+                            requireActivity().finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(requireActivity(),
+                                e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }else {
                     swipeRefreshLayout.setRefreshing(false);
                     shimmerFrameLayout.stopShimmer();
                     shimmerFrameLayout.setVisibility(View.GONE);
@@ -537,7 +536,7 @@ public class HomeFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<HomeContent> call, Throwable t) {
+            public void onFailure(@NonNull Call<HomeContent> call, @NonNull Throwable t) {
                 //              swipeRefreshLayout.setRefreshing(false);
 //                shimmerFrameLayout.stopShimmer();
 //                shimmerFrameLayout.setVisibility(View.GONE);
@@ -555,59 +554,36 @@ public class HomeFragment extends Fragment {
 
     private void btnClick() {
 
-        btnMoreMovie.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), ItemMovieActivity.class);
-                intent.putExtra("title", "Movies");
-                getActivity().startActivity(intent);
-            }
+        btnMoreMovie.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), ItemMovieActivity.class);
+            intent.putExtra("title", "Movies");
+            getActivity().startActivity(intent);
         });
-        btnMoreTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), ItemTVActivity.class);
-                intent.putExtra("title", "Live TV");
-                getActivity().startActivity(intent);
-            }
+        btnMoreTv.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), ItemTVActivity.class);
+            intent.putExtra("title", "Live TV");
+            getActivity().startActivity(intent);
         });
 
-        btnMoreSeries.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), ItemSeriesActivity.class);
-                intent.putExtra("title", "TV Series");
-                getActivity().startActivity(intent);
-            }
+        btnMoreSeries.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), ItemSeriesActivity.class);
+            intent.putExtra("title", "TV Series");
+            getActivity().startActivity(intent);
         });
 
-        btnContinueWatchingClear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                continueWatchingViewModel.deleteAllContent();
-            }
-        });
+        btnContinueWatchingClear.setOnClickListener(v -> continueWatchingViewModel.deleteAllContent());
 
     }
+
 
     @Override
     public void onStart() {
         super.onStart();
 
-        menuIv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                activity.openDrawer();
-            }
-        });
+        menuIv.setOnClickListener(view -> activity.openDrawer());
 
 
-        searchIv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                activity.goToSearchActivity();
-            }
-        });
+        searchIv.setOnClickListener(view -> activity.goToSearchActivity());
 
         shimmerFrameLayout.startShimmer();
     }

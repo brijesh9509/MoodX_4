@@ -1,10 +1,14 @@
 package com.moodX.app.nav_fragments;
 
+import static com.moodX.app.utils.Constants.getDeviceId;
+
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -16,19 +20,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.moodX.app.BuildConfig;
+import com.moodX.app.utils.ApiResources;
 import com.moodX.app.utils.PreferenceUtils;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.moodX.app.AppConfig;
 import com.moodX.app.MainActivity;
-import com.moodX.app.BuildConfig;
 import com.moodX.app.R;
 import com.moodX.app.adapters.CountryAdapter;
 import com.moodX.app.models.CommonModels;
 import com.moodX.app.models.home_content.AllCountry;
 import com.moodX.app.network.RetrofitClient;
 import com.moodX.app.network.apis.CountryApi;
-import com.moodX.app.utils.ApiResources;
 import com.moodX.app.utils.NetworkInst;
 import com.moodX.app.utils.SpacingItemDecoration;
 import com.moodX.app.utils.ToastMsg;
@@ -44,9 +49,8 @@ import retrofit2.Retrofit;
 public class CountryFragment extends Fragment {
 
     ShimmerFrameLayout shimmerFrameLayout;
-    private ApiResources apiResources;
     private RecyclerView recyclerView;
-    private List<CommonModels> list = new ArrayList<>();
+    private final List<CommonModels> list = new ArrayList<>();
     private CountryAdapter mAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private CoordinatorLayout coordinatorLayout;
@@ -61,9 +65,7 @@ public class CountryFragment extends Fragment {
     private int scrolledDistance = 0;
     private boolean controlsVisible = true;
 
-    private CardView searchBar;
     private ImageView menuIv, searchIv;
-    private TextView pageTitle;
 
     @Nullable
     @Override
@@ -72,6 +74,7 @@ public class CountryFragment extends Fragment {
         return inflater.inflate(R.layout.layout_country,container,false);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -82,9 +85,9 @@ public class CountryFragment extends Fragment {
         shimmerFrameLayout=view.findViewById(R.id.shimmer_view_container);
         tvNoItem=view.findViewById(R.id.tv_noitem);
         searchRootLayout=view.findViewById(R.id.search_root_layout);
-        searchBar           = view.findViewById(R.id.search_bar);
+        CardView searchBar = view.findViewById(R.id.search_bar);
         menuIv              = view.findViewById(R.id.bt_menu);
-        pageTitle           = view.findViewById(R.id.page_title_tv);
+        TextView pageTitle = view.findViewById(R.id.page_title_tv);
         searchIv            = view.findViewById(R.id.search_iv);
 
         pageTitle.setText(getContext().getResources().getString(R.string.country));
@@ -92,8 +95,8 @@ public class CountryFragment extends Fragment {
         if (activity.isDark) {
             pageTitle.setTextColor(activity.getResources().getColor(R.color.white));
             searchBar.setCardBackgroundColor(activity.getResources().getColor(R.color.black_window_light));
-            menuIv.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_menu));
-            searchIv.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_search_white));
+            menuIv.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.ic_menu));
+            searchIv.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.ic_search_white));
         }
 
         recyclerView=view.findViewById(R.id.recyclerView);
@@ -140,57 +143,46 @@ public class CountryFragment extends Fragment {
             coordinatorLayout.setVisibility(View.VISIBLE);
         }
 
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
+        swipeRefreshLayout.setOnRefreshListener(() -> {
 
-                coordinatorLayout.setVisibility(View.GONE);
+            coordinatorLayout.setVisibility(View.GONE);
 
-                recyclerView.removeAllViews();
-                list.clear();
-                mAdapter.notifyDataSetChanged();
+            recyclerView.removeAllViews();
+            list.clear();
+            mAdapter.notifyDataSetChanged();
 
-                if (new NetworkInst(getContext()).isNetworkAvailable()){
-                    getAllCountry();
-                }else {
-                    tvNoItem.setText(getString(R.string.no_internet));
-                    shimmerFrameLayout.stopShimmer();
-                    shimmerFrameLayout.setVisibility(View.GONE);
-                    swipeRefreshLayout.setRefreshing(false);
-                    coordinatorLayout.setVisibility(View.VISIBLE);
-                }
+            if (new NetworkInst(getContext()).isNetworkAvailable()){
+                getAllCountry();
+            }else {
+                tvNoItem.setText(getString(R.string.no_internet));
+                shimmerFrameLayout.stopShimmer();
+                shimmerFrameLayout.setVisibility(View.GONE);
+                swipeRefreshLayout.setRefreshing(false);
+                coordinatorLayout.setVisibility(View.VISIBLE);
             }
         });
-
     }
 
     @Override
     public void onStart() {
         super.onStart();
 
-        menuIv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                activity.openDrawer();
-            }
-        });
-        searchIv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                activity.goToSearchActivity();
-            }
-        });
+        menuIv.setOnClickListener(view -> activity.openDrawer());
+        searchIv.setOnClickListener(view -> activity.goToSearchActivity());
 
     }
+
 
     private void getAllCountry(){
         String userId = PreferenceUtils.getUserId(requireActivity());
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         CountryApi api = retrofit.create(CountryApi.class);
-        Call<List<AllCountry>> call = api.getAllCountry(AppConfig.API_KEY, BuildConfig.VERSION_CODE,userId);
+        Call<List<AllCountry>> call = api.getAllCountry(AppConfig.API_KEY,
+                BuildConfig.VERSION_CODE,userId,getDeviceId(requireContext()));
         call.enqueue(new Callback<List<AllCountry>>() {
+            @SuppressLint("NotifyDataSetChanged")
             @Override
-            public void onResponse(Call<List<AllCountry>> call, retrofit2.Response<List<AllCountry>> response) {
+            public void onResponse(@NonNull Call<List<AllCountry>> call, @NonNull retrofit2.Response<List<AllCountry>> response) {
                 if (response.code() == 200){
                     shimmerFrameLayout.stopShimmer();
                     shimmerFrameLayout.setVisibility(View.GONE);
@@ -211,6 +203,17 @@ public class CountryFragment extends Fragment {
                         list.add(models);
                     }
                     mAdapter.notifyDataSetChanged();
+                }else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    requireActivity());
+                            requireActivity().finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(requireActivity(),
+                                e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 }else {
                     swipeRefreshLayout.setRefreshing(false);
                     shimmerFrameLayout.stopShimmer();
@@ -221,7 +224,7 @@ public class CountryFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<AllCountry>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<AllCountry>> call, @NonNull Throwable t) {
                 swipeRefreshLayout.setRefreshing(false);
                 shimmerFrameLayout.stopShimmer();
                 shimmerFrameLayout.setVisibility(View.GONE);

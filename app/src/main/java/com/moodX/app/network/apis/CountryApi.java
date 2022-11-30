@@ -13,7 +13,8 @@ public interface CountryApi {
 
     @GET("all_country")
     Call<List<AllCountry>> getAllCountry(@Header("API-KEY") String apiKey,
-                                         @Query("version") Integer vId,
-                                         @Query("user_id") String userID);
+                                         @Query("version") Integer id,
+                                         @Query("user_id") String userId,
+                                         @Query("udid") String uDID);
 
 }

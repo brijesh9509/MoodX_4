@@ -18,6 +18,8 @@ public interface PaymentApi {
                                    @Field("paid_amount") String paidAmount,
                                    @Field("payment_info") String paymentInfo,
                                    @Field("payment_method") String paymentMethod,
-                                   @Field("version") Integer vId);
+                                   @Field("version") Integer vId,
+                                   @Field("udid") String uDID);
+
 
 }

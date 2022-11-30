@@ -37,6 +37,7 @@ import com.moodX.app.network.apis.SetPasswordApi;
 import com.moodX.app.network.apis.UserDataApi;
 import com.moodX.app.network.model.ResponseStatus;
 import com.moodX.app.network.model.User;
+import com.moodX.app.utils.ApiResources;
 import com.moodX.app.utils.Constants;
 import com.moodX.app.utils.FileUtil;
 import com.moodX.app.utils.PreferenceUtils;
@@ -46,6 +47,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.moodX.app.R;
 
 import java.io.File;
 
@@ -61,7 +63,7 @@ import retrofit2.Retrofit;
 public class ProfileActivity extends AppCompatActivity {
     private static final String TAG = ProfileActivity.class.getSimpleName();
     private TextInputEditText etName, etEmail, etPhone, etPass, etCurrentPassword;
-    ;
+
     private AutoCompleteTextView genderSpinner;
     private Button btnUpdate, deactivateBt, setPasswordBtn;
     private ProgressDialog dialog;
@@ -218,7 +220,6 @@ public class ProfileActivity extends AppCompatActivity {
         final Button okBt = view.findViewById(R.id.ok_bt);
         Button cancelBt = view.findViewById(R.id.cancel_bt);
         ImageView closeIv = view.findViewById(R.id.close_iv);
-        final ProgressBar progressBar = view.findViewById(R.id.progress_bar);
         LinearLayout topLayout = view.findViewById(R.id.top_layout);
         if (isDark) {
             topLayout.setBackgroundColor(getResources().getColor(R.color.overlay_dark_30));
@@ -263,10 +264,11 @@ public class ProfileActivity extends AppCompatActivity {
         String userId = PreferenceUtils.getUserId(this);
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         DeactivateAccountApi api = retrofit.create(DeactivateAccountApi.class);
-        Call<ResponseStatus> call = api.deactivateAccount(id, pass, reason, AppConfig.API_KEY, BuildConfig.VERSION_CODE, userId);
+        Call<ResponseStatus> call = api.deactivateAccount(id, pass, reason, AppConfig.API_KEY,
+                BuildConfig.VERSION_CODE, userId, Constants.getDeviceId(this));
         call.enqueue(new Callback<ResponseStatus>() {
             @Override
-            public void onResponse(Call<ResponseStatus> call, retrofit2.Response<ResponseStatus> response) {
+            public void onResponse(Call<ResponseStatus> call, Response<ResponseStatus> response) {
                 if (response.code() == 200) {
                     ResponseStatus resStatus = response.body();
                     if (resStatus.getStatus().equalsIgnoreCase("success")) {
@@ -343,7 +345,8 @@ public class ProfileActivity extends AppCompatActivity {
         String userId = PreferenceUtils.getUserId(this);
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         UserDataApi api = retrofit.create(UserDataApi.class);
-        Call<User> call = api.getUserData(AppConfig.API_KEY, id, BuildConfig.VERSION_CODE,userId);
+        Call<User> call = api.getUserData(AppConfig.API_KEY, id, BuildConfig.VERSION_CODE,userId,
+                Constants.getDeviceId(this));
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
@@ -378,6 +381,17 @@ public class ProfileActivity extends AppCompatActivity {
                             etPass.setVisibility(View.GONE);
                             setPasswordBtn.setVisibility(View.VISIBLE);
                         }
+                    }
+                }else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    ProfileActivity.this);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(ProfileActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -423,17 +437,29 @@ public class ProfileActivity extends AppCompatActivity {
 
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         ProfileApi api = retrofit.create(ProfileApi.class);
-        Call<ResponseStatus> call = api.updateProfile(AppConfig.API_KEY, id, name, email, phone, password, currentPass,
-                multipartBody, gender,versionCode ,userId);
+        Call<ResponseStatus> call = api.updateProfile(AppConfig.API_KEY, id, name, email,
+                phone, password, currentPass,
+                multipartBody, gender,versionCode ,userId, Constants.getDeviceId(this));
         call.enqueue(new Callback<ResponseStatus>() {
             @Override
-            public void onResponse(Call<ResponseStatus> call, retrofit2.Response<ResponseStatus> response) {
+            public void onResponse(Call<ResponseStatus> call, Response<ResponseStatus> response) {
                 if (response.code() == 200) {
                     if (response.body().getStatus().equalsIgnoreCase("success")) {
                         new ToastMsg(ProfileActivity.this).toastIconSuccess(response.body().getData());
                         getProfile();
                     } else {
                         new ToastMsg(ProfileActivity.this).toastIconError(response.body().getData());
+                    }
+                }else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    ProfileActivity.this);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(ProfileActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 } else {
                     new ToastMsg(ProfileActivity.this).toastIconError(getString(R.string.something_went_wrong));
@@ -519,7 +545,8 @@ public class ProfileActivity extends AppCompatActivity {
 
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SetPasswordApi api = retrofit.create(SetPasswordApi.class);
-        Call<ResponseStatus> call = api.setPassword(AppConfig.API_KEY, id, password, uid, BuildConfig.VERSION_CODE);
+        Call<ResponseStatus> call = api.setPassword(AppConfig.API_KEY, id, password, uid,
+                BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
         call.enqueue(new Callback<ResponseStatus>() {
             @Override
             public void onResponse(Call<ResponseStatus> call, Response<ResponseStatus> response) {
@@ -542,7 +569,18 @@ public class ProfileActivity extends AppCompatActivity {
                     } else {
                         new ToastMsg(ProfileActivity.this).toastIconError(getString(R.string.something_went_text));
                     }
-                } else {
+                } else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    ProfileActivity.this);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(ProfileActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }else {
                     new ToastMsg(ProfileActivity.this).toastIconError(getString(R.string.something_went_text));
                 }
 

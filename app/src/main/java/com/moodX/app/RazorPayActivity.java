@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.moodX.app.database.DatabaseHelper;
@@ -28,6 +27,7 @@ import com.razorpay.PaymentResultListener;
 
 import org.json.JSONObject;
 
+import com.moodX.app.utils.Constants;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -105,13 +105,24 @@ public class RazorPayActivity extends AppCompatActivity implements PaymentResult
         Call<ResponseBody> call = paymentApi.savePayment(AppConfig.API_KEY, aPackage.getPlanId(),
                 databaseHelper.getUserData().getUserId(),
                 amountPaidInRupee,
-                token, "RazorPay", BuildConfig.VERSION_CODE);
+                token, "RazorPay", BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.code() == 200) {
                     updateActiveStatus();
 
+                } else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    RazorPayActivity.this);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(RazorPayActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 } else {
                     new ToastMsg(RazorPayActivity.this).toastIconError(getString(R.string.something_went_wrong));
                     finish();
@@ -135,7 +146,9 @@ public class RazorPayActivity extends AppCompatActivity implements PaymentResult
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SubscriptionApi subscriptionApi = retrofit.create(SubscriptionApi.class);
 
-        Call<ActiveStatus> call = subscriptionApi.getActiveStatus(AppConfig.API_KEY, PreferenceUtils.getUserId(RazorPayActivity.this), BuildConfig.VERSION_CODE);
+        Call<ActiveStatus> call = subscriptionApi.getActiveStatus(AppConfig.API_KEY,
+                PreferenceUtils.getUserId(this),
+                BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
         call.enqueue(new Callback<ActiveStatus>() {
             @Override
             public void onResponse(Call<ActiveStatus> call, Response<ActiveStatus> response) {
@@ -149,11 +162,22 @@ public class RazorPayActivity extends AppCompatActivity implements PaymentResult
                     Intent intent = new Intent(RazorPayActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
+                }else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    RazorPayActivity.this);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(RazorPayActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 }
             }
 
             @Override
-            public void onFailure(@NonNull Call<ActiveStatus> call, @NonNull Throwable t) {
+            public void onFailure(Call<ActiveStatus> call, Throwable t) {
                 t.printStackTrace();
                 new ToastMsg(RazorPayActivity.this).toastIconError(getString(R.string.something_went_wrong));
                 finish();

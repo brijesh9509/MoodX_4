@@ -27,7 +27,7 @@ public class HelperUtils {
         this.activity = activity;
     }
 
-    public boolean isVpnConnectionAvailable(){
+    public boolean isVpnConnectionAvailable() {
         /*String iface = "";
         try {
             for (NetworkInterface networkInst : Collections.list(NetworkInterface.getNetworkInterfaces())){
@@ -37,7 +37,6 @@ public class HelperUtils {
                     return true;
                 }
             }
-
 
         }catch (SocketException e){
             e.printStackTrace();
@@ -75,21 +74,21 @@ public class HelperUtils {
         return restrictPackageInfo;
     }
 
-    public boolean isForeground( String myPackage){
+    public boolean isForeground(String myPackage) {
         ActivityManager manager = (ActivityManager) activity.getSystemService(ACTIVITY_SERVICE);
-        List< ActivityManager.RunningTaskInfo > runningTaskInfo = manager.getRunningTasks(1);
+        List<ActivityManager.RunningTaskInfo> runningTaskInfo = manager.getRunningTasks(1);
 
         ComponentName componentInfo = runningTaskInfo.get(0).topActivity;
         Log.e("123456", "Background Apps: " + componentInfo.getPackageName());
         return componentInfo != null && componentInfo.getPackageName().equals(myPackage);
     }
 
-    public boolean isAppRunning(Context context, String packageName){
+    public boolean isAppRunning(Context context, String packageName) {
         ActivityManager activityManager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
         List<ActivityManager.RunningAppProcessInfo> processInfos = activityManager.getRunningAppProcesses();
-        if (processInfos != null){
-            for (ActivityManager.RunningAppProcessInfo processInfo : processInfos){
-                if (processInfo.processName.equals(packageName)){
+        if (processInfos != null) {
+            for (ActivityManager.RunningAppProcessInfo processInfo : processInfos) {
+                if (processInfo.processName.equals(packageName)) {
                     return true;
                 }
             }

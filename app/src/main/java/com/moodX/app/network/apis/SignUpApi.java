@@ -16,6 +16,7 @@ public interface SignUpApi {
                       @Field("email") String email,
                       @Field("password") String password,
                       @Field("name") String name,
-                      @Field("version") Integer vId);
+                      @Field("version") Integer vId,
+                      @Field("udid") String uDID);
 
 }

@@ -1,8 +1,5 @@
 package com.moodX.app;
 
-import static com.moodX.app.AppConfig.TELEGRAM_URL;
-import static com.moodX.app.AppConfig.WP_URL;
-
 import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
@@ -39,6 +36,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.moodX.app.R;
+
 import com.moodX.app.adapters.NavigationAdapter;
 import com.moodX.app.database.DatabaseHelper;
 import com.moodX.app.fragments.LiveTvFragment;
@@ -55,7 +54,6 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.moodX.app.R;
 import com.moodX.app.utils.Constants;
 import com.moodX.app.utils.HelperUtils;
 import com.moodX.app.utils.PreferenceUtils;
@@ -425,8 +423,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         webView.loadUrl(AppConfig.TERMS_URL);
 
         if (isDark) {
-            declineBt.setBackground(ContextCompat.getDrawable(this, R.drawable.btn_rounded_grey_outline));
-            acceptBt.setBackground(ContextCompat.getDrawable(this, R.drawable.btn_rounded_dark));
+            declineBt.setBackground(ContextCompat.getDrawable(this,R.drawable.btn_rounded_grey_outline));
+            acceptBt.setBackground(ContextCompat.getDrawable(this,R.drawable.btn_rounded_dark));
         }
 
         dialog.findViewById(R.id.bt_close).setOnClickListener(v -> {
@@ -453,7 +451,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     // ------------------ checking storage permission ------------
     private boolean checkStoragePermission() {
-        int result = ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int result = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         if (result == PackageManager.PERMISSION_GRANTED) {
             return true;
         } else {
@@ -516,13 +514,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void supportLinkClick() {
         imgWPSupport.setOnClickListener(v -> {
             Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setData(Uri.parse(WP_URL));
+            i.setData(Uri.parse(AppConfig.WP_URL));
             startActivity(i);
         });
 
         imgTelegramSupport.setOnClickListener(v -> {
             Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setData(Uri.parse(TELEGRAM_URL));
+            i.setData(Uri.parse(AppConfig.TELEGRAM_URL));
             startActivity(i);
         });
     }

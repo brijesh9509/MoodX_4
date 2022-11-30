@@ -16,5 +16,6 @@ public interface MovieRequestApi {
                                      @Field("movie_name") String movieName,
                                      @Field("message") String message,
                                      @Field("version") Integer vId,
-                                     @Field("user_id") String userID);
+                                     @Field("user_id") String userId,
+                                     @Field("udid") String uDID);
 }

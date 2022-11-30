@@ -15,14 +15,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.moodX.app.R;
 
 import com.moodX.app.network.RetrofitClient;
 import com.moodX.app.network.apis.PassResetApi;
 import com.moodX.app.network.model.PasswordReset;
+import com.moodX.app.utils.ApiResources;
 import com.moodX.app.utils.RtlUtils;
 import com.moodX.app.utils.ToastMsg;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
+import com.moodX.app.utils.Constants;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -68,6 +73,9 @@ public class PassResetActivity extends AppCompatActivity {
         if (isDark) {
             backgroundView.setBackgroundColor(getResources().getColor(R.color.nav_head_bg));
             btnReset.setBackground(ContextCompat.getDrawable(this, R.drawable.btn_rounded_dark));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.black_window_light));
+        } else {
+            toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         }
 
         dialog = new ProgressDialog(this);
@@ -88,7 +96,8 @@ public class PassResetActivity extends AppCompatActivity {
         dialog.show();
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         PassResetApi passResetApi = retrofit.create(PassResetApi.class);
-        Call<PasswordReset> call = passResetApi.resetPassword(AppConfig.API_KEY, email, BuildConfig.VERSION_CODE);
+        Call<PasswordReset> call = passResetApi.resetPassword(AppConfig.API_KEY, email,
+                BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
         call.enqueue(new Callback<PasswordReset>() {
             @Override
             public void onResponse(@NonNull Call<PasswordReset> call, @NonNull Response<PasswordReset> response) {
@@ -100,6 +109,17 @@ public class PassResetActivity extends AppCompatActivity {
                     } else {
                         new ToastMsg(PassResetActivity.this).toastIconError(pr.getMessage());
                         dialog.cancel();
+                    }
+                }else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    PassResetActivity.this);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(PassResetActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -128,6 +148,5 @@ public class PassResetActivity extends AppCompatActivity {
         java.util.regex.Matcher m = p.matcher(email);
         return m.matches();
     }
-
 
 }

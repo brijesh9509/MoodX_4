@@ -14,6 +14,7 @@ public interface PassResetApi {
     @POST("password_reset")
     Call<PasswordReset> resetPassword(@Header("API-KEY") String apiKey,
                                       @Field("email") String email,
-                                      @Field("version") Integer vId);
+                                      @Field("version") Integer vId,
+                                      @Field("udid") String uDID);
 
 }

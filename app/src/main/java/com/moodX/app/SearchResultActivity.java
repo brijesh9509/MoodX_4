@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.moodX.app.adapters.LiveTvAdapter2;
 import com.moodX.app.adapters.SearchAdapter;
@@ -37,6 +38,7 @@ import com.moodX.app.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.moodX.app.utils.Constants;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -160,7 +162,7 @@ public class SearchResultActivity extends AppCompatActivity implements SearchAda
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SearchApi searchApi = retrofit.create(SearchApi.class);
         Call<SearchModel> call = searchApi.getSearchData(AppConfig.API_KEY, query, type, range_to, range_from,
-                tvCategoryId, genreId, countryId, BuildConfig.VERSION_CODE, userId);
+                tvCategoryId, genreId, countryId, BuildConfig.VERSION_CODE, userId, Constants.getDeviceId(this));
         call.enqueue(new Callback<SearchModel>() {
             @Override
             public void onResponse(Call<SearchModel> call, retrofit2.Response<SearchModel> response) {
@@ -199,7 +201,18 @@ public class SearchResultActivity extends AppCompatActivity implements SearchAda
                     }
 
 
-                } else {
+                } else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    SearchResultActivity.this);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(SearchResultActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }  else {
                     new ToastMsg(SearchResultActivity.this).toastIconSuccess("Something went wrong.");
                     coordinatorLayout.setVisibility(View.VISIBLE);
                 }

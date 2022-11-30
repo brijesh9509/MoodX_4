@@ -7,7 +7,6 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
-import com.moodX.app.R;
 
 public class WebViewActivity extends AppCompatActivity {
 

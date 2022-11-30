@@ -19,7 +19,8 @@ public interface CommentApi {
     Call<List<GetCommentsModel>> getAllComments(@Header("API-KEY") String apiKey,
                                                 @Query("id") String id,
                                                 @Query("version") Integer vId,
-                                                @Query("user_id") String userID);
+                                                @Query("user_id") String userId,
+                                                @Query("udid") String uDID);
 
     @FormUrlEncoded
     @POST("comments")
@@ -27,7 +28,8 @@ public interface CommentApi {
                                        @Field("videos_id") String videoId,
                                        @Field("user_id") String userId,
                                        @Field("comment") String comment,
-                                       @Field("version") Integer vId);
+                                       @Field("version") Integer vId,
+                                       @Field("udid") String uDID);
 
     @FormUrlEncoded
     @POST("add_replay")
@@ -36,12 +38,14 @@ public interface CommentApi {
                                      @Field("user_id") String userId,
                                      @Field("comment") String comment,
                                      @Field("comments_id") String commentId,
-                                     @Field("version") Integer vId);
+                                     @Field("version") Integer vId,
+                                     @Field("udid") String uDID);
 
     @GET("all_replay")
     Call<List<GetCommentsModel>> getAllReply(@Header("API-KEY") String apiKey,
                                              @Query("id") String id,
                                              @Query("version") Integer vId,
-                                             @Query("user_id") String userID);
+                                             @Query("user_id") String userId,
+                                             @Query("udid") String uDID);
 
 }

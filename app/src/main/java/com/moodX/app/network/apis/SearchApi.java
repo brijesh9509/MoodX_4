@@ -19,5 +19,6 @@ public interface SearchApi {
                                     @Query("genre_id") int genreId,
                                     @Query("country_id") int countryId,
                                     @Query("version") Integer vId,
-                                    @Query("user_id") String userID);
+                                    @Query("user_id") String userId,
+                                    @Query("udid") String uDID);
 }

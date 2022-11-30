@@ -17,7 +17,8 @@ public interface FirebaseAuthApi {
     Call<User> getPhoneAuthStatus(@Header("API-KEY") String apiKey,
                                   @Field("uid") String uid,
                                   @Field("phone") String phoneNo,
-                                  @Field("version") Integer vId);
+                                  @Field("version") Integer vId,
+                                  @Field("udid") String uDID);
 
     @FormUrlEncoded
     @POST("firebase_auth")
@@ -27,7 +28,8 @@ public interface FirebaseAuthApi {
                                    @Field("name") String name,
                                    @Field("image_url") Uri image,
                                    @Field("phone") String phone,
-                                   @Field("version") Integer vId);
+                                   @Field("version") Integer vId,
+                                   @Field("udid") String uDID);
 
 
     @FormUrlEncoded
@@ -37,6 +39,7 @@ public interface FirebaseAuthApi {
                                      @Field("name") String name,
                                      @Field("email") String email,
                                      @Field("image_url") Uri photoUrl,
-                                     @Field("version") Integer vId);
+                                     @Field("version") Integer vId,
+                                     @Field("udid") String uDID);
 
 }

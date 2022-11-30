@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,11 +16,14 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.moodX.app.R;
+
 import com.moodX.app.adapters.CommonGridAdapter;
 import com.moodX.app.models.CommonModels;
 import com.moodX.app.models.home_content.Video;
 import com.moodX.app.network.RetrofitClient;
 import com.moodX.app.network.apis.TvSeriesApi;
+import com.moodX.app.utils.ApiResources;
 import com.moodX.app.utils.HelperUtils;
 import com.moodX.app.utils.NetworkInst;
 import com.moodX.app.utils.PreferenceUtils;
@@ -32,6 +36,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.moodX.app.utils.Constants;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -41,7 +46,7 @@ public class ItemSeriesActivity extends AppCompatActivity {
     private ShimmerFrameLayout shimmerFrameLayout;
     private RecyclerView recyclerView;
     private CommonGridAdapter mAdapter;
-    private List<CommonModels> list = new ArrayList<>();
+    private final List<CommonModels> list = new ArrayList<>();
 
     private boolean isLoading = false;
     private ProgressBar progressBar;
@@ -182,15 +187,14 @@ public class ItemSeriesActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
-
 
     private void getTvSeriesData(int pageNum) {
         String userId = PreferenceUtils.getUserId(this);
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         TvSeriesApi api = retrofit.create(TvSeriesApi.class);
-        Call<List<Video>> call = api.getTvSeries(AppConfig.API_KEY, pageNum, BuildConfig.VERSION_CODE,userId);
+        Call<List<Video>> call = api.getTvSeries(AppConfig.API_KEY, pageNum,
+                BuildConfig.VERSION_CODE,userId, Constants.getDeviceId(this));
         call.enqueue(new Callback<List<Video>>() {
             @Override
             public void onResponse(Call<List<Video>> call, retrofit2.Response<List<Video>> response) {
@@ -220,7 +224,18 @@ public class ItemSeriesActivity extends AppCompatActivity {
                     }
                     mAdapter.notifyDataSetChanged();
 
-                } else {
+                } else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    ItemSeriesActivity.this);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(ItemSeriesActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }else {
                     isLoading = false;
                     progressBar.setVisibility(View.GONE);
                     shimmerFrameLayout.stopShimmer();

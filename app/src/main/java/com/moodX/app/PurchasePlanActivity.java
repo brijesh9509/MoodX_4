@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -55,6 +56,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.moodX.app.utils.Constants;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -150,19 +152,34 @@ public class PurchasePlanActivity extends AppCompatActivity
         String userId = PreferenceUtils.getUserId(this);
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         final PackageApi packageApi = retrofit.create(PackageApi.class);
-        Call<AllPackage> call = packageApi.getAllPackage(AppConfig.API_KEY, BuildConfig.VERSION_CODE,userId);
+        Call<AllPackage> call = packageApi.getAllPackage(AppConfig.API_KEY,
+                BuildConfig.VERSION_CODE,userId, Constants.getDeviceId(this));
         call.enqueue(new Callback<AllPackage>() {
             @Override
             public void onResponse(@NonNull Call<AllPackage> call, @NonNull Response<AllPackage> response) {
                 AllPackage allPackage = response.body();
-                if (allPackage != null) {
-                    if (allPackage.getPackage().size() > 0) {
-                        noTv.setVisibility(View.GONE);
-                        PackageAdapter adapter = new PackageAdapter(PurchasePlanActivity.this, allPackage.getPackage(), currency);
-                        adapter.setItemClickListener(PurchasePlanActivity.this);
-                        packageRv.setAdapter(adapter);
-                    } else {
-                        noTv.setVisibility(View.VISIBLE);
+                if (response.code() == 200) {
+                    if (allPackage != null) {
+                        if (allPackage.getPackage().size() > 0) {
+                            noTv.setVisibility(View.GONE);
+                            PackageAdapter adapter = new PackageAdapter(
+                                    PurchasePlanActivity.this, allPackage.getPackage(), currency);
+                            adapter.setItemClickListener(PurchasePlanActivity.this);
+                            packageRv.setAdapter(adapter);
+                        } else {
+                            noTv.setVisibility(View.VISIBLE);
+                        }
+                    }
+                } else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    PurchasePlanActivity.this);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(PurchasePlanActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
                 progressBar.setVisibility(View.GONE);
@@ -219,7 +236,7 @@ public class PurchasePlanActivity extends AppCompatActivity
         PaymentApi paymentApi = retrofit.create(PaymentApi.class);
         Call<ResponseBody> call = paymentApi.savePayment(AppConfig.API_KEY,
                 packageItem.getPlanId(), userId, packageItem.getPrice(),
-                payId, paymentMethod, BuildConfig.VERSION_CODE);
+                payId, paymentMethod, BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -228,7 +245,18 @@ public class PurchasePlanActivity extends AppCompatActivity
 
                     updateActiveStatus(userId);
 
-                } else {
+                } else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    PurchasePlanActivity.this);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(PurchasePlanActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }else {
                     new ToastMsg(PurchasePlanActivity.this).toastIconError(getString(R.string.something_went_wrong));
                 }
             }
@@ -247,13 +275,25 @@ public class PurchasePlanActivity extends AppCompatActivity
     private void updateActiveStatus(String userId) {
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SubscriptionApi subscriptionApi = retrofit.create(SubscriptionApi.class);
-        Call<ActiveStatus> call = subscriptionApi.getActiveStatus(AppConfig.API_KEY, userId, BuildConfig.VERSION_CODE);
+        Call<ActiveStatus> call = subscriptionApi.getActiveStatus(AppConfig.API_KEY, userId,
+                BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
         call.enqueue(new Callback<ActiveStatus>() {
             @Override
             public void onResponse(@NonNull Call<ActiveStatus> call, @NonNull Response<ActiveStatus> response) {
                 if (response.code() == 200) {
                     ActiveStatus activiStatus = response.body();
                     saveActiveStatus(activiStatus);
+                }else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    PurchasePlanActivity.this);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(PurchasePlanActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 } else {
                     new ToastMsg(PurchasePlanActivity.this).toastIconError("Payment info not save to the own server. something went wrong.");
                 }

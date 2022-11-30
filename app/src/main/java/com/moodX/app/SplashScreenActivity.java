@@ -79,8 +79,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splashscreen);
 
         db = new DatabaseHelper(SplashScreenActivity.this);
@@ -124,14 +123,17 @@ public class SplashScreenActivity extends AppCompatActivity {
             }
         };
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkStoragePermission()) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            getConfigurationData();
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (checkStoragePermission()) {
+                    getConfigurationData();
+                }
+            } else {
                 getConfigurationData();
             }
-        } else {
-            getConfigurationData();
         }
-
     }
 
     public boolean isLoginMandatory() {
@@ -142,8 +144,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         if (!vpnStatus) {
             Retrofit retrofit = RetrofitClient.getRetrofitInstance();
             ConfigurationApi api = retrofit.create(ConfigurationApi.class);
-            Call<Configuration> call = api.getConfigurationData(AppConfig.API_KEY, BuildConfig.VERSION_CODE,
-                    PreferenceUtils.getUserId(this));
+            Call<Configuration> call = api.getConfigurationData(AppConfig.API_KEY, BuildConfig.VERSION_CODE, PreferenceUtils.getUserId(this));
             call.enqueue(new Callback<Configuration>() {
                 @Override
 
@@ -205,44 +206,33 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     private void showAppUpdateDialog(final ApkUpdateInfo info) {
-        new MaterialAlertDialogBuilder(this)
-                .setTitle("New version: " + info.getVersionName())
-                .setMessage(info.getWhatsNew())
-                .setPositiveButton("Update Now", (dialog, which) -> {
-                    //update clicked
-                    dialog.dismiss();
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(info.getApkUrl()));
-                    startActivity(browserIntent);
+        new MaterialAlertDialogBuilder(this).setTitle("New version: " + info.getVersionName()).setMessage(info.getWhatsNew()).setPositiveButton("Update Now", (dialog, which) -> {
+            //update clicked
+            dialog.dismiss();
+            Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(info.getApkUrl()));
+            startActivity(browserIntent);
+            finish();
+        }).setNegativeButton("Later", (dialog, which) -> {
+            //exit clicked
+            if (info.isSkipable()) {
+                if (db.getConfigurationData() != null) {
+                    timer.start();
+                } else {
+                    new ToastMsg(SplashScreenActivity.this).toastIconError(getString(R.string.error_toast));
                     finish();
-                })
-                .setNegativeButton("Later", (dialog, which) -> {
-                    //exit clicked
-                    if (info.isSkipable()) {
-                        if (db.getConfigurationData() != null) {
-                            timer.start();
-                        } else {
-                            new ToastMsg(SplashScreenActivity.this).toastIconError(getString(R.string.error_toast));
-                            finish();
-                        }
-                    } else {
-                        System.exit(0);
-                    }
-                    dialog.dismiss();
-                })
-                .setCancelable(false)
-                .show();
+                }
+            } else {
+                System.exit(0);
+            }
+            dialog.dismiss();
+        }).setCancelable(false).show();
     }
 
     private void showErrorDialog(String title, String message) {
-        new MaterialAlertDialogBuilder(this)
-                .setTitle(title)
-                .setCancelable(false)
-                .setMessage(message)
-                .setPositiveButton("Ok", (dialog, which) -> {
-                    System.exit(0);
-                    finish();
-                })
-                .show();
+        new MaterialAlertDialogBuilder(this).setTitle(title).setCancelable(false).setMessage(message).setPositiveButton("Ok", (dialog, which) -> {
+            System.exit(0);
+            finish();
+        }).show();
     }
 
     private boolean isNeedUpdate(String versionCode) {
@@ -252,8 +242,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     // ------------------ checking storage permission ------------
     private boolean checkStoragePermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                    && checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
 
                 Log.v(TAG, "Permission is granted");
                 return true;
@@ -273,8 +262,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                && grantResults.length > 0 && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults.length > 0 && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
             //resume tasks needing this permission
             getConfigurationData();
         }

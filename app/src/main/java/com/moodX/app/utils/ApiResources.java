@@ -1,7 +1,18 @@
 package com.moodX.app.utils;
 
+
+import static android.content.Context.MODE_PRIVATE;
+
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.widget.Toast;
+
 import com.moodX.app.AppConfig;
+import com.moodX.app.LoginActivity;
 import com.moodX.app.network.RetrofitClient;
+
+import org.json.JSONObject;
 
 public class ApiResources {
 
@@ -14,10 +25,12 @@ public class ApiResources {
 
     String URL = AppConfig.API_SERVER_URL + RetrofitClient.API_URL_EXTENSION;
 
+    private static Toast toast;
 
-    String searchUrl = URL+"search";
 
-    String getAllReply = URL+"all_replay";
+    String searchUrl = URL + "search";
+
+    String getAllReply = URL + "all_replay";
     String termsURL = AppConfig.TERMS_URL;
 
     public String getTermsURL() {
@@ -32,7 +45,32 @@ public class ApiResources {
         return searchUrl;
     }
 
+    public static void openLoginScreen(String mErrorBody,
+                                       Context mContext) {
+        try {
+            JSONObject jObjError = new JSONObject(mErrorBody);
+            if (toast != null ) {
+                toast.cancel();
+            }
+            toast = Toast.makeText(mContext, jObjError.getString("message"), Toast.LENGTH_LONG);
+            toast.show();
 
+            SharedPreferences.Editor editor = mContext
+                    .getSharedPreferences(Constants.USER_LOGIN_STATUS, MODE_PRIVATE).edit();
+            editor.putBoolean(Constants.USER_LOGIN_STATUS, false);
+            editor.apply();
+
+            /*DatabaseHelper databaseHelper = new DatabaseHelper(mContext);
+            databaseHelper.deleteUserData();*/
+
+            PreferenceUtils.clearSubscriptionSavedData(mContext);
+
+            Intent intent = new Intent(mContext, LoginActivity.class);
+            mContext.startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+}
 
 

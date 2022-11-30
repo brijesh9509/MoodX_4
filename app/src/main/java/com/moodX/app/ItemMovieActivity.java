@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,11 +16,14 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.moodX.app.R;
+
 import com.moodX.app.adapters.CommonGridAdapter;
 import com.moodX.app.models.CommonModels;
 import com.moodX.app.models.home_content.Video;
 import com.moodX.app.network.RetrofitClient;
 import com.moodX.app.network.apis.MovieApi;
+import com.moodX.app.utils.ApiResources;
 import com.moodX.app.utils.HelperUtils;
 import com.moodX.app.utils.NetworkInst;
 import com.moodX.app.utils.PreferenceUtils;
@@ -32,6 +36,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.moodX.app.utils.Constants;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -207,7 +212,8 @@ public class ItemMovieActivity extends AppCompatActivity {
         String userId = PreferenceUtils.getUserId(this);
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         MovieApi api = retrofit.create(MovieApi.class);
-        Call<List<Video>> call = api.getMovieByStarId(AppConfig.API_KEY, id, pageCount, BuildConfig.VERSION_CODE,userId);
+        Call<List<Video>> call = api.getMovieByStarId(AppConfig.API_KEY, id, pageCount,
+                BuildConfig.VERSION_CODE,userId, Constants.getDeviceId(this));
         call.enqueue(new Callback<List<Video>>() {
             @Override
             public void onResponse(Call<List<Video>> call, Response<List<Video>> response) {
@@ -243,6 +249,17 @@ public class ItemMovieActivity extends AppCompatActivity {
                     }
 
                     mAdapter.notifyDataSetChanged();
+                } else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    ItemMovieActivity.this);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(ItemMovieActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 } else {
                     isLoading = false;
                     progressBar.setVisibility(View.GONE);
@@ -287,10 +304,11 @@ public class ItemMovieActivity extends AppCompatActivity {
         String userId = PreferenceUtils.getUserId(this);
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         MovieApi api = retrofit.create(MovieApi.class);
-        Call<List<Video>> call = api.getMovieByGenreId(AppConfig.API_KEY, id, pageNum, BuildConfig.VERSION_CODE,userId);
+        Call<List<Video>> call = api.getMovieByGenreId(AppConfig.API_KEY, id, pageNum,
+                BuildConfig.VERSION_CODE,userId, Constants.getDeviceId(this));
         call.enqueue(new Callback<List<Video>>() {
             @Override
-            public void onResponse(Call<List<Video>> call, retrofit2.Response<List<Video>> response) {
+            public void onResponse(Call<List<Video>> call, Response<List<Video>> response) {
                 if (response.code() == 200) {
                     isLoading = false;
                     progressBar.setVisibility(View.GONE);
@@ -323,7 +341,18 @@ public class ItemMovieActivity extends AppCompatActivity {
                     }
 
                     mAdapter.notifyDataSetChanged();
-                } else {
+                }  else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    ItemMovieActivity.this);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(ItemMovieActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }else {
                     isLoading = false;
                     progressBar.setVisibility(View.GONE);
                     shimmerFrameLayout.stopShimmer();
@@ -353,10 +382,11 @@ public class ItemMovieActivity extends AppCompatActivity {
         String userId = PreferenceUtils.getUserId(this);
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         MovieApi api = retrofit.create(MovieApi.class);
-        Call<List<Video>> call = api.getMovieByCountryId(AppConfig.API_KEY, id, pageNum, BuildConfig.VERSION_CODE,userId);
+        Call<List<Video>> call = api.getMovieByCountryId(AppConfig.API_KEY, id, pageNum,
+                BuildConfig.VERSION_CODE,userId, Constants.getDeviceId(this));
         call.enqueue(new Callback<List<Video>>() {
             @Override
-            public void onResponse(Call<List<Video>> call, retrofit2.Response<List<Video>> response) {
+            public void onResponse(Call<List<Video>> call, Response<List<Video>> response) {
                 if (response.code() == 200) {
                     isLoading = false;
                     progressBar.setVisibility(View.GONE);
@@ -389,7 +419,18 @@ public class ItemMovieActivity extends AppCompatActivity {
                     }
 
                     mAdapter.notifyDataSetChanged();
-                } else {
+                }  else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    ItemMovieActivity.this);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(ItemMovieActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }else {
                     isLoading = false;
                     progressBar.setVisibility(View.GONE);
                     shimmerFrameLayout.stopShimmer();
@@ -419,10 +460,11 @@ public class ItemMovieActivity extends AppCompatActivity {
         String userId = PreferenceUtils.getUserId(this);
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         MovieApi api = retrofit.create(MovieApi.class);
-        Call<List<Video>> call = api.getMovies(AppConfig.API_KEY, pageNum, BuildConfig.VERSION_CODE,userId);
+        Call<List<Video>> call = api.getMovies(AppConfig.API_KEY, pageNum, BuildConfig.VERSION_CODE,
+                userId, Constants.getDeviceId(this));
         call.enqueue(new Callback<List<Video>>() {
             @Override
-            public void onResponse(Call<List<Video>> call, retrofit2.Response<List<Video>> response) {
+            public void onResponse(Call<List<Video>> call, Response<List<Video>> response) {
                 if (response.code() == 200) {
                     isLoading = false;
                     progressBar.setVisibility(View.GONE);
@@ -455,6 +497,17 @@ public class ItemMovieActivity extends AppCompatActivity {
                     }
 
                     mAdapter.notifyDataSetChanged();
+                } else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    ItemMovieActivity.this);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(ItemMovieActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 } else {
                     isLoading = false;
                     progressBar.setVisibility(View.GONE);

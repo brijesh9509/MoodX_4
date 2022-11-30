@@ -15,12 +15,14 @@ public interface LiveTvApi {
     @GET("all_tv_channel_by_category")
     Call<List<LiveTvCategory>> getLiveTvCategories(@Header("API-KEY") String apiKey,
                                                    @Query("version") Integer vId,
-                                                   @Query("user_id") String userID);
+                                                   @Query("user_id") String userId,
+                                                   @Query("udid") String uDID);
 
     @GET("featured_tv_channel")
     Call<List<Channel>> getFeaturedTV(@Header("API-KEY") String apiKey,
                                       @Query("page") int page,
                                       @Query("version") Integer vId,
-                                      @Query("user_id") String userID);
+                                      @Query("user_id") String userId,
+                                      @Query("udid") String uDID);
 
 }

@@ -1,7 +1,9 @@
 package com.moodX.app.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Environment;
+import android.provider.Settings;
 
 import com.moodX.app.models.single_details.Country;
 import com.moodX.app.models.single_details.Genre;
@@ -56,5 +58,9 @@ public class Constants {
     public static final String YOUTUBE = "youtube";
     public static final String YOUTUBE_LIVE = "youtube_live";
 
-
+    @SuppressLint("HardwareIds")
+    public static String getDeviceId(Context mContext) {
+        return Settings.Secure.getString(mContext.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
+    }
 }

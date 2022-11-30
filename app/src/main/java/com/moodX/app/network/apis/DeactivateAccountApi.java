@@ -8,7 +8,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 
-public interface DeactivateAccountApi {
+public interface DeactivateAccountApi  {
 
     @POST("deactivate_account")
     @FormUrlEncoded
@@ -17,7 +17,8 @@ public interface DeactivateAccountApi {
                                            @Field("reason") String reason,
                                            @Header("API-KEY") String apiKey,
                                            @Field("version") Integer vId,
-                                           @Field("user_id") String userID);
+                                           @Field("user_id") String userId,
+                                           @Field("udid") String uDID);
 
 
 }

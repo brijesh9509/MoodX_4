@@ -1,7 +1,8 @@
 package com.moodX.app.nav_fragments;
 
-import android.os.Bundle;
+import static com.moodX.app.utils.Constants.getDeviceId;
 
+import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
@@ -17,19 +18,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.moodX.app.BuildConfig;
+import com.moodX.app.utils.ApiResources;
 import com.moodX.app.utils.PreferenceUtils;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.moodX.app.AppConfig;
 import com.moodX.app.MainActivity;
-import com.moodX.app.BuildConfig;
 import com.moodX.app.R;
 import com.moodX.app.adapters.GenreAdapter;
 import com.moodX.app.models.CommonModels;
 import com.moodX.app.models.home_content.AllGenre;
 import com.moodX.app.network.RetrofitClient;
 import com.moodX.app.network.apis.GenreApi;
-import com.moodX.app.utils.ApiResources;
 import com.moodX.app.utils.NetworkInst;
 import com.moodX.app.utils.SpacingItemDecoration;
 import com.moodX.app.utils.ToastMsg;
@@ -45,9 +47,8 @@ import retrofit2.Retrofit;
 public class GenreFragment extends Fragment {
 
     ShimmerFrameLayout shimmerFrameLayout;
-    private ApiResources apiResources;
     private RecyclerView recyclerView;
-    private List<CommonModels> list = new ArrayList<>();
+    private final List<CommonModels> list = new ArrayList<>();
     private GenreAdapter mAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private CoordinatorLayout coordinatorLayout;
@@ -61,15 +62,13 @@ public class GenreFragment extends Fragment {
     private int scrolledDistance = 0;
     private boolean controlsVisible = true;
 
-    private CardView searchBar;
     private ImageView menuIv, searchIv;
-    private TextView pageTitle;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         activity = (MainActivity) getActivity();
-        return inflater.inflate(R.layout.layout_country, container, false);
+        return inflater.inflate(R.layout.layout_country,container,false);
     }
 
     @Override
@@ -77,16 +76,16 @@ public class GenreFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         getActivity().setTitle(getResources().getString(R.string.genre));
 
-        coordinatorLayout = view.findViewById(R.id.coordinator_lyt);
-        shimmerFrameLayout = view.findViewById(R.id.shimmer_view_container);
-        swipeRefreshLayout = view.findViewById(R.id.swipe_layout);
-        recyclerView = view.findViewById(R.id.recyclerView);
-        tvNoItem = view.findViewById(R.id.tv_noitem);
-        searchRootLayout = view.findViewById(R.id.search_root_layout);
-        searchBar = view.findViewById(R.id.search_bar);
-        menuIv = view.findViewById(R.id.bt_menu);
-        pageTitle = view.findViewById(R.id.page_title_tv);
-        searchIv = view.findViewById(R.id.search_iv);
+        coordinatorLayout=view.findViewById(R.id.coordinator_lyt);
+        shimmerFrameLayout=view.findViewById(R.id.shimmer_view_container);
+        swipeRefreshLayout=view.findViewById(R.id.swipe_layout);
+        recyclerView=view.findViewById(R.id.recyclerView);
+        tvNoItem=view.findViewById(R.id.tv_noitem);
+        searchRootLayout=view.findViewById(R.id.search_root_layout);
+        CardView searchBar = view.findViewById(R.id.search_bar);
+        menuIv              = view.findViewById(R.id.bt_menu);
+        TextView pageTitle = view.findViewById(R.id.page_title_tv);
+        searchIv            = view.findViewById(R.id.search_iv);
 
         pageTitle.setText(getContext().getResources().getString(R.string.genre));
 
@@ -102,7 +101,7 @@ public class GenreFragment extends Fragment {
         recyclerView.addItemDecoration(new SpacingItemDecoration(3, Tools.dpToPx(getActivity(), 10), true));
         recyclerView.setHasFixedSize(true);
         recyclerView.setNestedScrollingEnabled(false);
-        mAdapter = new GenreAdapter(activity, list, "genre", "");
+        mAdapter = new GenreAdapter(activity, list,"genre", "");
         recyclerView.setAdapter(mAdapter);
 
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -121,7 +120,7 @@ public class GenreFragment extends Fragment {
                     scrolledDistance = 0;
                 }
 
-                if ((controlsVisible && dy > 0) || (!controlsVisible && dy < 0)) {
+                if((controlsVisible && dy>0) || (!controlsVisible && dy<0)) {
                     scrolledDistance += dy;
                 }
 
@@ -129,14 +128,13 @@ public class GenreFragment extends Fragment {
             }
         });
 
-        apiResources = new ApiResources();
-
         shimmerFrameLayout.startShimmer();
 
 
-        if (new NetworkInst(getContext()).isNetworkAvailable()) {
+
+        if (new NetworkInst(getContext()).isNetworkAvailable()){
             getAllGenre();
-        } else {
+        }else {
             tvNoItem.setText(getString(R.string.no_internet));
             shimmerFrameLayout.stopShimmer();
             shimmerFrameLayout.setVisibility(View.GONE);
@@ -154,9 +152,9 @@ public class GenreFragment extends Fragment {
                 list.clear();
                 mAdapter.notifyDataSetChanged();
 
-                if (new NetworkInst(getContext()).isNetworkAvailable()) {
+                if (new NetworkInst(getContext()).isNetworkAvailable()){
                     getAllGenre();
-                } else {
+                }else {
                     tvNoItem.setText(getString(R.string.no_internet));
                     shimmerFrameLayout.stopShimmer();
                     shimmerFrameLayout.setVisibility(View.GONE);
@@ -165,6 +163,7 @@ public class GenreFragment extends Fragment {
                 }
             }
         });
+
     }
 
     @Override
@@ -186,22 +185,24 @@ public class GenreFragment extends Fragment {
 
     }
 
-    private void getAllGenre() {
+
+    private void getAllGenre(){
         String userId = PreferenceUtils.getUserId(requireActivity());
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         GenreApi api = retrofit.create(GenreApi.class);
-        Call<List<AllGenre>> call = api.getGenre(AppConfig.API_KEY, BuildConfig.VERSION_CODE, userId);
+        Call<List<AllGenre>> call = api.getGenre(AppConfig.API_KEY, BuildConfig.VERSION_CODE,userId,
+                getDeviceId(requireContext()));
         call.enqueue(new Callback<List<AllGenre>>() {
             @Override
             public void onResponse(Call<List<AllGenre>> call, retrofit2.Response<List<AllGenre>> response) {
-                if (response.code() == 200) {
+                if (response.code() == 200){
                     shimmerFrameLayout.stopShimmer();
                     shimmerFrameLayout.setVisibility(View.GONE);
                     swipeRefreshLayout.setRefreshing(false);
 
-                    if (response.body().size() == 0) {
+                    if (response.body().size() == 0){
                         coordinatorLayout.setVisibility(View.VISIBLE);
-                    } else {
+                    }else {
                         coordinatorLayout.setVisibility(View.GONE);
                     }
 
@@ -214,7 +215,18 @@ public class GenreFragment extends Fragment {
                         list.add(models);
                     }
                     mAdapter.notifyDataSetChanged();
-                } else {
+                }else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    requireActivity());
+                            requireActivity().finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(requireActivity(),
+                                e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }else {
                     swipeRefreshLayout.setRefreshing(false);
                     shimmerFrameLayout.stopShimmer();
                     shimmerFrameLayout.setVisibility(View.GONE);
@@ -245,4 +257,6 @@ public class GenreFragment extends Fragment {
     }
 
 
+
 }
+

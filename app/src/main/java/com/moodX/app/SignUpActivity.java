@@ -22,6 +22,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.moodX.app.R;
+
 import com.moodX.app.database.DatabaseHelper;
 import com.moodX.app.network.RetrofitClient;
 import com.moodX.app.network.apis.FirebaseAuthApi;
@@ -78,7 +80,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         if (!isDark) {
             toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
-        }else {
+        } else {
             toolbar.setBackgroundColor(getResources().getColor(R.color.black_window_light));
         }
 
@@ -98,12 +100,12 @@ public class SignUpActivity extends AppCompatActivity {
         dialog.setMessage("Please wait");
         dialog.setCancelable(false);
 
-        etName              = findViewById(R.id.name);
-        etEmail             = findViewById(R.id.email);
-        etPass              = findViewById(R.id.password);
+        etName = findViewById(R.id.name);
+        etEmail = findViewById(R.id.email);
+        etPass = findViewById(R.id.password);
         Button btnSignup = findViewById(R.id.signup);
         View backgroundView = findViewById(R.id.background_view);
-        progressBar         = findViewById(R.id.progress_bar);
+        progressBar = findViewById(R.id.progress_bar);
         ImageView phoneAuthButton = findViewById(R.id.phoneAuthButton);
         ImageView facebookAuthButton = findViewById(R.id.facebookAuthButton);
         ImageView googleAuthButton = findViewById(R.id.googleAuthButton);
@@ -157,7 +159,8 @@ public class SignUpActivity extends AppCompatActivity {
         dialog.show();
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SignUpApi signUpApi = retrofit.create(SignUpApi.class);
-        Call<User> call = signUpApi.signUp(AppConfig.API_KEY, email, pass, name, BuildConfig.VERSION_CODE);
+        Call<User> call = signUpApi.signUp(AppConfig.API_KEY, email, pass, name,
+                BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
@@ -225,7 +228,8 @@ public class SignUpActivity extends AppCompatActivity {
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SubscriptionApi subscriptionApi = retrofit.create(SubscriptionApi.class);
 
-        Call<ActiveStatus> call = subscriptionApi.getActiveStatus(AppConfig.API_KEY, userId, BuildConfig.VERSION_CODE);
+        Call<ActiveStatus> call = subscriptionApi.getActiveStatus(AppConfig.API_KEY, userId,
+                BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
         call.enqueue(new Callback<ActiveStatus>() {
             @Override
             public void onResponse(@NonNull Call<ActiveStatus> call, @NonNull Response<ActiveStatus> response) {
@@ -245,6 +249,17 @@ public class SignUpActivity extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                         dialog.cancel();
+                    }
+                }else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    SignUpActivity.this);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(SignUpActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -353,7 +368,8 @@ public class SignUpActivity extends AppCompatActivity {
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         FirebaseAuthApi api = retrofit.create(FirebaseAuthApi.class);
-        Call<User> call = api.getPhoneAuthStatus(AppConfig.API_KEY, uid, phoneNo, BuildConfig.VERSION_CODE);
+        Call<User> call = api.getPhoneAuthStatus(AppConfig.API_KEY, uid, phoneNo,
+                BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
@@ -373,7 +389,18 @@ public class SignUpActivity extends AppCompatActivity {
                         updateSubscriptionStatus(user.getUserId());
                     }
 
-                } else {
+                } else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    SignUpActivity.this);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(SignUpActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }else {
                     progressBar.setVisibility(View.GONE);
                     Toast.makeText(SignUpActivity.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
                 }
@@ -406,7 +433,8 @@ public class SignUpActivity extends AppCompatActivity {
 
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         FirebaseAuthApi api = retrofit.create(FirebaseAuthApi.class);
-        Call<User> call = api.getGoogleAuthStatus(AppConfig.API_KEY, uid, email, username, image, phone, BuildConfig.VERSION_CODE);
+        Call<User> call = api.getGoogleAuthStatus(AppConfig.API_KEY, uid, email, username, image, phone,
+                BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
@@ -426,6 +454,17 @@ public class SignUpActivity extends AppCompatActivity {
                         updateSubscriptionStatus(user.getUserId());
                     }
 
+                }else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    SignUpActivity.this);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(SignUpActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 } else {
                     progressBar.setVisibility(View.GONE);
                     Toast.makeText(SignUpActivity.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
@@ -445,7 +484,8 @@ public class SignUpActivity extends AppCompatActivity {
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         FirebaseAuthApi api = retrofit.create(FirebaseAuthApi.class);
-        Call<User> call = api.getFacebookAuthStatus(AppConfig.API_KEY, uid, username, email, Uri.parse(photoUrl), BuildConfig.VERSION_CODE);
+        Call<User> call = api.getFacebookAuthStatus(AppConfig.API_KEY, uid, username, email, Uri.parse(photoUrl),
+                BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(@NonNull Call<User> call, @NonNull Response<User> response) {
@@ -466,7 +506,18 @@ public class SignUpActivity extends AppCompatActivity {
                         updateSubscriptionStatus(user.getUserId());
                     }
 
-                } else {
+                } else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    SignUpActivity.this);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(SignUpActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }else {
                     progressBar.setVisibility(View.GONE);
                     Toast.makeText(SignUpActivity.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
                 }
@@ -514,7 +565,7 @@ public class SignUpActivity extends AppCompatActivity {
 
             }
         } else if (requestCode == RC_FACEBOOK_SIGN_IN) {
-            final IdpResponse response = com.firebase.ui.auth.IdpResponse.fromResultIntent(data);
+            final IdpResponse response = IdpResponse.fromResultIntent(data);
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
                 final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();

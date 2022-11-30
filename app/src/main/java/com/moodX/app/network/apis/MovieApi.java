@@ -13,29 +13,33 @@ public interface MovieApi {
 
     @GET("movies")
     Call<List<Video>> getMovies(@Header("API-KEY") String apiKey,
-                                @Query("page") int page,
+                                @Query("page") int pahe,
                                 @Query("version") Integer vId,
-                                @Query("user_id") String userID);
+                                @Query("user_id") String userId,
+                                @Query("udid") String uDID);
 
     @GET("content_by_genre_id")
     Call<List<Video>> getMovieByGenreId(@Header("API-KEY") String apiKey,
                                         @Query("id") String id,
                                         @Query("page") int page,
                                         @Query("version") Integer vId,
-                                        @Query("user_id") String userID);
+                                        @Query("user_id") String userId,
+                                        @Query("udid") String uDID);
 
     @GET("content_by_country_id")
     Call<List<Video>> getMovieByCountryId(@Header("API-KEY") String apiKey,
                                           @Query("id") String id,
                                           @Query("page") int page,
                                           @Query("version") Integer vId,
-                                          @Query("user_id") String userID);
+                                          @Query("user_id") String userId,
+                                          @Query("udid") String uDID);
 
     @GET("content_by_star_id")
     Call<List<Video>> getMovieByStarId(@Header("API-KEY") String apiKey,
                                        @Query("id") String id,
                                        @Query("page") int page,
                                        @Query("version") Integer vId,
-                                       @Query("user_id") String userID);
+                                       @Query("user_id") String userId,
+                                       @Query("udid") String uDID);
 
 }
