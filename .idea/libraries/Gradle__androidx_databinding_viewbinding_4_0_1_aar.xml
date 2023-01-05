@@ -15,16 +15,16 @@
       <root url="file://E:/AndroidGradle/caches/transforms-3/6c82b3a6e14751426bc3148eefe9d430/transformed/jetified-viewbinding-4.0.1/res" />
       <root url="file://E:/AndroidGradle/caches/transforms-3/6c82b3a6e14751426bc3148eefe9d430/transformed/jetified-viewbinding-4.0.1/AndroidManifest.xml" />
       <root url="jar://E:/AndroidGradle/caches/transforms-3/6c82b3a6e14751426bc3148eefe9d430/transformed/jetified-viewbinding-4.0.1/jars/classes.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/3bfd0186839e9174910ed6d0171d7841/transformed/jetified-viewbinding-4.0.1/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/3bfd0186839e9174910ed6d0171d7841/transformed/jetified-viewbinding-4.0.1/AndroidManifest.xml" />
       <root url="jar://E:/AndroidGradle/caches/transforms-3/3bfd0186839e9174910ed6d0171d7841/transformed/jetified-viewbinding-4.0.1/jars/classes.jar!/" />
       <root url="file://E:/AndroidGradle/caches/transforms-3/3bfd0186839e9174910ed6d0171d7841/transformed/jetified-viewbinding-4.0.1/AndroidManifest.xml" />
+      <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/3bfd0186839e9174910ed6d0171d7841/transformed/jetified-viewbinding-4.0.1/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/3bfd0186839e9174910ed6d0171d7841/transformed/jetified-viewbinding-4.0.1/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://D:/AndroidGradle/caches/modules-2/files-2.1/androidx.databinding/viewbinding/4.0.1/f61a9e2dca678d7a7a2d72eac80eca681469c103/viewbinding-4.0.1-sources.jar!/" />
       <root url="jar://E:/AndroidGradle/caches/modules-2/files-2.1/androidx.databinding/viewbinding/4.0.1/f61a9e2dca678d7a7a2d72eac80eca681469c103/viewbinding-4.0.1-sources.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.databinding/viewbinding/4.0.1/f61a9e2dca678d7a7a2d72eac80eca681469c103/viewbinding-4.0.1-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/modules-2/files-2.1/androidx.databinding/viewbinding/4.0.1/f61a9e2dca678d7a7a2d72eac80eca681469c103/viewbinding-4.0.1-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

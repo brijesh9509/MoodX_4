@@ -10,18 +10,18 @@
       <root url="jar://E:/AndroidGradle/caches/transforms-3/ed4745b6b026e39abd25a049925dfa90/transformed/jetified-CardSlider-0.4/jars/classes.jar!/" />
       <root url="file://E:/AndroidGradle/caches/transforms-3/ed4745b6b026e39abd25a049925dfa90/transformed/jetified-CardSlider-0.4/AndroidManifest.xml" />
       <root url="file://E:/AndroidGradle/caches/transforms-3/ed4745b6b026e39abd25a049925dfa90/transformed/jetified-CardSlider-0.4/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/b8cd25450cabdb76801e0c6fc72ce16e/transformed/jetified-CardSlider-0.4/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/b8cd25450cabdb76801e0c6fc72ce16e/transformed/jetified-CardSlider-0.4/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/b8cd25450cabdb76801e0c6fc72ce16e/transformed/jetified-CardSlider-0.4/AndroidManifest.xml" />
       <root url="jar://E:/AndroidGradle/caches/transforms-3/b8cd25450cabdb76801e0c6fc72ce16e/transformed/jetified-CardSlider-0.4/jars/classes.jar!/" />
       <root url="file://E:/AndroidGradle/caches/transforms-3/b8cd25450cabdb76801e0c6fc72ce16e/transformed/jetified-CardSlider-0.4/AndroidManifest.xml" />
       <root url="file://E:/AndroidGradle/caches/transforms-3/b8cd25450cabdb76801e0c6fc72ce16e/transformed/jetified-CardSlider-0.4/res" />
+      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/b8cd25450cabdb76801e0c6fc72ce16e/transformed/jetified-CardSlider-0.4/AndroidManifest.xml" />
+      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/b8cd25450cabdb76801e0c6fc72ce16e/transformed/jetified-CardSlider-0.4/res" />
+      <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/b8cd25450cabdb76801e0c6fc72ce16e/transformed/jetified-CardSlider-0.4/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://D:/AndroidGradle/caches/modules-2/files-2.1/com.github.IslamKhSh/CardSlider/0.4/33f7ac1ca01fa952c79bd038876ada98fc1681b3/CardSlider-0.4-sources.jar!/" />
       <root url="jar://E:/AndroidGradle/caches/modules-2/files-2.1/com.github.IslamKhSh/CardSlider/0.4/11b4fd21f9faf14dee63d05eb788719e74a3ab58/CardSlider-0.4-sources.jar!/" />
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.IslamKhSh/CardSlider/0.4/33f7ac1ca01fa952c79bd038876ada98fc1681b3/CardSlider-0.4-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/modules-2/files-2.1/com.github.IslamKhSh/CardSlider/0.4/11b4fd21f9faf14dee63d05eb788719e74a3ab58/CardSlider-0.4-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

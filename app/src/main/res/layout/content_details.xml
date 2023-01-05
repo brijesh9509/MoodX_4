@@ -363,15 +363,7 @@
                                 android:layout_alignParentEnd="true"
                                 android:background="@drawable/rounded_toolbar_background"
                                 android:orientation="vertical"
-                                android:visibility="gone"></androidx.appcompat.widget.Toolbar>
-
-
-                            <!--<ImageView
-                                android:layout_centerInParent="true"
-                                android:src="@drawable/ic_outline_play_circle_filled_24px"
-                                android:layout_width="38dp"
-                                android:layout_height="38dp" />-->
-
+                                android:visibility="gone"/>
 
                             <com.makeramen.roundedimageview.RoundedImageView
                                 android:id="@+id/image_thumb"
@@ -460,7 +452,6 @@
 
 
                                 </LinearLayout>
-
 
                             </LinearLayout>
 
@@ -590,12 +581,12 @@
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="wrap_content">
 
                         <LinearLayout
                             android:id="@+id/tv_layout"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:orientation="vertical"
                             android:visibility="gone"
                             tools:visibility="visible">
@@ -685,13 +676,11 @@
                             </LinearLayout>
 
                             <TextView
-                                android:id="@+id/now_watching_tv"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="10dp"
                                 android:layout_marginTop="10dp"
                                 android:text="Now Watching" />
-
 
                             <LinearLayout
                                 android:id="@+id/p_shedule_layout"
@@ -738,7 +727,10 @@
                             </androidx.recyclerview.widget.RecyclerView>
 
                         </LinearLayout>
+
+
                     </RelativeLayout>
+
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -784,7 +776,6 @@
                                 android:layout_marginStart="10dp"
                                 android:layout_toEndOf="@id/director"
                                 android:textAppearance="@style/TextAppearance.Medium.Bold" />
-
 
                         </RelativeLayout>
 
@@ -874,7 +865,6 @@
                     </androidx.recyclerview.widget.RecyclerView>
                 </LinearLayout>
 
-                <!-- Comment section-->
                 <RelativeLayout
                     android:id="@+id/llcomments"
                     android:layout_width="match_parent"
@@ -918,83 +908,10 @@
 
                 </RelativeLayout>
 
-
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-    <!--Live chat section-->
-
-
-    <RelativeLayout
-        android:id="@+id/liveChatSection"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/play"
-        android:fitsSystemWindows="true"
-        android:padding="10dp"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/text_live_comment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/live_comments"
-            android:textAppearance="@style/TextAppearance.Medium.Bold" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/liveCommentRV"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@id/input"
-            android:layout_below="@id/text_live_comment"
-            android:layout_marginTop="8dp"
-            android:nestedScrollingEnabled="true">
-
-        </androidx.recyclerview.widget.RecyclerView>
-
-        <RelativeLayout
-            android:id="@+id/input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="8dp">
-
-            <EditText
-                android:id="@+id/live_chat_msg"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="5dp"
-                android:layout_toStartOf="@id/live_chat_msg_btn_send"
-                android:background="@drawable/comment_et_border"
-                android:hint="@string/your_comments"
-                android:imeOptions="actionSend"
-                android:inputType="textShortMessage"
-                android:padding="10dp"
-                android:textColor="@color/black"
-                android:textColorHint="@color/black" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/live_chat_msg_btn_send"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_margin="@dimen/spacing_small"
-                android:clickable="true"
-                android:contentDescription="Send"
-                android:gravity="center"
-                android:tint="@android:color/white"
-                app:backgroundTint="#00897B"
-                app:elevation="1dp"
-                app:fabSize="mini"
-                app:srcCompat="@drawable/ic_send"
-                app:useCompatPadding="false" />
-        </RelativeLayout>
-    </RelativeLayout>
-
-
-    <!--  Live chat section end-->
 
 
 </RelativeLayout>

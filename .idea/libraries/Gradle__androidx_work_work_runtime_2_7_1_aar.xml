@@ -7,17 +7,17 @@
       <root url="file://E:/AndroidGradle/caches/transforms-3/ffd32c81eeccf05fc0a55b1cde37177c/transformed/work-runtime-2.7.1/res" />
       <root url="jar://E:/AndroidGradle/caches/transforms-3/ffd32c81eeccf05fc0a55b1cde37177c/transformed/work-runtime-2.7.1/jars/classes.jar!/" />
       <root url="file://E:/AndroidGradle/caches/transforms-3/ffd32c81eeccf05fc0a55b1cde37177c/transformed/work-runtime-2.7.1/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/dca4a72e8bd7ed6a61f86893360a05a5/transformed/work-runtime-2.7.1/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/dca4a72e8bd7ed6a61f86893360a05a5/transformed/work-runtime-2.7.1/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/dca4a72e8bd7ed6a61f86893360a05a5/transformed/work-runtime-2.7.1/AndroidManifest.xml" />
       <root url="file://E:/AndroidGradle/caches/transforms-3/dca4a72e8bd7ed6a61f86893360a05a5/transformed/work-runtime-2.7.1/AndroidManifest.xml" />
       <root url="jar://E:/AndroidGradle/caches/transforms-3/dca4a72e8bd7ed6a61f86893360a05a5/transformed/work-runtime-2.7.1/jars/classes.jar!/" />
       <root url="file://E:/AndroidGradle/caches/transforms-3/dca4a72e8bd7ed6a61f86893360a05a5/transformed/work-runtime-2.7.1/res" />
+      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/dca4a72e8bd7ed6a61f86893360a05a5/transformed/work-runtime-2.7.1/res" />
+      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/dca4a72e8bd7ed6a61f86893360a05a5/transformed/work-runtime-2.7.1/AndroidManifest.xml" />
+      <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/dca4a72e8bd7ed6a61f86893360a05a5/transformed/work-runtime-2.7.1/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.work/work-runtime/2.7.1/609a4c5626cb1a8d806d9adf8a8b7dfafc337891/work-runtime-2.7.1-sources.jar!/" />
       <root url="jar://E:/AndroidGradle/caches/modules-2/files-2.1/androidx.work/work-runtime/2.7.1/609a4c5626cb1a8d806d9adf8a8b7dfafc337891/work-runtime-2.7.1-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/modules-2/files-2.1/androidx.work/work-runtime/2.7.1/609a4c5626cb1a8d806d9adf8a8b7dfafc337891/work-runtime-2.7.1-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

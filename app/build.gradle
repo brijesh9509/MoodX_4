@@ -22,8 +22,8 @@ android {
         applicationId "com.moodX.app"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 3
-        versionName "1.0.1"
+        versionCode 5
+        versionName "1.5"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true

@@ -50,8 +50,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.moodX.app.R;
-
 import com.moodX.app.models.single_details_tv.AllTvChannel;
 import com.moodX.app.models.single_details_tv.ProgramGuide;
 import com.balysv.materialripple.MaterialRippleLayout;
@@ -214,6 +212,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     private Button btnComment;
     private EditText etComment;
     private CommentsAdapter commentsAdapter;
+    private RelativeLayout description_layout;
 
     public static SimpleExoPlayer player;
     public static PlayerView simpleExoPlayerView;
@@ -550,6 +549,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         seasonDownloadLayout = findViewById(R.id.seasonDownloadLayout);
         seasonDownloadSpinner = findViewById(R.id.seasonSpinnerField);
         seasonDownloadRecyclerView = findViewById(R.id.seasonDownloadRecyclerView);
+        description_layout = findViewById(R.id.description_layout);
 
     }
 
@@ -1208,15 +1208,15 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
         @NonNull
         @Override
-        public OriginalViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            OriginalViewHolder vh;
+        public SubtitleAdapter.OriginalViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            SubtitleAdapter.OriginalViewHolder vh;
             View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_subtitle, parent, false);
-            vh = new OriginalViewHolder(v);
+            vh = new SubtitleAdapter.OriginalViewHolder(v);
             return vh;
         }
 
         @Override
-        public void onBindViewHolder(OriginalViewHolder holder, final int position) {
+        public void onBindViewHolder(SubtitleAdapter.OriginalViewHolder holder, final int position) {
             final SubtitleModel obj = items.get(position);
             holder.name.setText(obj.getLanguage());
 
@@ -1254,6 +1254,8 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         } else {
             if (!categoryType.equals("tv")) {
 
+                description_layout.setVisibility(VISIBLE);
+                llComment.setVisibility(GONE);
                 //----related rv----------
                 relatedAdapter = new HomePageAdapter(this, listRelated);
                 rvRelated.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,
@@ -1307,11 +1309,12 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                 if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
                     getFavStatus();
                 }
-
             } else {
                 tv = true;
-                imgSubtitle.setVisibility(GONE);
+
+                description_layout.setVisibility(GONE);
                 llComment.setVisibility(GONE);
+                imgSubtitle.setVisibility(GONE);
                 serverIv.setVisibility(GONE);
 
                 rvServer.setVisibility(VISIBLE);
@@ -1403,8 +1406,6 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
                     }
                 });
-
-
             }
         }
     }
@@ -1663,7 +1664,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                     "en"); // The subtitle language. May be null.
 
             DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(context,
-                    Util.getUserAgent(context, BuildConfig.APPLICATION_ID), new DefaultBandwidthMeter());
+                    Util.getUserAgent(context, getResources().getString(R.string.app_name)), new DefaultBandwidthMeter());
 
 
             MediaSource subtitleSource = new SingleSampleMediaSource
@@ -1688,7 +1689,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                 BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
         call.enqueue(new Callback<FavoriteModel>() {
             @Override
-            public void onResponse(@NonNull Call<FavoriteModel> call, @NonNull Response<FavoriteModel> response) {
+            public void onResponse(@NonNull Call<FavoriteModel> call, @NonNull retrofit2.Response<FavoriteModel> response) {
                 if (response.code() == 200) {
                     if (response.body().getStatus().equalsIgnoreCase("success")) {
                         new ToastMsg(DetailsActivity.this).toastIconSuccess(response.body().getMessage());
@@ -1698,7 +1699,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                     } else {
                         new ToastMsg(DetailsActivity.this).toastIconError(response.body().getMessage());
                     }
-                }else if (response.code() == 412) {
+                } else if (response.code() == 412) {
                     try {
                         if (response.errorBody() != null) {
                             ApiResources.openLoginScreen(response.errorBody().string(),
@@ -1709,7 +1710,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         Toast.makeText(DetailsActivity.this,
                                 e.getMessage(), Toast.LENGTH_LONG).show();
                     }
-                } else {
+                }else {
                     new ToastMsg(DetailsActivity.this).toastIconError(getString(R.string.error_toast));
                 }
             }
@@ -1753,11 +1754,12 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SingleDetailsTVApi api = retrofit.create(SingleDetailsTVApi.class);
         Call<SingleDetailsTV> call = api.getSingleDetails(AppConfig.API_KEY, vType, vId,
-                BuildConfig.VERSION_CODE, PreferenceUtils.getUserId(this), Constants.getDeviceId(this));
+                BuildConfig.VERSION_CODE, PreferenceUtils.getUserId(this),
+                Constants.getDeviceId(this));
         call.enqueue(new Callback<SingleDetailsTV>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
-            public void onResponse(@NonNull Call<SingleDetailsTV> call, @NonNull Response<SingleDetailsTV> response) {
+            public void onResponse(@NonNull Call<SingleDetailsTV> call, @NonNull retrofit2.Response<SingleDetailsTV> response) {
                 if (response.code() == 200) {
                     if (response.body() != null) {
                         swipeRefreshLayout.setRefreshing(false);
@@ -1876,11 +1878,12 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SingleDetailsApi api = retrofit.create(SingleDetailsApi.class);
         Call<SingleDetails> call = api.getSingleDetails(AppConfig.API_KEY, vType, vId,
-                BuildConfig.VERSION_CODE, PreferenceUtils.getUserId(this), Constants.getDeviceId(this));
+                BuildConfig.VERSION_CODE, PreferenceUtils.getUserId(this),
+                Constants.getDeviceId(this));
         call.enqueue(new Callback<SingleDetails>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
-            public void onResponse(@NonNull Call<SingleDetails> call, @NonNull Response<SingleDetails> response) {
+            public void onResponse(@NonNull Call<SingleDetails> call, @NonNull retrofit2.Response<SingleDetails> response) {
                 if (response.code() == 200) {
                     swipeRefreshLayout.setRefreshing(false);
                     shimmerFrameLayout.stopShimmer();
@@ -2096,11 +2099,12 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SingleDetailsApi api = retrofit.create(SingleDetailsApi.class);
         Call<SingleDetails> call = api.getSingleDetails(AppConfig.API_KEY, vType, vId,
-                BuildConfig.VERSION_CODE, PreferenceUtils.getUserId(this), Constants.getDeviceId(this));
+                BuildConfig.VERSION_CODE, PreferenceUtils.getUserId(this),
+                Constants.getDeviceId(this));
         call.enqueue(new Callback<SingleDetails>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
-            public void onResponse(@NonNull Call<SingleDetails> call, @NonNull Response<SingleDetails> response) {
+            public void onResponse(@NonNull Call<SingleDetails> call, @NonNull retrofit2.Response<SingleDetails> response) {
                 if (response.code() == 200) {
                     shimmerFrameLayout.stopShimmer();
                     shimmerFrameLayout.setVisibility(GONE);
@@ -2260,7 +2264,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         }
                     }
 
-                }else if (response.code() == 412) {
+                } else if (response.code() == 412) {
                     try {
                         if (response.errorBody() != null) {
                             ApiResources.openLoginScreen(response.errorBody().string(),
@@ -2271,7 +2275,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         Toast.makeText(DetailsActivity.this,
                                 e.getMessage(), Toast.LENGTH_LONG).show();
                     }
-                } else {
+                }else {
                     swipeRefreshLayout.setRefreshing(false);
                 }
             }
@@ -2286,11 +2290,11 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     private void getFavStatus() {
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         FavouriteApi api = retrofit.create(FavouriteApi.class);
-        Call<FavoriteModel> call = api.verifyFavoriteList(AppConfig.API_KEY, userId, id, BuildConfig.VERSION_CODE,
-                Constants.getDeviceId(this));
+        Call<FavoriteModel> call = api.verifyFavoriteList(AppConfig.API_KEY, userId, id,
+                BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
         call.enqueue(new Callback<FavoriteModel>() {
             @Override
-            public void onResponse(@NonNull Call<FavoriteModel> call, @NonNull Response<FavoriteModel> response) {
+            public void onResponse(@NonNull Call<FavoriteModel> call, @NonNull retrofit2.Response<FavoriteModel> response) {
                 if (response.code() == 200) {
                     if (response.body().getStatus().equalsIgnoreCase("success")) {
                         isFav = true;
@@ -2331,7 +2335,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                 BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
         call.enqueue(new Callback<FavoriteModel>() {
             @Override
-            public void onResponse(@NonNull Call<FavoriteModel> call, @NonNull Response<FavoriteModel> response) {
+            public void onResponse(@NonNull Call<FavoriteModel> call, @NonNull retrofit2.Response<FavoriteModel> response) {
                 if (response.code() == 200) {
                     if (response.body().getStatus().equalsIgnoreCase("success")) {
                         isFav = false;
@@ -2376,11 +2380,12 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         CommentApi api = retrofit.create(CommentApi.class);
-        Call<PostCommentModel> call = api.postComment(AppConfig.API_KEY, videoId, userId, comments,
-                BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
+        Call<PostCommentModel> call = api.postComment(AppConfig.API_KEY, videoId,
+                userId, comments, BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
         call.enqueue(new Callback<PostCommentModel>() {
             @Override
-            public void onResponse(@NonNull Call<PostCommentModel> call, @NonNull Response<PostCommentModel> response) {
+            public void onResponse(@NonNull Call<PostCommentModel> call, @NonNull retrofit2.Response<PostCommentModel> response) {
+
                 if (response.code() == 200) {
                     if (response.body().getStatus().equals("success")) {
                         rvComment.removeAllViews();
@@ -2416,18 +2421,19 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         CommentApi api = retrofit.create(CommentApi.class);
-        Call<List<GetCommentsModel>> call = api.getAllComments(AppConfig.API_KEY, id, BuildConfig.VERSION_CODE,
-                PreferenceUtils.getUserId(this), Constants.getDeviceId(this));
+        Call<List<GetCommentsModel>> call = api.getAllComments(AppConfig.API_KEY, id,
+                BuildConfig.VERSION_CODE, PreferenceUtils.getUserId(this),
+                Constants.getDeviceId(this));
         call.enqueue(new Callback<List<GetCommentsModel>>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onResponse(@NonNull Call<List<GetCommentsModel>> call,
-                                   @NonNull Response<List<GetCommentsModel>> response) {
+                                   @NonNull retrofit2.Response<List<GetCommentsModel>> response) {
                 if (response.code() == 200) {
                     listComment.addAll(response.body());
 
                     commentsAdapter.notifyDataSetChanged();
-                }else if (response.code() == 412) {
+                } else if (response.code() == 412) {
                     try {
                         if (response.errorBody() != null) {
                             ApiResources.openLoginScreen(response.errorBody().string(),

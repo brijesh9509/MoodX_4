@@ -11,7 +11,6 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
@@ -23,19 +22,26 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
 
-        <activity android:name="com.moodX.app.RazorPayActivity" />
-        <activity android:name="com.moodX.app.SearchActivity" />
+        <activity
+            android:name="com.moodX.app.RazorPayActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.moodX.app.SearchActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.moodX.app.PapalPaymentActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
-        <activity android:name="com.moodX.app.WebViewActivity" />
+        <activity
+            android:name="com.moodX.app.WebViewActivity"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.onesignal.NotificationOpened.DEFAULT"
@@ -43,46 +49,57 @@
         <meta-data
             android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
             android:value="com.google.android.exoplayer2.ext.cast.DefaultCastOptionsProvider" />
+
         <activity
             android:name="com.moodX.app.TermsActivity"
-            android:screenOrientation="fullSensor"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
             android:name="com.moodX.app.ReplyActivity"
             android:label="@string/title_activity_reply"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.moodX.app.ProfileActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
             android:name="com.moodX.app.PassResetActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
             android:name="com.moodX.app.SearchResultActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
             android:name="com.moodX.app.SignUpActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
             android:name="com.moodX.app.LoginActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
             android:name="com.moodX.app.DetailsActivity"
             android:configChanges="screenLayout|screenSize|orientation"
             android:label="@string/title_activity_details"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="com.moodX.app.MainActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="com.moodX.app.SettingsActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
             android:name="com.moodX.app.SplashScreenActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -92,24 +109,31 @@
         <activity
             android:name="com.moodX.app.ItemMovieActivity"
             android:label="@string/title_activity_item_show"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.moodX.app.ItemTVActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
             android:name="com.moodX.app.ItemSeriesActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
             android:name="com.moodX.app.SubscriptionActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
             android:name="com.moodX.app.StripePaymentActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
             android:name="com.moodX.app.PurchasePlanActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
         <activity
             android:name="com.moodX.app.DownloadActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Nobar" />
     </application>
 
