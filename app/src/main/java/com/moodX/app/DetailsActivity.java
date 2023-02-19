@@ -1,5 +1,19 @@
 package com.moodX.app;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+import static com.moodX.app.utils.Constants.CATEGORY_TYPE;
+import static com.moodX.app.utils.Constants.CONTENT_ID;
+import static com.moodX.app.utils.Constants.CONTENT_TITLE;
+import static com.moodX.app.utils.Constants.IMAGE_URL;
+import static com.moodX.app.utils.Constants.IS_FROM_CONTINUE_WATCHING;
+import static com.moodX.app.utils.Constants.POSITION;
+import static com.moodX.app.utils.Constants.SERVER_TYPE;
+import static com.moodX.app.utils.Constants.STREAM_URL;
+import static com.moodX.app.utils.Constants.YOUTUBE;
+import static com.moodX.app.utils.Constants.YOUTUBE_LIVE;
+import static com.moodX.app.utils.Constants.getDeviceId;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
@@ -21,6 +35,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -42,6 +57,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProviders;
@@ -50,27 +66,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.moodX.app.models.single_details_tv.AllTvChannel;
-import com.moodX.app.models.single_details_tv.ProgramGuide;
 import com.balysv.materialripple.MaterialRippleLayout;
-import com.moodX.app.adapters.CastCrewAdapter;
-import com.moodX.app.adapters.CommentsAdapter;
-import com.moodX.app.adapters.DownloadAdapter;
-import com.moodX.app.adapters.EpisodeDownloadAdapter;
-import com.moodX.app.adapters.HomePageAdapter;
-import com.moodX.app.adapters.ProgramAdapter;
-import com.moodX.app.adapters.RelatedTvAdapter;
-import com.moodX.app.adapters.ServerAdapter;
-import com.moodX.app.database.DatabaseHelper;
-import com.moodX.app.database.continueWatching.ContinueWatchingModel;
-import com.moodX.app.database.continueWatching.ContinueWatchingViewModel;
-import com.moodX.app.database.downlaod.DownloadViewModel;
-import com.moodX.app.network.apis.CommentApi;
-import com.moodX.app.network.apis.FavouriteApi;
-import com.moodX.app.network.apis.ReportApi;
-import com.moodX.app.network.apis.SingleDetailsApi;
-import com.moodX.app.network.apis.SingleDetailsTVApi;
-import com.moodX.app.network.model.FavoriteModel;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
@@ -108,16 +104,35 @@ import com.google.android.gms.cast.framework.CastSession;
 import com.google.android.gms.cast.framework.CastState;
 import com.google.android.gms.cast.framework.media.RemoteMediaClient;
 import com.google.android.gms.common.images.WebImage;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerFragment;
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.moodX.app.adapters.CastCrewAdapter;
+import com.moodX.app.adapters.CommentsAdapter;
+import com.moodX.app.adapters.DownloadAdapter;
 import com.moodX.app.adapters.EpisodeAdapter;
+import com.moodX.app.adapters.EpisodeDownloadAdapter;
+import com.moodX.app.adapters.HomePageAdapter;
+import com.moodX.app.adapters.LiveChatAdapter;
+import com.moodX.app.adapters.ProgramAdapter;
+import com.moodX.app.adapters.RelatedTvAdapter;
+import com.moodX.app.adapters.ServerAdapter;
+import com.moodX.app.database.DatabaseHelper;
+import com.moodX.app.database.continueWatching.ContinueWatchingModel;
+import com.moodX.app.database.continueWatching.ContinueWatchingViewModel;
+import com.moodX.app.database.downlaod.DownloadViewModel;
 import com.moodX.app.models.CastCrew;
 import com.moodX.app.models.CommonModels;
 import com.moodX.app.models.EpiModel;
 import com.moodX.app.models.GetCommentsModel;
+import com.moodX.app.models.LiveChat;
 import com.moodX.app.models.PostCommentModel;
 import com.moodX.app.models.Program;
 import com.moodX.app.models.SubtitleModel;
@@ -134,7 +149,13 @@ import com.moodX.app.models.single_details.Video;
 import com.moodX.app.models.single_details_tv.AdditionalMediaSource;
 import com.moodX.app.models.single_details_tv.SingleDetailsTV;
 import com.moodX.app.network.RetrofitClient;
-import com.moodX.app.utils.ApiResources;
+import com.moodX.app.network.apis.CommentApi;
+import com.moodX.app.network.apis.FavouriteApi;
+import com.moodX.app.network.apis.ReportApi;
+import com.moodX.app.network.apis.SingleDetailsApi;
+import com.moodX.app.network.apis.SingleDetailsTVApi;
+import com.moodX.app.network.model.FavoriteModel;
+import com.moodX.app.network.model.User;
 import com.moodX.app.utils.HelperUtils;
 import com.moodX.app.utils.PreferenceUtils;
 import com.moodX.app.utils.RtlUtils;
@@ -148,7 +169,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.moodX.app.utils.Constants;
 import at.huber.youtubeExtractor.VideoMeta;
 import at.huber.youtubeExtractor.YouTubeExtractor;
 import at.huber.youtubeExtractor.YtFile;
@@ -158,31 +178,29 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-
 @SuppressLint("StaticFieldLeak")
-public class DetailsActivity extends AppCompatActivity implements CastPlayer.SessionAvailabilityListener,
-        ProgramAdapter.OnProgramClickListener,
-        EpisodeAdapter.OnTVSeriesEpisodeItemClickListener,
+public class DetailsActivity extends AppCompatActivity implements CastPlayer.SessionAvailabilityListener, ProgramAdapter.OnProgramClickListener, EpisodeAdapter.OnTVSeriesEpisodeItemClickListener,
         RelatedTvAdapter.RelatedTvClickListener {
-
     private static final int PERMISSION_REQUEST_CODE = 1;
     private static final int PRELOAD_TIME_S = 20;
     public static final String TAG = DetailsActivity.class.getSimpleName();
-    private TextView tvName, tvDirector, tvRelease, tvDes, tvGenre, tvRelated;
-    private RecyclerView rvServer, rvServerForTV, rvRelated, rvComment, castRv;
+    private TextView tvName;
+    private TextView tvDirector;
+    private TextView tvRelease;
+    private TextView tvDes;
+    private TextView tvGenre;
+    private TextView tvRelated;
+    private RecyclerView rvServer, rvServerForTV, rvRelated, rvComment, castRv, liveChatRV;
     private Spinner seasonSpinner;
     private LinearLayout seasonSpinnerContainer;
     public static RelativeLayout lPlay;
-    private RelativeLayout contentDetails;
-    private LinearLayout subscriptionLayout, topBarLayout;
+    private RelativeLayout contentDetails, liveChatSection;
+    private LinearLayout subscriptionLayout, topbarLayout;
     private Button subscribeBt;
     private ImageView backIv, subBackIv;
 
     private ServerAdapter serverAdapter;
     private HomePageAdapter relatedAdapter;
-    private RelatedTvAdapter relatedTvAdapter;
     private CastCrewAdapter castCrewAdapter;
 
     private String V_URL = "";
@@ -199,7 +217,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     private final List<CastCrew> castCrews = new ArrayList<>();
     private String strDirector = "", strGenre = "";
     public static LinearLayout llBottom, llBottomParent;
-    public static RelativeLayout llComment;
+    public static RelativeLayout llcomment;
     private SwipeRefreshLayout swipeRefreshLayout;
     private String categoryType = "", id = "";
     private ImageButton imgAddFav, shareIv2, reportIv;
@@ -210,9 +228,9 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
     private ShimmerFrameLayout shimmerFrameLayout;
     private Button btnComment;
-    private EditText etComment;
+    private EditText etComment, liveChatMsgET;
+    private FloatingActionButton liveChatMsgSendBtn;
     private CommentsAdapter commentsAdapter;
-    private RelativeLayout description_layout;
 
     public static SimpleExoPlayer player;
     public static PlayerView simpleExoPlayerView;
@@ -223,9 +241,9 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     private DefaultTrackSelector trackSelector;
 
     public static ImageView imgFull;
-    public ImageView aspectRatioIv, externalPlayerIv, volumeControlIv;
-    private LinearLayout volumeControlLayout;
-    private SeekBar volumeSeekbar;
+    public ImageView aspectRatioIv, externalPlayerIv, volumControlIv;
+    private LinearLayout volumnControlLayout;
+    private SeekBar volumnSeekbar;
     public MediaRouteButton mediaRouteButton;
 
     public static boolean isPlaying, isFullScr;
@@ -243,6 +261,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     private boolean tv = false;
     private String download_check = "";
     private String trailerUrl = "";
+    private String isPaid = "0";
 
     private CastPlayer castPlayer;
     private boolean castSession;
@@ -251,7 +270,6 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
     private LinearLayout tvLayout, scheduleLayout, tvTopLayout;
     private TextView tvTitleTv, watchStatusTv, timeTv, programTv, proGuideTv, watchLiveTv;
-    private ProgramAdapter programAdapter;
     List<Program> programs = new ArrayList<>();
     private RecyclerView programRv;
     private ImageView tvThumbIv, shareIv, tvReportIV;
@@ -266,14 +284,14 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     private String currentProgramTitle;
     private String userId;
 
+    private RelativeLayout descriptionLayout;
     private MaterialRippleLayout descriptionContainer;
-    private TextView dGenreTv;
+    private TextView dGenereTv;
     private boolean activeMovie;
 
     private TextView seriesTitleTv;
     private RelativeLayout seriesLayout;
     private ImageView favIv;
-
     private AudioManager mAudioManager;
     private int aspectClickCount = 1;
 
@@ -302,6 +320,8 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+
 
         //check vpn connection
         helperUtils = new HelperUtils(DetailsActivity.this);
@@ -326,11 +346,11 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         initViews();
 
         if (isDark) {
-            tvTopLayout.setBackgroundColor(getResources().getColor(R.color.black_window_light));
+            tvTopLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.black_window_light));
             scheduleLayout.setBackground(ContextCompat.getDrawable(this, R.drawable.rounded_black_transparent));
             etComment.setBackground(ContextCompat.getDrawable(this, R.drawable.round_grey_transparent));
-            btnComment.setTextColor(getResources().getColor(R.color.grey_20));
-            topBarLayout.setBackgroundColor(getResources().getColor(R.color.dark));
+            btnComment.setTextColor(ContextCompat.getColor(this, R.color.grey_20));
+            topbarLayout.setBackgroundColor(getResources().getColor(R.color.dark));
             subscribeBt.setBackground(ContextCompat.getDrawable(this, R.drawable.btn_rounded_dark));
 
             descriptionContainer.setBackground(ContextCompat.getDrawable(this, R.drawable.gradient_black_transparent));
@@ -376,16 +396,16 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         castSession = getIntent().getBooleanExtra("castSession", false);
 
         //handle Continue watching task
-        isFromContinueWatching = getIntent().getBooleanExtra(Constants.IS_FROM_CONTINUE_WATCHING, false);
+        isFromContinueWatching = getIntent().getBooleanExtra(IS_FROM_CONTINUE_WATCHING, false);
         try {
             if (isFromContinueWatching) {
-                id = getIntent().getStringExtra(Constants.CONTENT_ID);
-                title = getIntent().getStringExtra(Constants.CONTENT_TITLE);
-                castImageUrl = getIntent().getStringExtra(Constants.IMAGE_URL);
-                categoryType = getIntent().getStringExtra(Constants.CATEGORY_TYPE);
-                serverType = getIntent().getStringExtra(Constants.SERVER_TYPE);
-                mediaUrl = getIntent().getStringExtra(Constants.STREAM_URL);
-                playerCurrentPosition = getIntent().getLongExtra(Constants.POSITION, 0);
+                id = getIntent().getStringExtra(CONTENT_ID);
+                title = getIntent().getStringExtra(CONTENT_TITLE);
+                castImageUrl = getIntent().getStringExtra(IMAGE_URL);
+                categoryType = getIntent().getStringExtra(CATEGORY_TYPE);
+                serverType = getIntent().getStringExtra(SERVER_TYPE);
+                mediaUrl = getIntent().getStringExtra(STREAM_URL);
+                playerCurrentPosition = getIntent().getLongExtra(POSITION, 0);
                 resumePosition = playerCurrentPosition;
             }
         } catch (NullPointerException e) {
@@ -408,6 +428,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
         commentsAdapter = new CommentsAdapter(this, listComment);
         rvComment.setLayoutManager(new LinearLayoutManager(this));
+        rvComment.setHasFixedSize(true);
         rvComment.setNestedScrollingEnabled(false);
         rvComment.setAdapter(commentsAdapter);
         getComments();
@@ -415,12 +436,16 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         imgSubtitle.setOnClickListener(v -> showSubtitleDialog(DetailsActivity.this, listSub));
 
         imgAudio.setOnClickListener(view -> {
-            TrackSelectionDialog trackSelectionDialog =
-                    TrackSelectionDialog.createForTrackSelector(
-                            trackSelector,
-                            /* onDismissListener= */ dismissedDialog -> {
-                            });
-            trackSelectionDialog.show(getSupportFragmentManager(), null);
+            try {
+                TrackSelectionDialog trackSelectionDialog =
+                        TrackSelectionDialog.createForTrackSelector(
+                                trackSelector,
+                                /* onDismissListener= */ dismissedDialog -> {
+                                });
+                trackSelectionDialog.show(getSupportFragmentManager(), null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
 
         btnComment.setOnClickListener(v -> {
@@ -466,6 +491,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     public void initViews() {
         llBottom = findViewById(R.id.llbottom);
         tvDes = findViewById(R.id.tv_details);
+        //tvCast = findViewById(R.id.tv_cast);
         tvRelease = findViewById(R.id.tv_release_date);
         tvName = findViewById(R.id.text_name);
         tvDirector = findViewById(R.id.tv_director);
@@ -483,7 +509,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         btnComment = findViewById(R.id.btn_comment);
         etComment = findViewById(R.id.et_comment);
         rvComment = findViewById(R.id.recyclerView_comment);
-        llComment = findViewById(R.id.llcomments);
+        llcomment = findViewById(R.id.llcomments);
         simpleExoPlayerView = findViewById(R.id.video_view);
         youtubePlayerView = findViewById(R.id.youtubePlayerView);
         exoplayerLayout = findViewById(R.id.exoPlayerLayout);
@@ -492,9 +518,9 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         imgFull = findViewById(R.id.img_full_scr);
         aspectRatioIv = findViewById(R.id.aspect_ratio_iv);
         externalPlayerIv = findViewById(R.id.external_player_iv);
-        volumeControlIv = findViewById(R.id.volumn_control_iv);
-        volumeControlLayout = findViewById(R.id.volumn_layout);
-        volumeSeekbar = findViewById(R.id.volumn_seekbar);
+        volumControlIv = findViewById(R.id.volumn_control_iv);
+        volumnControlLayout = findViewById(R.id.volumn_layout);
+        volumnSeekbar = findViewById(R.id.volumn_seekbar);
         rvServer = findViewById(R.id.rv_server_list);
         rvServerForTV = findViewById(R.id.rv_server_list_for_tv);
         seasonSpinner = findViewById(R.id.season_spinner);
@@ -520,6 +546,13 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         seekbarLayout = findViewById(R.id.seekbar_layout);
         liveTv = findViewById(R.id.live_tv);
         castRv = findViewById(R.id.cast_rv);
+        //live chat section
+        liveChatSection = findViewById(R.id.liveChatSection);
+        liveChatRV = findViewById(R.id.liveCommentRV);
+        liveChatMsgET = findViewById(R.id.live_chat_msg);
+        liveChatMsgSendBtn = findViewById(R.id.live_chat_msg_btn_send);
+        liveChatMsgET.setOnEditorActionListener(liveMsgListener);
+
         proGuideTv = findViewById(R.id.pro_guide_tv);
         watchLiveTv = findViewById(R.id.watch_live_tv);
 
@@ -528,8 +561,9 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         subscribeBt = findViewById(R.id.subscribe_bt);
         backIv = findViewById(R.id.des_back_iv);
         subBackIv = findViewById(R.id.back_iv);
-        topBarLayout = findViewById(R.id.topbar);
+        topbarLayout = findViewById(R.id.topbar);
 
+        descriptionLayout = findViewById(R.id.description_layout);
         descriptionContainer = findViewById(R.id.lyt_parent);
         watchNowBt = findViewById(R.id.watch_now_bt);
         downloadBt = findViewById(R.id.download_bt);
@@ -537,7 +571,8 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         downloadAndTrailerBtContainer = findViewById(R.id.downloadBt_container);
         posterIv = findViewById(R.id.poster_iv);
         thumbIv = findViewById(R.id.image_thumb);
-        dGenreTv = findViewById(R.id.genre_tv);
+        //descriptionBackIv = findViewById(R.id.back_iv);
+        dGenereTv = findViewById(R.id.genre_tv);
         serverIv = findViewById(R.id.img_server);
 
         seriesLayout = findViewById(R.id.series_layout);
@@ -549,13 +584,17 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         seasonDownloadLayout = findViewById(R.id.seasonDownloadLayout);
         seasonDownloadSpinner = findViewById(R.id.seasonSpinnerField);
         seasonDownloadRecyclerView = findViewById(R.id.seasonDownloadRecyclerView);
-        description_layout = findViewById(R.id.description_layout);
 
+
+       /* RelativeLayout rlInput = findViewById(R.id.input);
+        rlInput.setVisibility(GONE);*/
     }
 
     @SuppressLint("SourceLockedOrientationActivity")
     public void controlFullScreenPlayer() {
+        boolean fullScreenByClick;
         if (isFullScr) {
+            fullScreenByClick = false;
             isFullScr = false;
             swipeRefreshLayout.setVisibility(VISIBLE);
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -572,6 +611,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
         } else {
 
+            fullScreenByClick = true;
             isFullScr = true;
             swipeRefreshLayout.setVisibility(GONE);
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -582,10 +622,12 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
             // reset the orientation
             //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
         }
     }
 
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onStart() {
         super.onStart();
@@ -612,12 +654,12 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         }
 
         if (mAudioManager != null) {
-            volumeSeekbar.setMax(mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+            volumnSeekbar.setMax(mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
             int currentVolumn = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
-            volumeSeekbar.setProgress(currentVolumn);
+            volumnSeekbar.setProgress(currentVolumn);
         }
 
-        volumeSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        volumnSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 if (b) {
@@ -637,7 +679,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
             }
         });
 
-        volumeControlIv.setOnClickListener(view -> volumeControlLayout.setVisibility(VISIBLE));
+        volumControlIv.setOnClickListener(view -> volumnControlLayout.setVisibility(VISIBLE));
 
         aspectRatioIv.setOnClickListener(view -> {
             if (aspectClickCount == 1) {
@@ -656,32 +698,42 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
         });
 
-        externalPlayerIv.setOnClickListener(view -> {
+        externalPlayerIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-            if (mediaUrl != null) {
-                if (!tv) {
-                    // set player normal/ portrait screen if not tv
-                    setPlayerNormalScreen();
+                if (mediaUrl != null) {
+                    if (!tv) {
+                        // set player normal/ portrait screen if not tv
+                        descriptionLayout.setVisibility(VISIBLE);
+                        setPlayerNormalScreen();
+                    }
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setDataAndType(Uri.parse(mediaUrl), "video/*");
+                    startActivity(Intent.createChooser(intent, "Complete action using"));
                 }
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setDataAndType(Uri.parse(mediaUrl), "video/*");
-                startActivity(Intent.createChooser(intent, "Complete action using"));
-            }
 
+            }
         });
 
         watchNowBt.setOnClickListener(v -> {
-            if (!listServer.isEmpty()) {
-                if (listServer.size() == 1) {
-                    releasePlayer();
-                    //resetCastPlayer();
-                    preparePlayer(listServer.get(0));
-                    lPlay.setVisibility(VISIBLE);
+            if (isUserAllowedToMovie(isPaid)) {
+                if (!listServer.isEmpty()) {
+                    if (listServer.size() == 1) {
+
+                        releasePlayer();
+                        //resetCastPlayer();
+                        preparePlayer(listServer.get(0));
+                        descriptionLayout.setVisibility(GONE);
+                        lPlay.setVisibility(VISIBLE);
+                    } else {
+                        openServerDialog();
+                    }
                 } else {
-                    openServerDialog();
+                    Toast.makeText(DetailsActivity.this, R.string.no_video_found, Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(DetailsActivity.this, R.string.no_video_found, Toast.LENGTH_SHORT).show();
+                paidControl(isPaid);
             }
         });
 
@@ -704,11 +756,12 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
         trailerBt.setOnClickListener(v -> {
             if (trailerUrl != null && !trailerUrl.equalsIgnoreCase("")) {
-                serverType = Constants.YOUTUBE;
+                serverType = YOUTUBE;
                 mediaUrl = trailerUrl;
                 CommonModels commonModels = new CommonModels();
                 commonModels.setStremURL(trailerUrl);
-                commonModels.setServerType(Constants.YOUTUBE);
+                commonModels.setServerType(YOUTUBE);
+                descriptionLayout.setVisibility(GONE);
                 lPlay.setVisibility(VISIBLE);
                 releasePlayer();
                 preparePlayer(commonModels);
@@ -798,20 +851,20 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                 imgBack.setVisibility(GONE);
                 imgFull.setVisibility(GONE);
                 imgSubtitle.setVisibility(GONE);
-                volumeControlLayout.setVisibility(GONE);
+                volumnControlLayout.setVisibility(GONE);
             }
         });
 
         subscribeBt.setOnClickListener(v -> {
-
-            if (userId == null) {
+            Log.e(TAG, "onClick: userID: " + userId);
+            Log.e(TAG, "onClick: userID: " + PreferenceUtils.getUserId(DetailsActivity.this));
+            if (!PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
                 new ToastMsg(DetailsActivity.this).toastIconError(getResources().getString(R.string.subscribe_error));
                 startActivity(new Intent(DetailsActivity.this, LoginActivity.class));
                 finish();
             } else {
                 startActivity(new Intent(DetailsActivity.this, PurchasePlanActivity.class));
             }
-
         });
         backIv.setOnClickListener(v -> finish());
 
@@ -819,8 +872,20 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
     }
 
+    private boolean isUserAllowedToMovie(String paid) {
+        if (paid.equals("1")) {
+            if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
+                if (PreferenceUtils.isActivePlan(DetailsActivity.this)) {
+                    return PreferenceUtils.isValid(DetailsActivity.this);
+                }
+            }
+        }
+        return false;
+    }
+
     String videoReport = "", audioReport = "", subtitleReport = "", messageReport = "";
 
+    @SuppressLint("SetTextI18n")
     private void reportMovie() {
         //open movie report dialog
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -833,6 +898,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         RadioGroup videoGroup = view.findViewById(R.id.radio_group_video);
         RadioGroup audioGroup = view.findViewById(R.id.radio_group_audio);
         RadioGroup subtitleGroup = view.findViewById(R.id.radio_group_subtitle);
+        //EditText message = view.findViewById(R.id.report_message_et);
         TextInputEditText message = view.findViewById(R.id.report_message_et);
         Button submitButton = view.findViewById(R.id.submit_button);
         Button cancelButton = view.findViewById(R.id.cancel_button);
@@ -867,27 +933,17 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
         submitButton.setOnClickListener(v -> {
             messageReport = message.getText().toString().trim();
+            String userId = PreferenceUtils.getUserId(getApplicationContext());
             Retrofit retrofit = RetrofitClient.getRetrofitInstance();
             ReportApi api = retrofit.create(ReportApi.class);
             Call<ResponseBody> call = api.submitReport(AppConfig.API_KEY, categoryType, id, videoReport,
-                    audioReport, subtitleReport, messageReport, BuildConfig.VERSION_CODE,
-                    PreferenceUtils.getUserId(DetailsActivity.this), Constants.getDeviceId(this));
+                    audioReport, subtitleReport, messageReport, BuildConfig.VERSION_CODE, userId,
+                    getDeviceId(DetailsActivity.this));
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                     if (response.code() == 200) {
                         new ToastMsg(getApplicationContext()).toastIconSuccess("Report submitted");
-                    }else if (response.code() == 412) {
-                        try {
-                            if (response.errorBody() != null) {
-                                ApiResources.openLoginScreen(response.errorBody().string(),
-                                        DetailsActivity.this);
-                                finish();
-                            }
-                        } catch (Exception e) {
-                            Toast.makeText(DetailsActivity.this,
-                                    e.getMessage(), Toast.LENGTH_LONG).show();
-                        }
                     } else {
                         new ToastMsg(getApplicationContext()).toastIconError(getResources().getString(R.string.something_went_text));
                     }
@@ -976,10 +1032,12 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         RecyclerView externalServerRv = view.findViewById(R.id.external_download_rv);
         DownloadAdapter internalDownloadAdapter = new DownloadAdapter(this, listInternalDownload, true, downloadViewModel);
         internalServerRv.setLayoutManager(new LinearLayoutManager(this));
+        internalServerRv.setHasFixedSize(true);
         internalServerRv.setAdapter(internalDownloadAdapter);
 
         DownloadAdapter externalDownloadAdapter = new DownloadAdapter(this, listExternalDownload, true, downloadViewModel);
         externalServerRv.setLayoutManager(new LinearLayoutManager(this));
+        externalServerRv.setHasFixedSize(true);
         externalServerRv.setAdapter(externalDownloadAdapter);
 
         builder.setView(view);
@@ -994,6 +1052,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         RecyclerView serverRv = view.findViewById(R.id.serverRv);
         serverAdapter = new ServerAdapter(this, listServer, "movie");
         serverRv.setLayoutManager(new LinearLayoutManager(this));
+        serverRv.setHasFixedSize(true);
         serverRv.setAdapter(serverAdapter);
 
         ImageView closeIv = view.findViewById(R.id.close_iv);
@@ -1004,14 +1063,17 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
         closeIv.setOnClickListener(v -> dialog.dismiss());
 
+        final ServerAdapter.OriginalViewHolder[] viewHolder = {null};
         serverAdapter.setOnItemClickListener(new ServerAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, CommonModels obj, int position,
-                                    ServerAdapter.OriginalViewHolder holder) {
+            public void onItemClick(View view, CommonModels obj, int position, ServerAdapter.OriginalViewHolder holder) {
                 releasePlayer();
                 //resetCastPlayer();
                 preparePlayer(obj);
 
+                //serverAdapter.chanColor(viewHolder[0], position);
+                //holder.name.setTextColor(getResources().getColor(R.color.colorPrimary));
+                //viewHolder[0] = holder;
             }
 
             @Override
@@ -1021,6 +1083,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
             @Override
             public void hideDescriptionLayout() {
+                descriptionLayout.setVisibility(GONE);
                 lPlay.setVisibility(VISIBLE);
                 dialog.dismiss();
 
@@ -1107,13 +1170,13 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         movieMetadata.putString(MediaMetadata.KEY_TITLE, title);
         //movieMetadata.putString(MediaMetadata.KEY_ALBUM_ARTIST, "Test Artist");
         movieMetadata.addImage(new WebImage(Uri.parse(castImageUrl)));
-        MediaInfo mediaInfo = new MediaInfo.Builder(mediaUrl)
+        @SuppressLint("VisibleForTests") MediaInfo mediaInfo = new MediaInfo.Builder(mediaUrl)
                 .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
                 .setContentType(MimeTypes.VIDEO_UNKNOWN)
                 .setMetadata(movieMetadata).build();
 
         //array of media sources
-        final MediaQueueItem[] mediaItems = {new MediaQueueItem.Builder(mediaInfo).build()};
+        @SuppressLint("VisibleForTests") final MediaQueueItem[] mediaItems = {new MediaQueueItem.Builder(mediaInfo).build()};
 
         castPlayer.loadItems(mediaItems, 0, 3000, Player.REPEAT_MODE_OFF);
 
@@ -1245,6 +1308,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
     }
 
+    @SuppressLint("SetTextI18n")
     private void initGetData() {
         //check vpn connection
         helperUtils = new HelperUtils(DetailsActivity.this);
@@ -1253,13 +1317,11 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
             helperUtils.showWarningDialog(DetailsActivity.this, getString(R.string.vpn_detected), getString(R.string.close_vpn));
         } else {
             if (!categoryType.equals("tv")) {
-
-                description_layout.setVisibility(VISIBLE);
-                llComment.setVisibility(GONE);
                 //----related rv----------
                 relatedAdapter = new HomePageAdapter(this, listRelated);
                 rvRelated.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,
                         false));
+                rvRelated.setHasFixedSize(true);
                 rvRelated.setAdapter(relatedAdapter);
 
                 if (categoryType.equals("tvseries")) {
@@ -1280,6 +1342,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                     // cast & crew adapter
                     castCrewAdapter = new CastCrewAdapter(this, castCrews);
                     castRv.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
+                    castRv.setHasFixedSize(true);
                     castRv.setAdapter(castCrewAdapter);
 
                     getSeriesData(categoryType, id);
@@ -1300,6 +1363,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                     // cast & crew adapter
                     castCrewAdapter = new CastCrewAdapter(this, castCrews);
                     castRv.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
+                    castRv.setHasFixedSize(true);
                     castRv.setAdapter(castCrewAdapter);
 
                     getMovieData(categoryType, id);
@@ -1309,15 +1373,15 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                 if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
                     getFavStatus();
                 }
+
             } else {
                 tv = true;
-
-                description_layout.setVisibility(GONE);
-                llComment.setVisibility(GONE);
                 imgSubtitle.setVisibility(GONE);
+                llcomment.setVisibility(GONE);
                 serverIv.setVisibility(GONE);
 
                 rvServer.setVisibility(VISIBLE);
+                descriptionLayout.setVisibility(GONE);
                 lPlay.setVisibility(VISIBLE);
 
                 // hide exo player some control
@@ -1329,52 +1393,48 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                 if (!PreferenceUtils.isProgramGuideEnabled(DetailsActivity.this)) {
                     proGuideTv.setVisibility(GONE);
                     programRv.setVisibility(GONE);
-
                 }
-
                 watchStatusTv.setText(getString(R.string.watching_on) + " " + getString(R.string.app_name));
-
                 tvRelated.setText(getString(R.string.all_tv_channel));
-
                 rvServer.removeAllViews();
                 listServer.clear();
                 rvRelated.removeAllViews();
                 listRelated.clear();
 
-                programAdapter = new ProgramAdapter(programs, this);
+                ProgramAdapter programAdapter = new ProgramAdapter(programs, this);
                 programRv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+                programRv.setHasFixedSize(true);
                 programRv.setAdapter(programAdapter);
                 programAdapter.setOnProgramClickListener(this);
 
                 //----related rv----------
                 //relatedTvAdapter = new LiveTvHomeAdapter(this, listRelated, TAG);
-                relatedTvAdapter = new RelatedTvAdapter(listRelated, DetailsActivity.this);
+                RelatedTvAdapter relatedTvAdapter = new RelatedTvAdapter(listRelated, DetailsActivity.this);
                 rvRelated.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+                rvRelated.setHasFixedSize(true);
                 rvRelated.setAdapter(relatedTvAdapter);
-                relatedTvAdapter.setListener(DetailsActivity.this);
+
 
                 imgAddFav.setVisibility(GONE);
 
                 serverAdapter = new ServerAdapter(this, listServer, "tv");
                 rvServerForTV.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+                rvServerForTV.setHasFixedSize(true);
                 rvServerForTV.setAdapter(serverAdapter);
                 Log.e(TAG, "initGetData: TV");
-                getTvData(categoryType, id);
                 llBottom.setVisibility(GONE);
+                getTvData(categoryType, id);
+
 
                 final ServerAdapter.OriginalViewHolder[] viewHolder = {null};
                 serverAdapter.setOnItemClickListener(new ServerAdapter.OnItemClickListener() {
                     @Override
                     public void onItemClick(View view, CommonModels obj, int position, ServerAdapter.OriginalViewHolder holder) {
                         mediaUrl = obj.getStremURL();
-
                         if (!castSession) {
                             initMoviePlayer(obj.getStremURL(), obj.getServerType(), DetailsActivity.this);
-
                         } else {
-
                             if (obj.getServerType().equalsIgnoreCase("embed")) {
-
                                 castSession = false;
                                 castPlayer.setSessionAvailabilityListener(null);
                                 castPlayer.release();
@@ -1406,12 +1466,14 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
                     }
                 });
+
+
             }
         }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    private void openWebActivity(String s) {
+    private void openWebActivity(String s, Context context, String videoType) {
 
         if (isPlaying) {
             player.release();
@@ -1429,11 +1491,10 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
     public void initMoviePlayer(String url, String type, Context context) {
         serverType = type;
-        if (type.equals("embed") || type.equals("vimeo") || type.equals("gdrive")
-            /*|| type.equals("youtube-live")*/) {
+        if (type.equals("embed") || type.equals("vimeo") || type.equals("gdrive") /*|| type.equals("youtube-live")*/) {
             isVideo = false;
 
-            openWebActivity(url);
+            openWebActivity(url, context, type);
         } else {
             isVideo = true;
             initVideoPlayer(url, context, type);
@@ -1471,12 +1532,12 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
             case "hls":
                 mediaSource = hlsMediaSource(uri, context);
                 break;
-            case Constants.YOUTUBE:
+            case YOUTUBE:
                 /**tag 18 : 360p, tag: 22 : 720p, 133: live*/
-                extractYoutubeUrl(url, context, 18);
+                extractYoutubeUrl(url, context);
                 // initYoutubePlayer(url);
                 break;
-            case Constants.YOUTUBE_LIVE:
+            case YOUTUBE_LIVE:
                 /**play Youtube-live video**/
                 initYoutubePlayer(url);
                 break;
@@ -1484,12 +1545,12 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                 mediaSource = rtmpMediaSource(uri);
                 break;
             default:
-                mediaSource = mediaSource(uri);
+                mediaSource = mediaSource(uri, context);
                 break;
         }
 
-        if (!type.equalsIgnoreCase(Constants.YOUTUBE) &&
-                !type.equalsIgnoreCase(Constants.YOUTUBE_LIVE)) {
+        if (!type.equalsIgnoreCase(YOUTUBE) &&
+                !type.equalsIgnoreCase(YOUTUBE_LIVE)) {
             try {
                 player.prepare(mediaSource, true, false);
                 simpleExoPlayerView.setPlayer(player);
@@ -1599,18 +1660,19 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
 
     @SuppressLint("StaticFieldLeak")
-    private void extractYoutubeUrl(String url, final Context context, final int tag) {
+    private void extractYoutubeUrl(String url, final Context context) {
         Log.e("Trailer", "onExtractUrl");
         new YouTubeExtractor(context) {
             @Override
             public void onExtractionComplete(SparseArray<YtFile> ytFiles, VideoMeta vMeta) {
                 if (ytFiles != null) {
+                    int itag = 18;
 
                     try {
                         Log.e("Trailer", "onPlayUrl");
-                        String extractedUrl = ytFiles.get(tag).getUrl();
+                        String extractedUrl = ytFiles.get(itag).getUrl();
                         //youtubeUrl = extractedUrl;
-                        MediaSource source = mediaSource(Uri.parse(extractedUrl));
+                        MediaSource source = mediaSource(Uri.parse(extractedUrl), context);
                         player.prepare(source, true, false);
                         simpleExoPlayerView.setPlayer(player);
                         player.setPlayWhenReady(true);
@@ -1628,7 +1690,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     }
 
     private MediaSource rtmpMediaSource(Uri uri) {
-        MediaSource videoSource;
+        MediaSource videoSource = null;
         RtmpDataSourceFactory dataSourceFactory = new RtmpDataSourceFactory();
         videoSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
                 .createMediaSource(uri);
@@ -1639,14 +1701,14 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     private MediaSource hlsMediaSource(Uri uri, Context context) {
         DefaultBandwidthMeter bandwidthMeter = new DefaultBandwidthMeter();
         DataSource.Factory dataSourceFactory = new DefaultDataSourceFactory(context,
-                Util.getUserAgent(context, getResources().getString(R.string.app_name)),
-                bandwidthMeter);
+                Util.getUserAgent(context, "oxoo"), bandwidthMeter);
 
-        return new HlsMediaSource.Factory(dataSourceFactory)
+        MediaSource videoSource = new HlsMediaSource.Factory(dataSourceFactory)
                 .createMediaSource(uri);
+        return videoSource;
     }
 
-    private MediaSource mediaSource(Uri uri) {
+    private MediaSource mediaSource(Uri uri, Context context) {
         return new DefaultMediaSourceFactory(
                 new DefaultHttpDataSourceFactory("exoplayer")).
                 createMediaSource(uri);
@@ -1664,7 +1726,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                     "en"); // The subtitle language. May be null.
 
             DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(context,
-                    Util.getUserAgent(context, getResources().getString(R.string.app_name)), new DefaultBandwidthMeter());
+                    Util.getUserAgent(context, getString(R.string.app_name)), new DefaultBandwidthMeter());
 
 
             MediaSource subtitleSource = new SingleSampleMediaSource
@@ -1685,8 +1747,8 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     private void addToFav() {
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         FavouriteApi api = retrofit.create(FavouriteApi.class);
-        Call<FavoriteModel> call = api.addToFavorite(AppConfig.API_KEY, userId, id,
-                BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
+        Call<FavoriteModel> call = api.addToFavorite(AppConfig.API_KEY, userId, id, BuildConfig.VERSION_CODE,
+                getDeviceId(DetailsActivity.this));
         call.enqueue(new Callback<FavoriteModel>() {
             @Override
             public void onResponse(@NonNull Call<FavoriteModel> call, @NonNull retrofit2.Response<FavoriteModel> response) {
@@ -1699,18 +1761,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                     } else {
                         new ToastMsg(DetailsActivity.this).toastIconError(response.body().getMessage());
                     }
-                } else if (response.code() == 412) {
-                    try {
-                        if (response.errorBody() != null) {
-                            ApiResources.openLoginScreen(response.errorBody().string(),
-                                    DetailsActivity.this);
-                            finish();
-                        }
-                    } catch (Exception e) {
-                        Toast.makeText(DetailsActivity.this,
-                                e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                }else {
+                } else {
                     new ToastMsg(DetailsActivity.this).toastIconError(getString(R.string.error_toast));
                 }
             }
@@ -1721,10 +1772,10 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
             }
         });
-
     }
 
     private void paidControl(String isPaid) {
+
         if (isPaid.equals("1")) {
             if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
                 if (PreferenceUtils.isActivePlan(DetailsActivity.this)) {
@@ -1748,14 +1799,15 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
             contentDetails.setVisibility(VISIBLE);
             subscriptionLayout.setVisibility(GONE);
         }
+
     }
 
-    private void getTvData(final String vType, final String vId) {
+    private void getTvData(final String vtype, final String vId) {
+        String userId = PreferenceUtils.getUserId(this);
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SingleDetailsTVApi api = retrofit.create(SingleDetailsTVApi.class);
-        Call<SingleDetailsTV> call = api.getSingleDetails(AppConfig.API_KEY, vType, vId,
-                BuildConfig.VERSION_CODE, PreferenceUtils.getUserId(this),
-                Constants.getDeviceId(this));
+        Call<SingleDetailsTV> call = api.getSingleDetails(AppConfig.API_KEY, vtype, vId, BuildConfig.VERSION_CODE, userId,
+                getDeviceId(DetailsActivity.this));
         call.enqueue(new Callback<SingleDetailsTV>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
@@ -1777,6 +1829,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         tvTitleTv.setText(title);
 
                         tvDes.setText(detailsModel.getDescription());
+                        tvDes.setVisibility(GONE);
                         V_URL = detailsModel.getStreamUrl();
                         castImageUrl = detailsModel.getThumbnailUrl();
 
@@ -1794,48 +1847,10 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         currentProgramTime = detailsModel.getCurrentProgramTime();
                         currentProgramTitle = detailsModel.getCurrentProgramTitle();
 
-                        timeTv.setText(currentProgramTime);
-                        programTv.setText(currentProgramTitle);
-                        if (PreferenceUtils.isProgramGuideEnabled(DetailsActivity.this)) {
-                            List<ProgramGuide> programGuideList = response.body().getProgramGuide();
-                            for (int i = 0; i < programGuideList.size(); i++) {
-                                ProgramGuide programGuide = programGuideList.get(i);
-                                Program program = new Program();
-                                program.setId(programGuide.getId());
-                                program.setTitle(programGuide.getTitle());
-                                program.setProgramStatus(programGuide.getProgramStatus());
-                                program.setTime(programGuide.getTime());
-                                program.setVideoUrl(programGuide.getVideoUrl());
-
-                                programs.add(program);
-                            }
-
-                            if (programs.size() <= 0) {
-                                proGuideTv.setVisibility(GONE);
-                                programRv.setVisibility(GONE);
-                            } else {
-                                proGuideTv.setVisibility(VISIBLE);
-                                programRv.setVisibility(VISIBLE);
-                                programAdapter.notifyDataSetChanged();
-                            }
-                        }
-                        //all tv channel data
-                        List<AllTvChannel> allTvChannelList = response.body().getAllTvChannel();
-                        for (int i = 0; i < allTvChannelList.size(); i++) {
-                            AllTvChannel allTvChannel = allTvChannelList.get(i);
-                            CommonModels models = new CommonModels();
-                            models.setImageUrl(allTvChannel.getPosterUrl());
-                            models.setTitle(allTvChannel.getTvName());
-                            models.setVideoType("tv");
-                            models.setIsPaid(allTvChannel.getIsPaid());
-                            models.setId(allTvChannel.getLiveTvId());
-                            listRelated.add(models);
-                        }
-                        if (listRelated.size() == 0) {
-                            tvRelated.setVisibility(GONE);
-                        }
-                        relatedTvAdapter.notifyDataSetChanged();
-
+                        //live chat related content
+                        swipeRefreshLayout.setVisibility(GONE);
+                        liveChatSection.setVisibility(VISIBLE);
+                        handleLiveChatData(vId);
                         //additional media source data
                         List<AdditionalMediaSource> serverArray = response.body().getAdditionalMediaSource();
                         for (int i = 0; i < serverArray.size(); i++) {
@@ -1849,17 +1864,6 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         }
                         serverAdapter.notifyDataSetChanged();
                     }
-                }else if (response.code() == 412) {
-                    try {
-                        if (response.errorBody() != null) {
-                            ApiResources.openLoginScreen(response.errorBody().string(),
-                                    DetailsActivity.this);
-                            finish();
-                        }
-                    } catch (Exception e) {
-                        Toast.makeText(DetailsActivity.this,
-                                e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
                 }
             }
 
@@ -1871,17 +1875,108 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
     }
 
-    private void getSeriesData(String vType, String vId) {
+    private LiveChatAdapter liveChatAdapter;
+    List<LiveChat> liveChatList = new ArrayList<>();
+
+    private void handleLiveChatData(String vId) {
+        //force hide full screen for tv
+       /* getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);*/
+
+        tvId = vId;
+        liveChatList.clear();
+        liveChatAdapter = new LiveChatAdapter(liveChatList, DetailsActivity.this);
+        liveChatRV.setLayoutManager(new LinearLayoutManager(this));
+        liveChatRV.setHasFixedSize(true);
+        liveChatRV.setNestedScrollingEnabled(false);
+        liveChatRV.setAdapter(liveChatAdapter);
+
+        //==FirebaseDatabase.getInstance().getReference().child(vId).addValueEventListener(liveChatListener);
+        FirebaseDatabase.getInstance().getReference().child(vId).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                LiveChat liveChat = snapshot.getValue(LiveChat.class);
+                liveChatList.add(liveChat);
+                liveChatAdapter.notifyItemInserted(liveChatAdapter.getItemCount() - 1);
+                liveChatRV.scrollToPosition(liveChatAdapter.getItemCount() - 1);
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Log.e("snapshot=====", snapshot.toString());
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                Log.e("snapshot=====", snapshot.toString());
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                Log.e("snapshot=====", snapshot.toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        liveChatMsgSendBtn.setOnClickListener(v -> {
+            if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
+                Log.e(TAG, "onClick: user logged in");
+                sendLiveChatMsg();
+            } else {
+                Toast.makeText(DetailsActivity.this, "Please login to comment.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private String tvId = "";
+
+    private final TextView.OnEditorActionListener liveMsgListener = (v, actionId, event) -> {
+        switch (actionId) {
+            case EditorInfo.IME_ACTION_SEND:
+                if (PreferenceUtils.isLoggedIn(DetailsActivity.this)) {
+                    Log.e(TAG, "onClick: user logged in");
+                    sendLiveChatMsg();
+                } else {
+                    Toast.makeText(DetailsActivity.this, "Please login to comment.", Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
+        return false;
+    };
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void sendLiveChatMsg() {
+        User user = new DatabaseHelper(DetailsActivity.this).getUserData();
+        if (!liveChatMsgET.getText().toString().equals("")) {
+            Log.e(TAG, "onDataSend: " + liveChatMsgET.getText().toString() + " " + user.getName() + " " + user.getImageUrl());
+            FirebaseDatabase.getInstance()
+                    .getReference().child(tvId)
+                    .push()
+                    .setValue(new LiveChat(user.getName(),
+                            user.getImageUrl(), liveChatMsgET.getText().toString())
+                    );
+
+            // Clear the input
+            liveChatMsgET.setText("");
+            liveChatAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private void getSeriesData(String vtype, String vId) {
         Log.e(TAG, "getSeriesData: " + vId + ", userId: " + userId);
         final List<String> seasonList = new ArrayList<>();
         final List<String> seasonListForDownload = new ArrayList<>();
+        String userId = PreferenceUtils.getUserId(this);
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SingleDetailsApi api = retrofit.create(SingleDetailsApi.class);
-        Call<SingleDetails> call = api.getSingleDetails(AppConfig.API_KEY, vType, vId,
-                BuildConfig.VERSION_CODE, PreferenceUtils.getUserId(this),
-                Constants.getDeviceId(this));
+        Call<SingleDetails> call = api.getSingleDetails(AppConfig.API_KEY, vtype, vId, BuildConfig.VERSION_CODE, userId,
+                getDeviceId(DetailsActivity.this));
         call.enqueue(new Callback<SingleDetails>() {
-            @SuppressLint("NotifyDataSetChanged")
+            @SuppressLint({"SetTextI18n", "NotifyDataSetChanged"})
             @Override
             public void onResponse(@NonNull Call<SingleDetails> call, @NonNull retrofit2.Response<SingleDetails> response) {
                 if (response.code() == 200) {
@@ -2014,17 +2109,6 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                     } else {
                         seasonSpinnerContainer.setVisibility(GONE);
                     }
-                }else if (response.code() == 412) {
-                    try {
-                        if (response.errorBody() != null) {
-                            ApiResources.openLoginScreen(response.errorBody().string(),
-                                    DetailsActivity.this);
-                            finish();
-                        }
-                    } catch (Exception e) {
-                        Toast.makeText(DetailsActivity.this,
-                                e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
                 }
             }
 
@@ -2068,7 +2152,8 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         seasonDownloadSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                List<DownloadLink> selectedSeasonDownloadList = new ArrayList<>(seasonList.get(position).getDownloadLinks());
+                List<DownloadLink> selectedSeasonDownloadList = new ArrayList<>();
+                selectedSeasonDownloadList.addAll(seasonList.get(position).getDownloadLinks());
                 seasonDownloadRecyclerView.removeAllViewsInLayout();
                 seasonDownloadRecyclerView.setLayoutManager(new LinearLayoutManager(DetailsActivity.this,
                         RecyclerView.VERTICAL, false));
@@ -2086,23 +2171,22 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
     private void setGenreText() {
         tvGenre.setText(strGenre);
-        dGenreTv.setText(strGenre);
+        dGenereTv.setText(strGenre);
     }
 
-    private void getMovieData(String vType, String vId) {
+    private void getMovieData(String vtype, String vId) {
         shimmerFrameLayout.setVisibility(VISIBLE);
         shimmerFrameLayout.startShimmer();
         //strCast = "";
         strDirector = "";
         strGenre = "";
-
+        String userId = PreferenceUtils.getUserId(this);
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SingleDetailsApi api = retrofit.create(SingleDetailsApi.class);
-        Call<SingleDetails> call = api.getSingleDetails(AppConfig.API_KEY, vType, vId,
-                BuildConfig.VERSION_CODE, PreferenceUtils.getUserId(this),
-                Constants.getDeviceId(this));
+        Call<SingleDetails> call = api.getSingleDetails(AppConfig.API_KEY, vtype, vId, BuildConfig.VERSION_CODE, userId,
+                getDeviceId(DetailsActivity.this));
         call.enqueue(new Callback<SingleDetails>() {
-            @SuppressLint("NotifyDataSetChanged")
+            @SuppressLint({"SetTextI18n", "NotifyDataSetChanged"})
             @Override
             public void onResponse(@NonNull Call<SingleDetails> call, @NonNull retrofit2.Response<SingleDetails> response) {
                 if (response.code() == 200) {
@@ -2111,7 +2195,8 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                     swipeRefreshLayout.setRefreshing(false);
 
                     SingleDetails singleDetails = response.body();
-                    paidControl(singleDetails.getIsPaid());
+                    //paidControl(singleDetails.getIsPaid());
+                    isPaid = singleDetails.getIsPaid();
                     download_check = singleDetails.getEnableDownload();
                     trailerUrl = singleDetails.getTrailerUrl();
                     castImageUrl = singleDetails.getThumbnailUrl();
@@ -2138,7 +2223,6 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                     tvName.setText(title);
                     tvRelease.setText("Release On " + singleDetails.getRelease());
                     tvDes.setText(singleDetails.getDescription());
-
 
                     Picasso.get().load(singleDetails.getPosterUrl()).placeholder(R.drawable.album_art_placeholder_large)
                             .into(posterIv);
@@ -2184,10 +2268,11 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         }
                     }
                     tvGenre.setText(strGenre);
-                    dGenreTv.setText(strGenre);
+                    dGenereTv.setText(strGenre);
 
                     //-----server----------
-                    List<Video> serverList = new ArrayList<>(singleDetails.getVideos());
+                    List<Video> serverList = new ArrayList<>();
+                    serverList.addAll(singleDetails.getVideos());
                     for (int i = 0; i < serverList.size(); i++) {
                         Video video = serverList.get(i);
 
@@ -2201,8 +2286,8 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         }
 
                         //----subtitle-----------
-                        List<Subtitle> subArray =
-                                new ArrayList<>(singleDetails.getVideos().get(i).getSubtitle());
+                        List<Subtitle> subArray = new ArrayList<>();
+                        subArray.addAll(singleDetails.getVideos().get(i).getSubtitle());
                         if (subArray.size() != 0) {
 
                             List<SubtitleModel> list = new ArrayList<>();
@@ -2264,18 +2349,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         }
                     }
 
-                } else if (response.code() == 412) {
-                    try {
-                        if (response.errorBody() != null) {
-                            ApiResources.openLoginScreen(response.errorBody().string(),
-                                    DetailsActivity.this);
-                            finish();
-                        }
-                    } catch (Exception e) {
-                        Toast.makeText(DetailsActivity.this,
-                                e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                }else {
+                } else {
                     swipeRefreshLayout.setRefreshing(false);
                 }
             }
@@ -2290,8 +2364,8 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     private void getFavStatus() {
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         FavouriteApi api = retrofit.create(FavouriteApi.class);
-        Call<FavoriteModel> call = api.verifyFavoriteList(AppConfig.API_KEY, userId, id,
-                BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
+        Call<FavoriteModel> call = api.verifyFavoriteList(AppConfig.API_KEY, userId, id, BuildConfig.VERSION_CODE,
+                getDeviceId(DetailsActivity.this));
         call.enqueue(new Callback<FavoriteModel>() {
             @Override
             public void onResponse(@NonNull Call<FavoriteModel> call, @NonNull retrofit2.Response<FavoriteModel> response) {
@@ -2306,17 +2380,6 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         imgAddFav.setImageResource(R.drawable.ic_favorite_border_white);
                     }
                     imgAddFav.setVisibility(VISIBLE);
-                }else if (response.code() == 412) {
-                    try {
-                        if (response.errorBody() != null) {
-                            ApiResources.openLoginScreen(response.errorBody().string(),
-                                    DetailsActivity.this);
-                            finish();
-                        }
-                    } catch (Exception e) {
-                        Toast.makeText(DetailsActivity.this,
-                                e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
                 }
             }
 
@@ -2331,8 +2394,8 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     private void removeFromFav() {
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         FavouriteApi api = retrofit.create(FavouriteApi.class);
-        Call<FavoriteModel> call = api.removeFromFavorite(AppConfig.API_KEY, userId, id,
-                BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
+        Call<FavoriteModel> call = api.removeFromFavorite(AppConfig.API_KEY, userId, id, BuildConfig.VERSION_CODE,
+                getDeviceId(DetailsActivity.this));
         call.enqueue(new Callback<FavoriteModel>() {
             @Override
             public void onResponse(@NonNull Call<FavoriteModel> call, @NonNull retrofit2.Response<FavoriteModel> response) {
@@ -2347,17 +2410,6 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                         new ToastMsg(DetailsActivity.this).toastIconError(response.body().getMessage());
                         //imgAddFav.setBackgroundResource(R.drawable.ic_favorite_white);
                         imgAddFav.setImageResource(R.drawable.ic_favorite_white);
-                    }
-                }else if (response.code() == 412) {
-                    try {
-                        if (response.errorBody() != null) {
-                            ApiResources.openLoginScreen(response.errorBody().string(),
-                                    DetailsActivity.this);
-                            finish();
-                        }
-                    } catch (Exception e) {
-                        Toast.makeText(DetailsActivity.this,
-                                e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -2380,33 +2432,19 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
 
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         CommentApi api = retrofit.create(CommentApi.class);
-        Call<PostCommentModel> call = api.postComment(AppConfig.API_KEY, videoId,
-                userId, comments, BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
+        Call<PostCommentModel> call = api.postComment(AppConfig.API_KEY, videoId, userId, comments, BuildConfig.VERSION_CODE,
+                getDeviceId(DetailsActivity.this));
         call.enqueue(new Callback<PostCommentModel>() {
             @Override
             public void onResponse(@NonNull Call<PostCommentModel> call, @NonNull retrofit2.Response<PostCommentModel> response) {
-
-                if (response.code() == 200) {
-                    if (response.body().getStatus().equals("success")) {
-                        rvComment.removeAllViews();
-                        listComment.clear();
-                        getComments();
-                        etComment.setText("");
-                        new ToastMsg(DetailsActivity.this).toastIconSuccess(response.body().getMessage());
-                    } else {
-                        new ToastMsg(DetailsActivity.this).toastIconError(response.body().getMessage());
-                    }
-                } else if (response.code() == 412) {
-                    try {
-                        if (response.errorBody() != null) {
-                            ApiResources.openLoginScreen(response.errorBody().string(),
-                                    DetailsActivity.this);
-                            finish();
-                        }
-                    } catch (Exception e) {
-                        Toast.makeText(DetailsActivity.this,
-                                e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
+                if (response.body().getStatus().equals("success")) {
+                    rvComment.removeAllViews();
+                    listComment.clear();
+                    getComments();
+                    etComment.setText("");
+                    new ToastMsg(DetailsActivity.this).toastIconSuccess(response.body().getMessage());
+                } else {
+                    new ToastMsg(DetailsActivity.this).toastIconError(response.body().getMessage());
                 }
             }
 
@@ -2418,32 +2456,19 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     }
 
     private void getComments() {
-
+        String userId = PreferenceUtils.getUserId(this);
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         CommentApi api = retrofit.create(CommentApi.class);
-        Call<List<GetCommentsModel>> call = api.getAllComments(AppConfig.API_KEY, id,
-                BuildConfig.VERSION_CODE, PreferenceUtils.getUserId(this),
-                Constants.getDeviceId(this));
+        Call<List<GetCommentsModel>> call = api.getAllComments(AppConfig.API_KEY, id, BuildConfig.VERSION_CODE, userId,
+                getDeviceId(DetailsActivity.this));
         call.enqueue(new Callback<List<GetCommentsModel>>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
-            public void onResponse(@NonNull Call<List<GetCommentsModel>> call,
-                                   @NonNull retrofit2.Response<List<GetCommentsModel>> response) {
+            public void onResponse(@NonNull Call<List<GetCommentsModel>> call, @NonNull retrofit2.Response<List<GetCommentsModel>> response) {
                 if (response.code() == 200) {
                     listComment.addAll(response.body());
 
                     commentsAdapter.notifyDataSetChanged();
-                } else if (response.code() == 412) {
-                    try {
-                        if (response.errorBody() != null) {
-                            ApiResources.openLoginScreen(response.errorBody().string(),
-                                    DetailsActivity.this);
-                            finish();
-                        }
-                    } catch (Exception e) {
-                        Toast.makeText(DetailsActivity.this,
-                                e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
                 }
             }
 
@@ -2456,6 +2481,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     }
 
     public void hideDescriptionLayout() {
+        descriptionLayout.setVisibility(GONE);
         lPlay.setVisibility(VISIBLE);
     }
 
@@ -2464,6 +2490,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
     }
 
     public void showDescriptionLayout() {
+        descriptionLayout.setVisibility(VISIBLE);
         lPlay.setVisibility(GONE);
     }
 
@@ -2530,11 +2557,10 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
             player = null;
             simpleExoPlayerView.setPlayer(null);
             //simpleExoPlayerView = null;
-
         }
     }
 
-    public void setMediaUrlForTvSeries(String url) {
+    public void setMediaUrlForTvSeries(String url, String season, String episode) {
         mediaUrl = url;
     }
 
@@ -2549,6 +2575,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         }
     }
 
+    @SuppressLint("VisibleForTests")
     public void showQueuePopup(final Context context, View view, final MediaInfo mediaInfo) {
         CastSession castSession =
                 CastContext.getSharedInstance(context).getSessionManager().getCurrentCastSession();
@@ -2562,14 +2589,14 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
             return;
         }
 
-        MediaQueueItem queueItem = new MediaQueueItem.Builder(mediaInfo).setAutoplay(
+        @SuppressLint("VisibleForTests") MediaQueueItem queueItem = new MediaQueueItem.Builder(mediaInfo).setAutoplay(
                 true).setPreloadTime(PRELOAD_TIME_S).build();
         MediaQueueItem[] newItemArray = new MediaQueueItem[]{queueItem};
         remoteMediaClient.queueLoad(newItemArray, 0,
                 MediaStatus.REPEAT_MODE_REPEAT_OFF, null);
     }
 
-
+    @SuppressLint("VisibleForTests")
     public MediaInfo getMediaInfo() {
         MediaMetadata movieMetadata = new MediaMetadata(MediaMetadata.MEDIA_TYPE_MOVIE);
         movieMetadata.putString(MediaMetadata.KEY_TITLE, title);
@@ -2580,12 +2607,10 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                 .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
                 .setContentType(MimeTypes.VIDEO_UNKNOWN)
                 .setMetadata(movieMetadata).build();
-
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {

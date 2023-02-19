@@ -1,6 +1,7 @@
 package com.moodX.app.utils;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.app.NotificationChannel;
@@ -8,7 +9,9 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
+import android.os.Bundle;
 import android.util.Log;
+import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 
@@ -59,9 +62,13 @@ public class MyAppClass extends Application {
 
         // fetched and save the user active status if user is logged in
         String userId = PreferenceUtils.getUserId(this);
-        if (userId != null && !userId.equals("")) {
-            updateActiveStatus(userId);
+        if (userId != null) {
+            if (!userId.isEmpty()) {
+                updateActiveStatus(userId);
+            }
         }
+
+        setupActivityListener();
     }
 
     private Picasso getCustomPicasso() {
@@ -127,7 +134,7 @@ public class MyAppClass extends Application {
         SubscriptionApi subscriptionApi = retrofit.create(SubscriptionApi.class);
 
         Call<ActiveStatus> call = subscriptionApi.getActiveStatus(AppConfig.API_KEY,
-                userId, BuildConfig.VERSION_CODE,Constants.getDeviceId(mContext));
+                userId, BuildConfig.VERSION_CODE, Constants.getDeviceId(mContext));
         call.enqueue(new Callback<ActiveStatus>() {
             @Override
             public void onResponse(@NonNull Call<ActiveStatus> call, @NonNull Response<ActiveStatus> response) {
@@ -145,5 +152,33 @@ public class MyAppClass extends Application {
             }
         });
 
+    }
+
+    private void setupActivityListener() {
+        registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
+            @Override
+            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+                activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);            }
+            @Override
+            public void onActivityStarted(Activity activity) {
+            }
+            @Override
+            public void onActivityResumed(Activity activity) {
+
+            }
+            @Override
+            public void onActivityPaused(Activity activity) {
+
+            }
+            @Override
+            public void onActivityStopped(Activity activity) {
+            }
+            @Override
+            public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
+            }
+            @Override
+            public void onActivityDestroyed(Activity activity) {
+            }
+        });
     }
 }

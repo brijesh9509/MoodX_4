@@ -2,20 +2,16 @@ package com.moodX.app;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
@@ -31,9 +27,6 @@ import com.moodX.app.utils.PreferenceUtils;
 import com.moodX.app.utils.ApiResources;
 import com.moodX.app.utils.Constants;
 import com.moodX.app.utils.ToastMsg;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -178,13 +171,13 @@ public class SplashScreenActivity extends AppCompatActivity {
                             //apk update check
                             if (isNeedUpdate(configuration.getApkUpdateInfo().getVersionCode())) {
                                 showAppUpdateDialog(configuration.getApkUpdateInfo());
-                                return;
-                            }
-
-                            if (db.getConfigurationData() != null) {
-                                timer.start();
                             } else {
-                                showErrorDialog(getString(R.string.error_toast), getString(R.string.no_configuration_data_found));
+
+                                if (db.getConfigurationData() != null) {
+                                    timer.start();
+                                } else {
+                                    showErrorDialog(getString(R.string.error_toast), getString(R.string.no_configuration_data_found));
+                                }
                             }
                         } else {
                             showErrorDialog(getString(R.string.error_toast), getString(R.string.failed_to_communicate));
@@ -206,13 +199,15 @@ public class SplashScreenActivity extends AppCompatActivity {
     }
 
     private void showAppUpdateDialog(final ApkUpdateInfo info) {
-        new MaterialAlertDialogBuilder(this).setTitle("New version: " + info.getVersionName()).setMessage(info.getWhatsNew()).setPositiveButton("Update Now", (dialog, which) -> {
+        new MaterialAlertDialogBuilder(SplashScreenActivity.this).setTitle("New version: " + info.getVersionName()).setMessage(info.getWhatsNew()).setPositiveButton("Update Now", (dialog, which) -> {
             //update clicked
             dialog.dismiss();
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(info.getApkUrl()));
             startActivity(browserIntent);
             finish();
         }).setNegativeButton("Later", (dialog, which) -> {
+
+            dialog.dismiss();
             //exit clicked
             if (info.isSkipable()) {
                 if (db.getConfigurationData() != null) {
@@ -222,17 +217,17 @@ public class SplashScreenActivity extends AppCompatActivity {
                     finish();
                 }
             } else {
-                System.exit(0);
+                finish();
             }
-            dialog.dismiss();
         }).setCancelable(false).show();
     }
 
     private void showErrorDialog(String title, String message) {
-        new MaterialAlertDialogBuilder(this).setTitle(title).setCancelable(false).setMessage(message).setPositiveButton("Ok", (dialog, which) -> {
-            System.exit(0);
-            finish();
-        }).show();
+        new MaterialAlertDialogBuilder(SplashScreenActivity.this).setTitle(title)
+                .setCancelable(false).setMessage(message).setPositiveButton("Ok", (dialog, which) -> {
+                    dialog.dismiss();
+                    finish();
+                }).show();
     }
 
     private boolean isNeedUpdate(String versionCode) {
@@ -258,26 +253,12 @@ public class SplashScreenActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults.length > 0 && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
             //resume tasks needing this permission
             getConfigurationData();
-        }
-    }
-
-    public static void createKeyHash(Activity activity, String yourPackage) {
-        try {
-            @SuppressLint("PackageManagerGetSignatures") PackageInfo info = activity.getPackageManager().getPackageInfo(yourPackage, PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.e("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-            }
-        } catch (PackageManager.NameNotFoundException | NoSuchAlgorithmException e) {
-            e.printStackTrace();
         }
     }
 

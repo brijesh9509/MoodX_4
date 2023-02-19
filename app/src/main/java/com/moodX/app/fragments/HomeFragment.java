@@ -79,7 +79,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 
-
 public class HomeFragment extends Fragment {
 
     CardSliderViewPager cViewPager;
@@ -491,11 +490,11 @@ public class HomeFragment extends Fragment {
     }
 
     private void getHomeContentDataFromServer() {
-        String userId = PreferenceUtils.getUserId(requireActivity());
+        String userId = PreferenceUtils.getUserId(activity);
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         HomeContentApi api = retrofit.create(HomeContentApi.class);
         Call<HomeContent> call = api.getHomeContent(AppConfig.API_KEY, BuildConfig.VERSION_CODE,userId,
-                getDeviceId(requireContext()));
+                getDeviceId(activity));
         call.enqueue(new Callback<HomeContent>() {
             @Override
             public void onResponse(@NonNull Call<HomeContent> call, @NonNull retrofit2.Response<HomeContent> response) {
@@ -518,11 +517,11 @@ public class HomeFragment extends Fragment {
                     try {
                         if (response.errorBody() != null) {
                             ApiResources.openLoginScreen(response.errorBody().string(),
-                                    requireActivity());
-                            requireActivity().finish();
+                                    requireContext());
+                            activity.finish();
                         }
                     } catch (Exception e) {
-                        Toast.makeText(requireActivity(),
+                        Toast.makeText(requireContext(),
                                 e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }else {
@@ -608,6 +607,4 @@ public class HomeFragment extends Fragment {
         int moveY = hide ? -(2 * searchRootLayout.getHeight()) : 0;
         searchRootLayout.animate().translationY(moveY).setStartDelay(100).setDuration(300).start();
     }
-
-
 }

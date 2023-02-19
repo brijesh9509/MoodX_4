@@ -1,5 +1,11 @@
 package com.moodX.app.bottomshit;
 
+import static com.moodX.app.utils.Constants.GOOGLE_PAY;
+import static com.moodX.app.utils.Constants.OFFLINE_PAY;
+import static com.moodX.app.utils.Constants.PAYPAL;
+import static com.moodX.app.utils.Constants.RAZOR_PAY;
+import static com.moodX.app.utils.Constants.STRIP;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,11 +24,6 @@ import com.moodX.app.network.model.config.PaymentConfig;
 
 public class PaymentBottomShitDialog extends BottomSheetDialogFragment {
 
-    public static final String PAYPAL = "paypal";
-    public static final String STRIP = "strip";
-    public static final String RAZOR_PAY = "razorpay";
-    public static final String OFFLINE_PAY = "offline_pay";
-    public static final String GOOGLE_PAY = "google_pay";
     private DatabaseHelper databaseHelper;
 
     private boolean isInAppPurchase;

@@ -83,7 +83,7 @@ public class LiveTvFragment extends Fragment {
 
         initComponent(view);
 
-        pageTitle.setText(getResources().getString(R.string.live_tv));
+        pageTitle.setText(requireContext().getResources().getString(R.string.live_tv));
 
         if (activity.isDark) {
             pageTitle.setTextColor(activity.getResources().getColor(R.color.white));
@@ -143,7 +143,7 @@ public class LiveTvFragment extends Fragment {
         if (new NetworkInst(activity).isNetworkAvailable()) {
             getLiveTvData();
         } else {
-            tvNoItem.setText(getString(R.string.no_internet));
+            tvNoItem.setText(requireContext().getString(R.string.no_internet));
             shimmerFrameLayout.stopShimmer();
             shimmerFrameLayout.setVisibility(View.GONE);
             coordinatorLayout.setVisibility(View.VISIBLE);
@@ -159,7 +159,7 @@ public class LiveTvFragment extends Fragment {
             if (new NetworkInst(activity).isNetworkAvailable()) {
                 getLiveTvData();
             } else {
-                tvNoItem.setText(getString(R.string.no_internet));
+                tvNoItem.setText(requireContext().getString(R.string.no_internet));
                 shimmerFrameLayout.stopShimmer();
                 shimmerFrameLayout.setVisibility(View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
@@ -233,7 +233,7 @@ public class LiveTvFragment extends Fragment {
                         shimmerFrameLayout.setVisibility(View.GONE);
 
                         coordinatorLayout.setVisibility(View.VISIBLE);
-                        tvNoItem.setText(getResources().getString(R.string.something_went_text));
+                        tvNoItem.setText(requireContext().getResources().getString(R.string.something_went_text));
 
                         t.printStackTrace();
                     }
@@ -249,6 +249,4 @@ public class LiveTvFragment extends Fragment {
         int moveY = hide ? -(2 * searchRootLayout.getHeight()) : 0;
         searchRootLayout.animate().translationY(moveY).setStartDelay(100).setDuration(300).start();
     }
-
-
 }
