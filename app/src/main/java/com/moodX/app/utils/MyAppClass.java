@@ -25,7 +25,6 @@ import com.moodX.app.BuildConfig;
 import com.onesignal.OneSignal;
 import com.squareup.picasso.LruCache;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Request;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -51,7 +50,7 @@ public class MyAppClass extends Application {
         OneSignal.setLogLevel(OneSignal.LOG_LEVEL.ERROR, OneSignal.LOG_LEVEL.NONE);
         OneSignal.setAppId(AppConfig.ONE_SIGNAL_APP_ID);
         OneSignal.initWithContext(this);
-        OneSignal.setNotificationOpenedHandler((OneSignal.OSNotificationOpenedHandler) new NotificationClickHandler(mContext));
+        OneSignal.setNotificationOpenedHandler(new NotificationClickHandler(mContext));
         SharedPreferences preferences = getSharedPreferences("push", MODE_PRIVATE);
         OneSignal.disablePush(!preferences.getBoolean("status", true));
 
@@ -61,10 +60,14 @@ public class MyAppClass extends Application {
         }
 
         // fetched and save the user active status if user is logged in
-        String userId = PreferenceUtils.getUserId(this);
-        if (userId != null) {
-            if (!userId.isEmpty()) {
-                updateActiveStatus(userId);
+        if (PreferenceUtils.isLoggedIn(this)) {
+            // fetched and save the user active status if user is logged in
+            // fetched and save the user active status if user is logged in
+            String userId = PreferenceUtils.getUserId(this);
+            if (userId != null) {
+                if (!userId.isEmpty()) {
+                    updateActiveStatus(userId);
+                }
             }
         }
 

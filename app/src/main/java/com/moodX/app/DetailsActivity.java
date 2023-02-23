@@ -879,7 +879,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
                     return PreferenceUtils.isValid(DetailsActivity.this);
                 }
             }
-        }
+        } else return paid.equals("0");
         return false;
     }
 
