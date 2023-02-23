@@ -58,7 +58,6 @@ public class GenreAdapter extends RecyclerView.Adapter<GenreAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final CommonModels commonModel = commonModels.get(position);
         if (commonModel != null) {
-            holder.cardView.requestFocus();
             holder.nameTv.setText(commonModel.getTitle());
             Picasso.get()
                     .load(commonModel.getImageUrl())

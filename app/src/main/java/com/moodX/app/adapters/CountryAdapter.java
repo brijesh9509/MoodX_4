@@ -57,7 +57,6 @@ public class CountryAdapter extends RecyclerView.Adapter<CountryAdapter.ViewHold
     public void onBindViewHolder(@NonNull CountryAdapter.ViewHolder holder, int position) {
         final CommonModels commonModel = commonModels.get(position);
         if (commonModel != null) {
-            holder.cardView.requestFocus();
             holder.nameTv.setText(commonModel.getTitle());
             Picasso.get()
                     .load(commonModel.getImageUrl())
