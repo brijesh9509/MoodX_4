@@ -4,6 +4,9 @@
       <root url="file://E:/AndroidGradle/caches/transforms-3/16b70594dc0f4636769b58cac4f98a7c/transformed/jetified-OneSignal-4.8.4/AndroidManifest.xml" />
       <root url="jar://E:/AndroidGradle/caches/transforms-3/16b70594dc0f4636769b58cac4f98a7c/transformed/jetified-OneSignal-4.8.4/jars/classes.jar!/" />
       <root url="file://E:/AndroidGradle/caches/transforms-3/16b70594dc0f4636769b58cac4f98a7c/transformed/jetified-OneSignal-4.8.4/res" />
+      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/16b70594dc0f4636769b58cac4f98a7c/transformed/jetified-OneSignal-4.8.4/res" />
+      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/16b70594dc0f4636769b58cac4f98a7c/transformed/jetified-OneSignal-4.8.4/AndroidManifest.xml" />
+      <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/16b70594dc0f4636769b58cac4f98a7c/transformed/jetified-OneSignal-4.8.4/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
