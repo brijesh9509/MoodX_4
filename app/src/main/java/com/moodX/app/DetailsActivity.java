@@ -320,7 +320,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
 
         //check vpn connection

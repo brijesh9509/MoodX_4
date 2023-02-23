@@ -83,11 +83,13 @@
             android:configChanges="screenLayout|screenSize|orientation"
             android:label="@string/title_activity_details"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="com.moodX.app.MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.Nobar" />
+            android:theme="@style/AppTheme.Nobar"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="com.moodX.app.SettingsActivity"
             android:screenOrientation="portrait"
