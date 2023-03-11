@@ -334,4 +334,5 @@
     <string name="current_password">Current Password</string>
     <string name="set_password">Set Password</string>
     <string name="new_password_optional">New Password (Optional)</string>
+    <string name="paytm">Paytm</string>
 </resources>

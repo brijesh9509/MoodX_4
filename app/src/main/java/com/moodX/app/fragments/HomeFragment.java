@@ -121,7 +121,7 @@ public class HomeFragment extends Fragment {
     private DatabaseHelper db = new DatabaseHelper(getContext());
     private HomeContentViewModel homeContentViewModel;
     private HomeContent homeContent = null;
-    private RelativeLayout popular_stars_layout, featuredTVLayout, movieLayout,  tvSeriesLayout;
+    private RelativeLayout popular_stars_layout, featuredTVLayout, movieLayout, tvSeriesLayout;
     private ContinueWatchingViewModel continueWatchingViewModel;
 
 
@@ -181,8 +181,8 @@ public class HomeFragment extends Fragment {
         if (activity.isDark) {
             pageTitle.setTextColor(activity.getResources().getColor(R.color.white));
             searchBar.setCardBackgroundColor(activity.getResources().getColor(R.color.black_window_light));
-            menuIv.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.ic_menu));
-            searchIv.setImageDrawable(ContextCompat.getDrawable(requireContext(),R.drawable.ic_search_white));
+            menuIv.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_menu));
+            searchIv.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_search_white));
         }
 
         //----init timer slider--------------------
@@ -369,28 +369,33 @@ public class HomeFragment extends Fragment {
 
         //genre data
         if (db.getConfigurationData().getAppConfig().getGenreVisible()) {
-            for (int i = 0; i < homeContent.getAllGenre().size(); i++) {
-                AllGenre genre = homeContent.getAllGenre().get(i);
-                CommonModels models = new CommonModels();
-                models.setId(genre.getGenreId());
-                models.setTitle(genre.getName());
-                models.setImageUrl(genre.getImageUrl());
-                genreList.add(models);
+
+            if (homeContent.getAllGenre() != null) {
+                for (int i = 0; i < homeContent.getAllGenre().size(); i++) {
+                    AllGenre genre = homeContent.getAllGenre().get(i);
+                    CommonModels models = new CommonModels();
+                    models.setId(genre.getGenreId());
+                    models.setTitle(genre.getName());
+                    models.setImageUrl(genre.getImageUrl());
+                    genreList.add(models);
+                }
+                genreAdapter.notifyDataSetChanged();
             }
-            genreAdapter.notifyDataSetChanged();
         }
 
         //country data
         if (db.getConfigurationData().getAppConfig().getCountryVisible()) {
-            for (int i = 0; i < homeContent.getAllCountry().size(); i++) {
-                AllCountry country = homeContent.getAllCountry().get(i);
-                CommonModels models = new CommonModels();
-                models.setId(country.getCountryId());
-                models.setTitle(country.getName());
-                models.setImageUrl(country.getImageUrl());
-                countryList.add(models);
+            if (homeContent.getAllCountry() != null) {
+                for (int i = 0; i < homeContent.getAllCountry().size(); i++) {
+                    AllCountry country = homeContent.getAllCountry().get(i);
+                    CommonModels models = new CommonModels();
+                    models.setId(country.getCountryId());
+                    models.setTitle(country.getName());
+                    models.setImageUrl(country.getImageUrl());
+                    countryList.add(models);
+                }
+                countryAdapter.notifyDataSetChanged();
             }
-            countryAdapter.notifyDataSetChanged();
         }
 
         //popular stars data
@@ -403,89 +408,97 @@ public class HomeFragment extends Fragment {
         }
 
         //tv channel data
-        if (homeContent.getFeaturedTvChannel().size() > 0) {
-            for (int i = 0; i < homeContent.getFeaturedTvChannel().size(); i++) {
-                FeaturedTvChannel tvChannel = homeContent.getFeaturedTvChannel().get(i);
-                CommonModels models = new CommonModels();
-                models.setImageUrl(tvChannel.getPosterUrl());
-                models.setTitle(tvChannel.getTvName());
-                models.setVideoType("tv");
-                models.setId(tvChannel.getLiveTvId());
-                models.setIsPaid(tvChannel.getIsPaid());
-                listTv.add(models);
+        if (homeContent.getFeaturedTvChannel() != null) {
+            if (homeContent.getFeaturedTvChannel().size() > 0) {
+                for (int i = 0; i < homeContent.getFeaturedTvChannel().size(); i++) {
+                    FeaturedTvChannel tvChannel = homeContent.getFeaturedTvChannel().get(i);
+                    CommonModels models = new CommonModels();
+                    models.setImageUrl(tvChannel.getPosterUrl());
+                    models.setTitle(tvChannel.getTvName());
+                    models.setVideoType("tv");
+                    models.setId(tvChannel.getLiveTvId());
+                    models.setIsPaid(tvChannel.getIsPaid());
+                    listTv.add(models);
+                }
+                featuredTVLayout.setVisibility(View.VISIBLE);
+                adapterTv.notifyDataSetChanged();
             }
-            featuredTVLayout.setVisibility(View.VISIBLE);
-            adapterTv.notifyDataSetChanged();
         }
 
         //latest movies data
-        if (homeContent.getLatestMovies().size() > 0) {
-            for (int i = 0; i < homeContent.getLatestMovies().size(); i++) {
-                LatestMovie movie = homeContent.getLatestMovies().get(i);
-                CommonModels models = new CommonModels();
-                models.setImageUrl(movie.getThumbnailUrl());
-                models.setTitle(movie.getTitle());
-                models.setVideoType("movie");
-                models.setReleaseDate(movie.getRelease());
-                models.setQuality(movie.getVideoQuality());
-                models.setId(movie.getVideosId());
-                models.setIsPaid(movie.getIsPaid());
-                listMovie.add(models);
+        if (homeContent.getLatestMovies() != null) {
+            if (homeContent.getLatestMovies().size() > 0) {
+                for (int i = 0; i < homeContent.getLatestMovies().size(); i++) {
+                    LatestMovie movie = homeContent.getLatestMovies().get(i);
+                    CommonModels models = new CommonModels();
+                    models.setImageUrl(movie.getThumbnailUrl());
+                    models.setTitle(movie.getTitle());
+                    models.setVideoType("movie");
+                    models.setReleaseDate(movie.getRelease());
+                    models.setQuality(movie.getVideoQuality());
+                    models.setId(movie.getVideosId());
+                    models.setIsPaid(movie.getIsPaid());
+                    listMovie.add(models);
+                }
+                movieLayout.setVisibility(View.VISIBLE);
+                adapterMovie.notifyDataSetChanged();
             }
-            movieLayout.setVisibility(View.VISIBLE);
-            adapterMovie.notifyDataSetChanged();
         }
 
         //latest tv series
-        if (homeContent.getLatestTvseries().size() > 0) {
-            for (int i = 0; i < homeContent.getLatestTvseries().size(); i++) {
-                LatestTvseries tvSeries = homeContent.getLatestTvseries().get(i);
-                CommonModels models = new CommonModels();
-                models.setImageUrl(tvSeries.getThumbnailUrl());
-                models.setTitle(tvSeries.getTitle());
-                models.setVideoType("tvseries");
-                models.setReleaseDate(tvSeries.getRelease());
-                models.setQuality(tvSeries.getVideoQuality());
-                models.setId(tvSeries.getVideosId());
-                models.setIsPaid(tvSeries.getIsPaid());
-                listSeries.add(models);
+        if (homeContent.getLatestTvseries() != null) {
+            if (homeContent.getLatestTvseries().size() > 0) {
+                for (int i = 0; i < homeContent.getLatestTvseries().size(); i++) {
+                    LatestTvseries tvSeries = homeContent.getLatestTvseries().get(i);
+                    CommonModels models = new CommonModels();
+                    models.setImageUrl(tvSeries.getThumbnailUrl());
+                    models.setTitle(tvSeries.getTitle());
+                    models.setVideoType("tvseries");
+                    models.setReleaseDate(tvSeries.getRelease());
+                    models.setQuality(tvSeries.getVideoQuality());
+                    models.setId(tvSeries.getVideosId());
+                    models.setIsPaid(tvSeries.getIsPaid());
+                    listSeries.add(models);
+                }
+                tvSeriesLayout.setVisibility(View.VISIBLE);
+                adapterSeries.notifyDataSetChanged();
             }
-            tvSeriesLayout.setVisibility(View.VISIBLE);
-            adapterSeries.notifyDataSetChanged();
         }
 
         //get data by genre
-        for (int i = 0; i < homeContent.getFeaturesGenreAndMovie().size(); i++) {
-            FeaturesGenreAndMovie genreAndMovie = homeContent.getFeaturesGenreAndMovie().get(i);
-            GenreModel models = new GenreModel();
+        if (homeContent.getFeaturesGenreAndMovie() != null) {
+            for (int i = 0; i < homeContent.getFeaturesGenreAndMovie().size(); i++) {
+                FeaturesGenreAndMovie genreAndMovie = homeContent.getFeaturesGenreAndMovie().get(i);
+                GenreModel models = new GenreModel();
 
-            models.setName(genreAndMovie.getName());
-            models.setId(genreAndMovie.getGenreId());
-            List<CommonModels> listGenreMovie = new ArrayList<>();
-            for (int j = 0; j < genreAndMovie.getVideos().size(); j++) {
-                Video video = genreAndMovie.getVideos().get(j);
-                CommonModels commonModels = new CommonModels();
+                models.setName(genreAndMovie.getName());
+                models.setId(genreAndMovie.getGenreId());
+                List<CommonModels> listGenreMovie = new ArrayList<>();
+                for (int j = 0; j < genreAndMovie.getVideos().size(); j++) {
+                    Video video = genreAndMovie.getVideos().get(j);
+                    CommonModels commonModels = new CommonModels();
 
-                commonModels.setId(video.getVideosId());
-                commonModels.setTitle(video.getTitle());
-                commonModels.setIsPaid(video.getIsPaid());
+                    commonModels.setId(video.getVideosId());
+                    commonModels.setTitle(video.getTitle());
+                    commonModels.setIsPaid(video.getIsPaid());
 
-                if (video.getIsTvseries().equals("0")) {
-                    commonModels.setVideoType("movie");
-                } else {
-                    commonModels.setVideoType("tvseries");
+                    if (video.getIsTvseries().equals("0")) {
+                        commonModels.setVideoType("movie");
+                    } else {
+                        commonModels.setVideoType("tvseries");
+                    }
+
+                    commonModels.setReleaseDate(video.getRelease());
+                    commonModels.setQuality(video.getVideoQuality());
+                    commonModels.setImageUrl(video.getThumbnailUrl());
+
+                    listGenreMovie.add(commonModels);
                 }
+                models.setList(listGenreMovie);
 
-                commonModels.setReleaseDate(video.getRelease());
-                commonModels.setQuality(video.getVideoQuality());
-                commonModels.setImageUrl(video.getThumbnailUrl());
-
-                listGenreMovie.add(commonModels);
+                listGenre.add(models);
+                genreHomeAdapter.notifyDataSetChanged();
             }
-            models.setList(listGenreMovie);
-
-            listGenre.add(models);
-            genreHomeAdapter.notifyDataSetChanged();
         }
     }
 
@@ -493,7 +506,7 @@ public class HomeFragment extends Fragment {
         String userId = PreferenceUtils.getUserId(activity);
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         HomeContentApi api = retrofit.create(HomeContentApi.class);
-        Call<HomeContent> call = api.getHomeContent(AppConfig.API_KEY, BuildConfig.VERSION_CODE,userId,
+        Call<HomeContent> call = api.getHomeContent(AppConfig.API_KEY, BuildConfig.VERSION_CODE, userId,
                 getDeviceId(activity));
         call.enqueue(new Callback<HomeContent>() {
             @Override
@@ -524,7 +537,7 @@ public class HomeFragment extends Fragment {
                         Toast.makeText(requireContext(),
                                 e.getMessage(), Toast.LENGTH_LONG).show();
                     }
-                }else {
+                } else {
                     swipeRefreshLayout.setRefreshing(false);
                     shimmerFrameLayout.stopShimmer();
                     shimmerFrameLayout.setVisibility(View.GONE);
