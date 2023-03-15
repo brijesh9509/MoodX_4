@@ -20,6 +20,7 @@ import com.moodX.app.models.PostCommentModel;
 import com.moodX.app.network.RetrofitClient;
 import com.moodX.app.network.apis.CommentApi;
 import com.moodX.app.utils.ApiResources;
+import com.moodX.app.utils.MyAppClass;
 import com.moodX.app.utils.PreferenceUtils;
 import com.moodX.app.utils.RtlUtils;
 import com.moodX.app.utils.ToastMsg;
@@ -121,7 +122,7 @@ public class ReplyActivity extends AppCompatActivity {
         String userId = PreferenceUtils.getUserId(ReplyActivity.this);
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         CommentApi api = retrofit.create(CommentApi.class);
-        Call<PostCommentModel> call = api.postReply(AppConfig.API_KEY, videoId, userId, comments,
+        Call<PostCommentModel> call = api.postReply(MyAppClass.API_KEY, videoId, userId, comments,
                 strCommentID, BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
         call.enqueue(new Callback<PostCommentModel>() {
             @Override
@@ -164,7 +165,7 @@ public class ReplyActivity extends AppCompatActivity {
         String userId = PreferenceUtils.getUserId(ReplyActivity.this);
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         CommentApi api = retrofit.create(CommentApi.class);
-        Call<List<GetCommentsModel>> call = api.getAllReply(AppConfig.API_KEY, strCommentID,
+        Call<List<GetCommentsModel>> call = api.getAllReply(MyAppClass.API_KEY, strCommentID,
                 BuildConfig.VERSION_CODE,userId, Constants.getDeviceId(this));
         call.enqueue(new Callback<List<GetCommentsModel>>() {
             @Override

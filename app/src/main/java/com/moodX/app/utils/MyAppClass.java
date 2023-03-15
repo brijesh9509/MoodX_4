@@ -38,6 +38,8 @@ public class MyAppClass extends Application {
     @SuppressLint("StaticFieldLeak")
     private static Context mContext;
 
+    public static  String API_KEY = "";
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -136,7 +138,7 @@ public class MyAppClass extends Application {
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SubscriptionApi subscriptionApi = retrofit.create(SubscriptionApi.class);
 
-        Call<ActiveStatus> call = subscriptionApi.getActiveStatus(AppConfig.API_KEY,
+        Call<ActiveStatus> call = subscriptionApi.getActiveStatus(MyAppClass.API_KEY,
                 userId, BuildConfig.VERSION_CODE, Constants.getDeviceId(mContext));
         call.enqueue(new Callback<ActiveStatus>() {
             @Override

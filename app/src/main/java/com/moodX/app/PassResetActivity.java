@@ -23,6 +23,7 @@ import com.moodX.app.network.RetrofitClient;
 import com.moodX.app.network.apis.PassResetApi;
 import com.moodX.app.network.model.PasswordReset;
 import com.moodX.app.utils.ApiResources;
+import com.moodX.app.utils.MyAppClass;
 import com.moodX.app.utils.RtlUtils;
 import com.moodX.app.utils.ToastMsg;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -96,7 +97,7 @@ public class PassResetActivity extends AppCompatActivity {
         dialog.show();
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         PassResetApi passResetApi = retrofit.create(PassResetApi.class);
-        Call<PasswordReset> call = passResetApi.resetPassword(AppConfig.API_KEY, email,
+        Call<PasswordReset> call = passResetApi.resetPassword(MyAppClass.API_KEY, email,
                 BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
         call.enqueue(new Callback<PasswordReset>() {
             @Override

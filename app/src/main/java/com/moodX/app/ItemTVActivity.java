@@ -23,6 +23,7 @@ import com.moodX.app.network.RetrofitClient;
 import com.moodX.app.network.apis.LiveTvApi;
 import com.moodX.app.network.model.Channel;
 import com.moodX.app.utils.HelperUtils;
+import com.moodX.app.utils.MyAppClass;
 import com.moodX.app.utils.NetworkInst;
 import com.moodX.app.utils.PreferenceUtils;
 import com.moodX.app.utils.RtlUtils;
@@ -189,7 +190,7 @@ public class ItemTVActivity extends AppCompatActivity {
         String userId = PreferenceUtils.getUserId(this);
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         LiveTvApi api = retrofit.create(LiveTvApi.class);
-        Call<List<Channel>> call = api.getFeaturedTV(AppConfig.API_KEY, pageNum,
+        Call<List<Channel>> call = api.getFeaturedTV(MyAppClass.API_KEY, pageNum,
                 BuildConfig.VERSION_CODE, userId, Constants.getDeviceId(this));
         call.enqueue(new Callback<List<Channel>>() {
             @Override

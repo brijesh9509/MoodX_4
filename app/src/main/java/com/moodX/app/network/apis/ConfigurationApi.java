@@ -1,5 +1,6 @@
 package com.moodX.app.network.apis;
 
+import com.moodX.app.network.model.ConfigResponse;
 import com.moodX.app.network.model.config.Configuration;
 
 import retrofit2.Call;
@@ -13,4 +14,7 @@ public interface ConfigurationApi {
                                              @Query("version") Integer id,
                                              @Query("user_id") String userId
                                              /*@Query("udid") String uDID*/);
+
+    @GET("app_config")
+    Call<ConfigResponse> getConfigData(@Query("user_id") String userId);
 }

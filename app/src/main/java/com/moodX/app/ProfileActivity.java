@@ -40,6 +40,7 @@ import com.moodX.app.network.model.User;
 import com.moodX.app.utils.ApiResources;
 import com.moodX.app.utils.Constants;
 import com.moodX.app.utils.FileUtil;
+import com.moodX.app.utils.MyAppClass;
 import com.moodX.app.utils.PreferenceUtils;
 import com.moodX.app.utils.RtlUtils;
 import com.moodX.app.utils.ToastMsg;
@@ -47,7 +48,6 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.moodX.app.R;
 
 import java.io.File;
 
@@ -264,7 +264,7 @@ public class ProfileActivity extends AppCompatActivity {
         String userId = PreferenceUtils.getUserId(this);
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         DeactivateAccountApi api = retrofit.create(DeactivateAccountApi.class);
-        Call<ResponseStatus> call = api.deactivateAccount(id, pass, reason, AppConfig.API_KEY,
+        Call<ResponseStatus> call = api.deactivateAccount(id, pass, reason, MyAppClass.API_KEY,
                 BuildConfig.VERSION_CODE, userId, Constants.getDeviceId(this));
         call.enqueue(new Callback<ResponseStatus>() {
             @Override
@@ -345,7 +345,7 @@ public class ProfileActivity extends AppCompatActivity {
         String userId = PreferenceUtils.getUserId(this);
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         UserDataApi api = retrofit.create(UserDataApi.class);
-        Call<User> call = api.getUserData(AppConfig.API_KEY, id, BuildConfig.VERSION_CODE,userId,
+        Call<User> call = api.getUserData(MyAppClass.API_KEY, id, BuildConfig.VERSION_CODE,userId,
                 Constants.getDeviceId(this));
         call.enqueue(new Callback<User>() {
             @Override
@@ -430,14 +430,13 @@ public class ProfileActivity extends AppCompatActivity {
         RequestBody phone = RequestBody.create(MediaType.parse("text/plain"), phoneString);
         RequestBody currentPass = RequestBody.create(MediaType.parse("text/plain"), currentPassString);
         RequestBody gender = RequestBody.create(MediaType.parse("text/plain"), selectedGender);
-        RequestBody key = RequestBody.create(MediaType.parse("text/plain"), AppConfig.API_KEY);
         RequestBody userId = RequestBody.create(MediaType.parse("text/plain"),  PreferenceUtils.getUserId(this));
         RequestBody versionCode = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(BuildConfig.VERSION_CODE));
 
 
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         ProfileApi api = retrofit.create(ProfileApi.class);
-        Call<ResponseStatus> call = api.updateProfile(AppConfig.API_KEY, id, name, email,
+        Call<ResponseStatus> call = api.updateProfile(MyAppClass.API_KEY, id, name, email,
                 phone, password, currentPass,
                 multipartBody, gender,versionCode ,userId, Constants.getDeviceId(this));
         call.enqueue(new Callback<ResponseStatus>() {
@@ -545,7 +544,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SetPasswordApi api = retrofit.create(SetPasswordApi.class);
-        Call<ResponseStatus> call = api.setPassword(AppConfig.API_KEY, id, password, uid,
+        Call<ResponseStatus> call = api.setPassword(MyAppClass.API_KEY, id, password, uid,
                 BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
         call.enqueue(new Callback<ResponseStatus>() {
             @Override

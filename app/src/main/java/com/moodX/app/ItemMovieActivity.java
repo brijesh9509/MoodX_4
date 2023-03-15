@@ -25,6 +25,7 @@ import com.moodX.app.network.RetrofitClient;
 import com.moodX.app.network.apis.MovieApi;
 import com.moodX.app.utils.ApiResources;
 import com.moodX.app.utils.HelperUtils;
+import com.moodX.app.utils.MyAppClass;
 import com.moodX.app.utils.NetworkInst;
 import com.moodX.app.utils.PreferenceUtils;
 import com.moodX.app.utils.RtlUtils;
@@ -212,7 +213,7 @@ public class ItemMovieActivity extends AppCompatActivity {
         String userId = PreferenceUtils.getUserId(this);
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         MovieApi api = retrofit.create(MovieApi.class);
-        Call<List<Video>> call = api.getMovieByStarId(AppConfig.API_KEY, id, pageCount,
+        Call<List<Video>> call = api.getMovieByStarId(MyAppClass.API_KEY, id, pageCount,
                 BuildConfig.VERSION_CODE,userId, Constants.getDeviceId(this));
         call.enqueue(new Callback<List<Video>>() {
             @Override
@@ -304,7 +305,7 @@ public class ItemMovieActivity extends AppCompatActivity {
         String userId = PreferenceUtils.getUserId(this);
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         MovieApi api = retrofit.create(MovieApi.class);
-        Call<List<Video>> call = api.getMovieByGenreId(AppConfig.API_KEY, id, pageNum,
+        Call<List<Video>> call = api.getMovieByGenreId(MyAppClass.API_KEY, id, pageNum,
                 BuildConfig.VERSION_CODE,userId, Constants.getDeviceId(this));
         call.enqueue(new Callback<List<Video>>() {
             @Override
@@ -382,7 +383,7 @@ public class ItemMovieActivity extends AppCompatActivity {
         String userId = PreferenceUtils.getUserId(this);
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         MovieApi api = retrofit.create(MovieApi.class);
-        Call<List<Video>> call = api.getMovieByCountryId(AppConfig.API_KEY, id, pageNum,
+        Call<List<Video>> call = api.getMovieByCountryId(MyAppClass.API_KEY, id, pageNum,
                 BuildConfig.VERSION_CODE,userId, Constants.getDeviceId(this));
         call.enqueue(new Callback<List<Video>>() {
             @Override
@@ -460,7 +461,7 @@ public class ItemMovieActivity extends AppCompatActivity {
         String userId = PreferenceUtils.getUserId(this);
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         MovieApi api = retrofit.create(MovieApi.class);
-        Call<List<Video>> call = api.getMovies(AppConfig.API_KEY, pageNum, BuildConfig.VERSION_CODE,
+        Call<List<Video>> call = api.getMovies(MyAppClass.API_KEY, pageNum, BuildConfig.VERSION_CODE,
                 userId, Constants.getDeviceId(this));
         call.enqueue(new Callback<List<Video>>() {
             @Override

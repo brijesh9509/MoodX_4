@@ -35,6 +35,7 @@ import com.moodX.app.network.model.SubscriptionHistory;
 import com.moodX.app.network.model.User;
 import com.moodX.app.utils.ApiResources;
 import com.moodX.app.utils.Constants;
+import com.moodX.app.utils.MyAppClass;
 import com.moodX.app.utils.NetworkInst;
 import com.moodX.app.utils.PreferenceUtils;
 import com.moodX.app.utils.RtlUtils;
@@ -114,7 +115,7 @@ public class SubscriptionActivity extends AppCompatActivity implements ActiveSub
     private void getSubscriptionHistory() {
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SubscriptionApi subscriptionApi = retrofit.create(SubscriptionApi.class);
-        Call<SubscriptionHistory> call = subscriptionApi.getSubscriptionHistory(AppConfig.API_KEY, userId,
+        Call<SubscriptionHistory> call = subscriptionApi.getSubscriptionHistory(MyAppClass.API_KEY, userId,
                 BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
         call.enqueue(new Callback<SubscriptionHistory>() {
             @Override
@@ -304,7 +305,7 @@ public class SubscriptionActivity extends AppCompatActivity implements ActiveSub
 
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SubscriptionApi api = retrofit.create(SubscriptionApi.class);
-        Call<ResponseBody> call = api.cancelSubscription(AppConfig.API_KEY, userId, subscriptionId,
+        Call<ResponseBody> call = api.cancelSubscription(MyAppClass.API_KEY, userId, subscriptionId,
                 BuildConfig.VERSION_CODE,PreferenceUtils.getUserId(this));
         call.enqueue(new Callback<ResponseBody>() {
             @Override

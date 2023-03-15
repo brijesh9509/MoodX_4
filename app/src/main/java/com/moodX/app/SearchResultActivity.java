@@ -28,6 +28,7 @@ import com.moodX.app.network.model.CommonModel;
 import com.moodX.app.network.model.SearchModel;
 import com.moodX.app.network.model.TvModel;
 import com.moodX.app.utils.ApiResources;
+import com.moodX.app.utils.MyAppClass;
 import com.moodX.app.utils.PreferenceUtils;
 import com.moodX.app.utils.RtlUtils;
 import com.moodX.app.utils.ToastMsg;
@@ -161,7 +162,7 @@ public class SearchResultActivity extends AppCompatActivity implements SearchAda
         String userId = PreferenceUtils.getUserId(this);
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SearchApi searchApi = retrofit.create(SearchApi.class);
-        Call<SearchModel> call = searchApi.getSearchData(AppConfig.API_KEY, query, type, range_to, range_from,
+        Call<SearchModel> call = searchApi.getSearchData(MyAppClass.API_KEY, query, type, range_to, range_from,
                 tvCategoryId, genreId, countryId, BuildConfig.VERSION_CODE, userId, Constants.getDeviceId(this));
         call.enqueue(new Callback<SearchModel>() {
             @Override

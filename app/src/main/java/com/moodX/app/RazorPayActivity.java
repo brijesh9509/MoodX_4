@@ -20,6 +20,7 @@ import com.moodX.app.network.model.User;
 import com.moodX.app.network.model.config.PaymentConfig;
 import com.moodX.app.utils.ApiResources;
 import com.moodX.app.R;
+import com.moodX.app.utils.MyAppClass;
 import com.moodX.app.utils.PreferenceUtils;
 import com.moodX.app.utils.ToastMsg;
 import com.razorpay.Checkout;
@@ -102,7 +103,7 @@ public class RazorPayActivity extends AppCompatActivity implements PaymentResult
         progressBar.setVisibility(View.VISIBLE);
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         PaymentApi paymentApi = retrofit.create(PaymentApi.class);
-        Call<ResponseBody> call = paymentApi.savePayment(AppConfig.API_KEY, aPackage.getPlanId(),
+        Call<ResponseBody> call = paymentApi.savePayment(MyAppClass.API_KEY, aPackage.getPlanId(),
                 databaseHelper.getUserData().getUserId(),
                 amountPaidInRupee,
                 token, "RazorPay", BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
@@ -146,7 +147,7 @@ public class RazorPayActivity extends AppCompatActivity implements PaymentResult
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SubscriptionApi subscriptionApi = retrofit.create(SubscriptionApi.class);
 
-        Call<ActiveStatus> call = subscriptionApi.getActiveStatus(AppConfig.API_KEY,
+        Call<ActiveStatus> call = subscriptionApi.getActiveStatus(MyAppClass.API_KEY,
                 PreferenceUtils.getUserId(this),
                 BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
         call.enqueue(new Callback<ActiveStatus>() {

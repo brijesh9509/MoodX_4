@@ -25,6 +25,7 @@ import com.moodX.app.network.RetrofitClient;
 import com.moodX.app.network.apis.TvSeriesApi;
 import com.moodX.app.utils.ApiResources;
 import com.moodX.app.utils.HelperUtils;
+import com.moodX.app.utils.MyAppClass;
 import com.moodX.app.utils.NetworkInst;
 import com.moodX.app.utils.PreferenceUtils;
 import com.moodX.app.utils.RtlUtils;
@@ -193,7 +194,7 @@ public class ItemSeriesActivity extends AppCompatActivity {
         String userId = PreferenceUtils.getUserId(this);
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         TvSeriesApi api = retrofit.create(TvSeriesApi.class);
-        Call<List<Video>> call = api.getTvSeries(AppConfig.API_KEY, pageNum,
+        Call<List<Video>> call = api.getTvSeries(MyAppClass.API_KEY, pageNum,
                 BuildConfig.VERSION_CODE,userId, Constants.getDeviceId(this));
         call.enqueue(new Callback<List<Video>>() {
             @Override

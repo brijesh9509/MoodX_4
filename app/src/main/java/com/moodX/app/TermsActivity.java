@@ -17,7 +17,6 @@ import android.widget.ProgressBar;
 
 import com.moodX.app.utils.ApiResources;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.moodX.app.R;
 
 public class TermsActivity extends AppCompatActivity {
 

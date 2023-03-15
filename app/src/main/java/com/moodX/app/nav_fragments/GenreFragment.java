@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.moodX.app.BuildConfig;
 import com.moodX.app.utils.ApiResources;
+import com.moodX.app.utils.MyAppClass;
 import com.moodX.app.utils.PreferenceUtils;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.moodX.app.AppConfig;
@@ -190,7 +191,7 @@ public class GenreFragment extends Fragment {
         String userId = PreferenceUtils.getUserId(requireContext());
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         GenreApi api = retrofit.create(GenreApi.class);
-        Call<List<AllGenre>> call = api.getGenre(AppConfig.API_KEY, BuildConfig.VERSION_CODE,userId,
+        Call<List<AllGenre>> call = api.getGenre(MyAppClass.API_KEY, BuildConfig.VERSION_CODE,userId,
                 getDeviceId(requireContext()));
         call.enqueue(new Callback<List<AllGenre>>() {
             @Override

@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.moodX.app.BuildConfig;
 import com.moodX.app.utils.ApiResources;
+import com.moodX.app.utils.MyAppClass;
 import com.moodX.app.utils.PreferenceUtils;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.moodX.app.AppConfig;
@@ -182,7 +183,7 @@ public class LiveTvFragment extends Fragment {
         String userId = PreferenceUtils.getUserId(activity);
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         LiveTvApi api = retrofit.create(LiveTvApi.class);
-        api.getLiveTvCategories(AppConfig.API_KEY, BuildConfig.VERSION_CODE, userId, getDeviceId(requireContext())).enqueue(new Callback<List<LiveTvCategory>>() {
+        api.getLiveTvCategories(MyAppClass.API_KEY, BuildConfig.VERSION_CODE, userId, getDeviceId(requireContext())).enqueue(new Callback<List<LiveTvCategory>>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onResponse(@NonNull Call<List<LiveTvCategory>> call, @NonNull retrofit2.Response<List<LiveTvCategory>> response) {

@@ -46,6 +46,7 @@ import com.moodX.app.network.model.PaytmResponse;
 import com.moodX.app.network.model.config.PaymentConfig;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.moodX.app.network.RetrofitClient;
+import com.moodX.app.utils.MyAppClass;
 import com.moodX.app.utils.PreferenceUtils;
 import com.moodX.app.utils.ApiResources;
 import com.moodX.app.utils.RtlUtils;
@@ -162,7 +163,7 @@ public class PurchasePlanActivity extends AppCompatActivity
     private void getPurchasePlanInfo() {
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         final PackageApi packageApi = retrofit.create(PackageApi.class);
-        Call<AllPackage> call = packageApi.getAllPackage(AppConfig.API_KEY, BuildConfig.VERSION_CODE,
+        Call<AllPackage> call = packageApi.getAllPackage(MyAppClass.API_KEY, BuildConfig.VERSION_CODE,
                 PreferenceUtils.getUserId(this), getDeviceId(this));
         call.enqueue(new Callback<AllPackage>() {
             @Override
@@ -248,7 +249,7 @@ public class PurchasePlanActivity extends AppCompatActivity
 
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         PaymentApi paymentApi = retrofit.create(PaymentApi.class);
-        Call<ResponseBody> call = paymentApi.savePayment(AppConfig.API_KEY,
+        Call<ResponseBody> call = paymentApi.savePayment(MyAppClass.API_KEY,
                 packageItem.getPlanId(), userId, packageItem.getPrice(),
                 payId, paymentMethod, BuildConfig.VERSION_CODE, getDeviceId(this));
 
@@ -287,7 +288,7 @@ public class PurchasePlanActivity extends AppCompatActivity
     private void updateActiveStatus(String userId) {
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SubscriptionApi subscriptionApi = retrofit.create(SubscriptionApi.class);
-        Call<ActiveStatus> call = subscriptionApi.getActiveStatus(AppConfig.API_KEY, userId,
+        Call<ActiveStatus> call = subscriptionApi.getActiveStatus(MyAppClass.API_KEY, userId,
                 BuildConfig.VERSION_CODE, getDeviceId(this));
         call.enqueue(new Callback<ActiveStatus>() {
             @Override
@@ -326,7 +327,7 @@ public class PurchasePlanActivity extends AppCompatActivity
 
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         PaymentApi paymentApi = retrofit.create(PaymentApi.class);
-        Call<PaytmResponse> call = paymentApi.getPaytmToken(AppConfig.API_KEY,
+        Call<PaytmResponse> call = paymentApi.getPaytmToken(MyAppClass.API_KEY,
                 productId, userId, BuildConfig.VERSION_CODE, getDeviceId(this));
 
         call.enqueue(new Callback<PaytmResponse>() {

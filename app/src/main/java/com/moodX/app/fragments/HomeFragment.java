@@ -47,6 +47,7 @@ import com.moodX.app.database.continueWatching.ContinueWatchingViewModel;
 import com.moodX.app.database.homeContent.HomeContentViewModel;
 import com.moodX.app.network.apis.HomeContentApi;
 import com.moodX.app.utils.ApiResources;
+import com.moodX.app.utils.MyAppClass;
 import com.moodX.app.utils.PreferenceUtils;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.github.islamkhsh.CardSliderViewPager;
@@ -506,7 +507,7 @@ public class HomeFragment extends Fragment {
         String userId = PreferenceUtils.getUserId(activity);
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         HomeContentApi api = retrofit.create(HomeContentApi.class);
-        Call<HomeContent> call = api.getHomeContent(AppConfig.API_KEY, BuildConfig.VERSION_CODE, userId,
+        Call<HomeContent> call = api.getHomeContent(MyAppClass.API_KEY, BuildConfig.VERSION_CODE, userId,
                 getDeviceId(activity));
         call.enqueue(new Callback<HomeContent>() {
             @Override

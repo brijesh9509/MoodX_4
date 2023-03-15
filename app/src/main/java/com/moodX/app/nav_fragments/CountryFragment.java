@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.moodX.app.BuildConfig;
 import com.moodX.app.utils.ApiResources;
+import com.moodX.app.utils.MyAppClass;
 import com.moodX.app.utils.PreferenceUtils;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.moodX.app.AppConfig;
@@ -178,7 +179,7 @@ public class CountryFragment extends Fragment {
         String userId = PreferenceUtils.getUserId(requireContext());
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         CountryApi api = retrofit.create(CountryApi.class);
-        Call<List<AllCountry>> call = api.getAllCountry(AppConfig.API_KEY, BuildConfig.VERSION_CODE, userId, getDeviceId(requireContext()));
+        Call<List<AllCountry>> call = api.getAllCountry(MyAppClass.API_KEY, BuildConfig.VERSION_CODE, userId, getDeviceId(requireContext()));
         call.enqueue(new Callback<List<AllCountry>>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override

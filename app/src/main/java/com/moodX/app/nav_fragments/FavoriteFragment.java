@@ -34,6 +34,7 @@ import com.moodX.app.models.Movie;
 import com.moodX.app.network.RetrofitClient;
 import com.moodX.app.network.apis.FavouriteApi;
 import com.moodX.app.utils.ApiResources;
+import com.moodX.app.utils.MyAppClass;
 import com.moodX.app.utils.PreferenceUtils;
 import com.moodX.app.utils.NetworkInst;
 import com.moodX.app.utils.SpacingItemDecoration;
@@ -209,7 +210,7 @@ public class FavoriteFragment extends Fragment {
     private void getData(String userID, int pageNum) {
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         FavouriteApi api = retrofit.create(FavouriteApi.class);
-        Call<List<Movie>> call = api.getFavoriteList(AppConfig.API_KEY, userID, pageNum,
+        Call<List<Movie>> call = api.getFavoriteList(MyAppClass.API_KEY, userID, pageNum,
                 BuildConfig.VERSION_CODE,getDeviceId(requireContext()));
         call.enqueue(new Callback<List<Movie>>() {
             @SuppressLint("NotifyDataSetChanged")

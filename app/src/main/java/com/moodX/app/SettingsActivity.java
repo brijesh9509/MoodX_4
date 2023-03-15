@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.moodX.app.R;
 
 import com.moodX.app.utils.ApiResources;
+import com.moodX.app.utils.MyAppClass;
 import com.onesignal.OneSignal;
 import com.moodX.app.network.RetrofitClient;
 import com.moodX.app.network.apis.MovieRequestApi;
@@ -138,7 +139,7 @@ public class SettingsActivity extends AppCompatActivity {
             if (!name.isEmpty() && !email.isEmpty() && !movieName.isEmpty() && !message.isEmpty()) {
                 Retrofit retrofit = RetrofitClient.getRetrofitInstance();
                 MovieRequestApi api = retrofit.create(MovieRequestApi.class);
-                Call<ResponseBody> call = api.submitRequest(AppConfig.API_KEY, name, email, movieName,
+                Call<ResponseBody> call = api.submitRequest(MyAppClass.API_KEY, name, email, movieName,
                         message, BuildConfig.VERSION_CODE, userId, Constants.getDeviceId(this));
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override

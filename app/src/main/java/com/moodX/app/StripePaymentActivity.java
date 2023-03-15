@@ -29,6 +29,7 @@ import com.moodX.app.network.model.config.PaymentConfig;
 import com.moodX.app.utils.ApiResources;
 import com.google.android.material.textfield.TextInputEditText;
 import com.moodX.app.R;
+import com.moodX.app.utils.MyAppClass;
 import com.moodX.app.utils.PreferenceUtils;
 import com.moodX.app.utils.ToastMsg;
 import com.stripe.android.ApiResultCallback;
@@ -278,7 +279,7 @@ public class StripePaymentActivity extends AppCompatActivity {
     public void saveChargeData(Charge charge, String token) {
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         PaymentApi paymentApi = retrofit.create(PaymentApi.class);
-        Call<ResponseBody> call = paymentApi.savePayment(AppConfig.API_KEY,
+        Call<ResponseBody> call = paymentApi.savePayment(MyAppClass.API_KEY,
                 aPackage.getPlanId(), userId, String.valueOf(charge.getAmount()),
                 token, "Stripe", BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
         call.enqueue(new Callback<ResponseBody>() {
@@ -317,7 +318,7 @@ public class StripePaymentActivity extends AppCompatActivity {
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SubscriptionApi subscriptionApi = retrofit.create(SubscriptionApi.class);
 
-        Call<ActiveStatus> call = subscriptionApi.getActiveStatus(AppConfig.API_KEY,
+        Call<ActiveStatus> call = subscriptionApi.getActiveStatus(MyAppClass.API_KEY,
                 PreferenceUtils.getUserId(this), BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
         call.enqueue(new Callback<ActiveStatus>() {
             @Override

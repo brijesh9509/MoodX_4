@@ -3,6 +3,7 @@ package com.moodX.app;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,7 +21,6 @@ import android.widget.TextView;
 import com.moodX.app.widget.RangeSeekBar;
 import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarChangeListener;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.moodX.app.R;
 import com.moodX.app.utils.Constants;
 import com.moodX.app.utils.NetworkInst;
 import com.moodX.app.utils.RtlUtils;
@@ -66,13 +66,13 @@ public class SearchActivity extends AppCompatActivity {
             toolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
             search_btn.setBackgroundResource(R.drawable.btn_rect_primary);
             search_btn.setTextColor(getResources().getColor(R.color.white));
-            genreSpinner.setBackground(getResources().getDrawable(R.drawable.edit_text_round_bg_overlay_light));
-            tvCategorySpinner.setBackground(getResources().getDrawable(R.drawable.edit_text_round_bg_overlay_light));
-            countrySpinner.setBackground(getResources().getDrawable(R.drawable.edit_text_round_bg_overlay_light));
+            genreSpinner.setBackground(ContextCompat.getDrawable(this,R.drawable.edit_text_round_bg_overlay_light));
+            tvCategorySpinner.setBackground(ContextCompat.getDrawable(this,R.drawable.edit_text_round_bg_overlay_light));
+            countrySpinner.setBackground(ContextCompat.getDrawable(this,R.drawable.edit_text_round_bg_overlay_light));
             //flex btn
-            btn_flex_1.setBackground(getResources().getDrawable(R.drawable.btn_rounded_primary_outline_flex));
-            btn_flex_2.setBackground(getResources().getDrawable(R.drawable.btn_rounded_primary_outline_flex));
-            btn_flex_3.setBackground(getResources().getDrawable(R.drawable.btn_rounded_primary_outline_flex));
+            btn_flex_1.setBackground(ContextCompat.getDrawable(this,R.drawable.btn_rounded_primary_outline_flex));
+            btn_flex_2.setBackground(ContextCompat.getDrawable(this,R.drawable.btn_rounded_primary_outline_flex));
+            btn_flex_3.setBackground(ContextCompat.getDrawable(this,R.drawable.btn_rounded_primary_outline_flex));
         }else {
             toolbar.setBackgroundColor(getResources().getColor(R.color.black_window_light));
             search_btn.setBackgroundResource(R.drawable.btn_rect_grey_outline);
@@ -84,13 +84,13 @@ public class SearchActivity extends AppCompatActivity {
             range_seek_bar.setLeftThumbColor(getResources().getColor(R.color.grey_60));
             range_seek_bar.setLeftThumbHighlightColor(getResources().getColor(R.color.grey_90));
             //spinner
-            genreSpinner.setBackground(getResources().getDrawable(R.drawable.edit_text_round_bg_overlay_dark));
-            tvCategorySpinner.setBackground(getResources().getDrawable(R.drawable.edit_text_round_bg_overlay_dark));
-            countrySpinner.setBackground(getResources().getDrawable(R.drawable.edit_text_round_bg_overlay_dark));
+            genreSpinner.setBackground(ContextCompat.getDrawable(this,R.drawable.edit_text_round_bg_overlay_dark));
+            tvCategorySpinner.setBackground(ContextCompat.getDrawable(this,R.drawable.edit_text_round_bg_overlay_dark));
+            countrySpinner.setBackground(ContextCompat.getDrawable(this,R.drawable.edit_text_round_bg_overlay_dark));
             //flex btn
-            btn_flex_1.setBackground(getResources().getDrawable(R.drawable.btn_rounded_grey_outline_flex));
-            btn_flex_2.setBackground(getResources().getDrawable(R.drawable.btn_rounded_grey_outline_flex));
-            btn_flex_3.setBackground(getResources().getDrawable(R.drawable.btn_rounded_grey_outline_flex));
+            btn_flex_1.setBackground(ContextCompat.getDrawable(this,R.drawable.btn_rounded_grey_outline_flex));
+            btn_flex_2.setBackground(ContextCompat.getDrawable(this,R.drawable.btn_rounded_grey_outline_flex));
+            btn_flex_3.setBackground(ContextCompat.getDrawable(this,R.drawable.btn_rounded_grey_outline_flex));
         }
 
         setSupportActionBar(toolbar);
