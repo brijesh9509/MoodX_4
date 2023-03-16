@@ -32,7 +32,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.moodX.app.AppConfig;
 import com.moodX.app.BuildConfig;
 import com.moodX.app.adapters.ContinueWatchingAdapter;
 import com.moodX.app.adapters.CountryAdapter;
@@ -169,7 +168,6 @@ public class HomeFragment extends Fragment {
         movieLayout = view.findViewById(R.id.movieLayout);
         tvSeriesLayout = view.findViewById(R.id.tvSeriesLayout);
 
-
         if (db.getConfigurationData().getAppConfig().getGenreVisible()) {
             genreLayout.setVisibility(View.VISIBLE);
         }
@@ -210,7 +208,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
         // --- genre recycler view ---------
         genreRv.setLayoutManager(new LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false));
         genreRv.setHasFixedSize(true);
@@ -231,7 +228,6 @@ public class HomeFragment extends Fragment {
         popularStarsRv.setNestedScrollingEnabled(false);
         popularStarAdapter = new PopularStarAdapter(activity, popularStarsList);
         popularStarsRv.setAdapter(popularStarAdapter);
-
 
         //----featured tv recycler view-----------------
         recyclerViewTv = view.findViewById(R.id.recyclerViewTv);
@@ -278,7 +274,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
         swipeRefreshLayout.setOnRefreshListener(() -> {
             recyclerViewMovie.removeAllViews();
             recyclerViewTv.removeAllViews();
@@ -308,7 +303,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
         scrollView.setOnScrollChangeListener((NestedScrollView.OnScrollChangeListener) (v, scrollX, scrollY, oldScrollX, oldScrollY) -> {
             if (scrollY < oldScrollY) { // up
                 animateSearchBar(false);
@@ -319,7 +313,6 @@ public class HomeFragment extends Fragment {
         });
 
         new Handler().postDelayed(this::getHomeContentDataFromServer, 1000);
-
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -367,10 +360,8 @@ public class HomeFragment extends Fragment {
         cViewPager.setAdapter(sliderAdapter);
         sliderAdapter.notifyDataSetChanged();
 
-
         //genre data
         if (db.getConfigurationData().getAppConfig().getGenreVisible()) {
-
             if (homeContent.getAllGenre() != null) {
                 for (int i = 0; i < homeContent.getAllGenre().size(); i++) {
                     AllGenre genre = homeContent.getAllGenre().get(i);
@@ -545,7 +536,6 @@ public class HomeFragment extends Fragment {
                     coordinatorLayout.setVisibility(View.VISIBLE);
                     scrollView.setVisibility(View.GONE);
                 }
-
             }
 
             @Override
@@ -555,7 +545,6 @@ public class HomeFragment extends Fragment {
 //                shimmerFrameLayout.setVisibility(View.GONE);
 //                coordinatorLayout.setVisibility(View.VISIBLE);
 //                scrollView.setVisibility(View.GONE);
-
             }
         });
     }
@@ -585,16 +574,13 @@ public class HomeFragment extends Fragment {
         });
 
         btnContinueWatchingClear.setOnClickListener(v -> continueWatchingViewModel.deleteAllContent());
-
     }
-
 
     @Override
     public void onStart() {
         super.onStart();
 
         menuIv.setOnClickListener(view -> activity.openDrawer());
-
 
         searchIv.setOnClickListener(view -> activity.goToSearchActivity());
 

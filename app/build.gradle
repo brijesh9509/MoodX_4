@@ -18,6 +18,14 @@ repositories {
 }*/
 
 android {
+    signingConfigs {
+        release {
+            storeFile file('F:\\AndroidStudioProjects\\QfonApp\\MoodX_4\\keystore.jks')
+            storePassword 'Moodx!@#456'
+            keyPassword 'Moodx!@#456'
+            keyAlias 'MoodX'
+        }
+    }
     compileSdkVersion 33
     defaultConfig {
         applicationId "com.moodX.app"
@@ -34,10 +42,12 @@ android {
                 cppFlags ""
             }
         }
+        signingConfig signingConfigs.release
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
 

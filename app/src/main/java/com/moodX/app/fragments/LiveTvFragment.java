@@ -29,7 +29,6 @@ import com.moodX.app.utils.ApiResources;
 import com.moodX.app.utils.MyAppClass;
 import com.moodX.app.utils.PreferenceUtils;
 import com.facebook.shimmer.ShimmerFrameLayout;
-import com.moodX.app.AppConfig;
 import com.moodX.app.MainActivity;
 import com.moodX.app.R;
 import com.moodX.app.adapters.LiveTvCategoryAdapter;

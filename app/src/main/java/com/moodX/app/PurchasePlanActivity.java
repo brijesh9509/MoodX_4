@@ -8,7 +8,6 @@ import static com.moodX.app.utils.Constants.RAZOR_PAY;
 import static com.moodX.app.utils.Constants.STRIP;
 import static com.moodX.app.utils.Constants.getDeviceId;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -51,22 +50,14 @@ import com.moodX.app.utils.PreferenceUtils;
 import com.moodX.app.utils.ApiResources;
 import com.moodX.app.utils.RtlUtils;
 import com.moodX.app.utils.ToastMsg;
-import com.paypal.android.sdk.payments.PayPalConfiguration;
-import com.paypal.android.sdk.payments.PayPalPayment;
-import com.paypal.android.sdk.payments.PayPalService;
-import com.paypal.android.sdk.payments.PaymentActivity;
-import com.paypal.android.sdk.payments.PaymentConfirmation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import com.moodX.app.utils.Constants;
 import com.paytm.pgsdk.PaytmOrder;
 import com.paytm.pgsdk.PaytmPaymentTransactionCallback;
 import com.paytm.pgsdk.TransactionManager;
@@ -90,20 +81,18 @@ public class PurchasePlanActivity extends AppCompatActivity
     private RecyclerView packageRv;
     private String currency = "";
 
-
-    private static final PayPalConfiguration config = new PayPalConfiguration()
+    /*private static final PayPalConfiguration config = new PayPalConfiguration()
             .environment(getPaypalStatus())
-            .clientId(ApiResources.PAYPAL_CLIENT_ID);
-
+            .clientId(ApiResources.PAYPAL_CLIENT_ID);*/
 
     private Package packageItem;
 
-    private static String getPaypalStatus() {
+    /*private static String getPaypalStatus() {
         if (AppConfig.PAYPAL_ACCOUNT_LIVE) {
             return PayPalConfiguration.ENVIRONMENT_PRODUCTION;
         }
         return PayPalConfiguration.ENVIRONMENT_SANDBOX;
-    }
+    }*/
 
     private BillingClient billingClient;
 
@@ -128,9 +117,9 @@ public class PurchasePlanActivity extends AppCompatActivity
         initView();
 
         // ---------- start paypal service ----------
-        Intent intent = new Intent(this, PayPalService.class);
+        /*Intent intent = new Intent(this, PayPalService.class);
         intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
-        startService(intent);
+        startService(intent);*/
 
         // getting currency symbol
         PaymentConfig config = new DatabaseHelper(PurchasePlanActivity.this).getConfigurationData().getPaymentConfig();
@@ -207,7 +196,7 @@ public class PurchasePlanActivity extends AppCompatActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == PAYPAL_REQUEST_CODE) {
+        /*if (requestCode == PAYPAL_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
                 PaymentConfirmation confirmation = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
                 if (confirmation != null) {
@@ -224,7 +213,7 @@ public class PurchasePlanActivity extends AppCompatActivity
 
         } else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID) {
             new ToastMsg(this).toastIconError("Invalid");
-        } else if (requestCode == PAYTM_REQUEST_CODE && data != null) {
+        } else*/ if (requestCode == PAYTM_REQUEST_CODE && data != null) {
             Toast.makeText(this, data.getStringExtra("nativeSdkForMerchantMessage")
                     + data.getStringExtra("response"), Toast.LENGTH_SHORT).show();
         }
@@ -373,7 +362,7 @@ public class PurchasePlanActivity extends AppCompatActivity
         finish();
     }
 
-    private void processPaypalPayment(Package packageItem) {
+    /*private void processPaypalPayment(Package packageItem) {
         String[] paypalAcceptedList = getResources().getStringArray(R.array.paypal_currency_list);
         if (Arrays.asList(paypalAcceptedList).contains(ApiResources.CURRENCY)) {
             PayPalPayment payPalPayment = new PayPalPayment((new BigDecimal(String.valueOf(packageItem.getPrice()))),
@@ -400,7 +389,7 @@ public class PurchasePlanActivity extends AppCompatActivity
             intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payPalPayment);
             startActivityForResult(intent, PAYPAL_REQUEST_CODE);
         }
-    }
+    }*/
 
     private void initView() {
         noTv = findViewById(R.id.no_tv);
@@ -422,7 +411,7 @@ public class PurchasePlanActivity extends AppCompatActivity
     @Override
     public void onBottomShitClick(String paymentMethodName) {
         if (paymentMethodName.equals(PAYPAL)) {
-            processPaypalPayment(packageItem);
+            //processPaypalPayment(packageItem);
 
         } else if (paymentMethodName.equals(STRIP)) {
             Intent intent = new Intent(PurchasePlanActivity.this, StripePaymentActivity.class);
@@ -642,7 +631,7 @@ public class PurchasePlanActivity extends AppCompatActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        stopService(new Intent(this, PayPalService.class));
+        //stopService(new Intent(this, PayPalService.class));
         if (billingClient != null) {
             billingClient.endConnection();
         }
