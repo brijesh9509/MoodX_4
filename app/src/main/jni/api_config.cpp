@@ -3,6 +3,7 @@
 
 
 std::string SERVER_URL = "https://www.moodx.vip/md_be/login/rest-api";
+//std::string SERVER_URL = "https://phpstack-781815-3329915.cloudwaysapps.com/md_be/login/rest-api";
 
 std::string PURCHASE_CODE = "xxxxxxxxxxxxxxx";
 std::string ONESIGNAL_APP_ID = "2c7cfedd-ec19-42bd-bf8c-fe2fa4fc6106";

@@ -13,23 +13,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
 
-import androidx.annotation.NonNull;
-
 import com.moodX.app.AppConfig;
 import com.moodX.app.NotificationClickHandler;
-import com.moodX.app.database.DatabaseHelper;
-import com.moodX.app.network.RetrofitClient;
-import com.moodX.app.network.apis.SubscriptionApi;
-import com.moodX.app.network.model.ActiveStatus;
-import com.moodX.app.BuildConfig;
 import com.onesignal.OneSignal;
 import com.squareup.picasso.LruCache;
 import com.squareup.picasso.Picasso;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class MyAppClass extends Application {
 
@@ -38,7 +26,7 @@ public class MyAppClass extends Application {
     @SuppressLint("StaticFieldLeak")
     private static Context mContext;
 
-    public static  String API_KEY = "";
+    public static String API_KEY = "";
 
     @Override
     public void onCreate() {
@@ -50,8 +38,8 @@ public class MyAppClass extends Application {
 
         //OneSignal setup
         OneSignal.setLogLevel(OneSignal.LOG_LEVEL.ERROR, OneSignal.LOG_LEVEL.NONE);
-        OneSignal.setAppId(AppConfig.ONE_SIGNAL_APP_ID);
         OneSignal.initWithContext(this);
+        OneSignal.setAppId(AppConfig.ONE_SIGNAL_APP_ID);
         OneSignal.setNotificationOpenedHandler(new NotificationClickHandler(mContext));
         SharedPreferences preferences = getSharedPreferences("push", MODE_PRIVATE);
         OneSignal.disablePush(!preferences.getBoolean("status", true));
@@ -59,18 +47,6 @@ public class MyAppClass extends Application {
         if (!getFirstTimeOpenStatus()) {
             changeSystemDarkMode(AppConfig.DEFAULT_DARK_THEME_ENABLE);
             saveFirstTimeOpenStatus(true);
-        }
-
-        // fetched and save the user active status if user is logged in
-        if (PreferenceUtils.isLoggedIn(this)) {
-            // fetched and save the user active status if user is logged in
-            // fetched and save the user active status if user is logged in
-            String userId = PreferenceUtils.getUserId(this);
-            if (userId != null) {
-                if (!userId.isEmpty()) {
-                    updateActiveStatus(userId);
-                }
-            }
         }
 
         setupActivityListener();
@@ -122,7 +98,6 @@ public class MyAppClass extends Application {
         SharedPreferences.Editor editor = getSharedPreferences("push", MODE_PRIVATE).edit();
         editor.putBoolean("firstTimeOpen", true);
         editor.apply();
-
     }
 
     public boolean getFirstTimeOpenStatus() {
@@ -134,53 +109,35 @@ public class MyAppClass extends Application {
         return mContext;
     }
 
-    private void updateActiveStatus(String userId) {
-        Retrofit retrofit = RetrofitClient.getRetrofitInstance();
-        SubscriptionApi subscriptionApi = retrofit.create(SubscriptionApi.class);
-
-        Call<ActiveStatus> call = subscriptionApi.getActiveStatus(MyAppClass.API_KEY,
-                userId, BuildConfig.VERSION_CODE, Constants.getDeviceId(mContext));
-        call.enqueue(new Callback<ActiveStatus>() {
-            @Override
-            public void onResponse(@NonNull Call<ActiveStatus> call, @NonNull Response<ActiveStatus> response) {
-                if (response.code() == 200) {
-                    ActiveStatus activeStatus = response.body();
-                    DatabaseHelper db = new DatabaseHelper(getApplicationContext());
-                    db.deleteAllActiveStatusData();
-                    db.insertActiveStatusData(activeStatus);
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<ActiveStatus> call, @NonNull Throwable t) {
-                t.printStackTrace();
-            }
-        });
-
-    }
-
     private void setupActivityListener() {
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-                activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);            }
+                activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
+            }
+
             @Override
             public void onActivityStarted(Activity activity) {
             }
+
             @Override
             public void onActivityResumed(Activity activity) {
 
             }
+
             @Override
             public void onActivityPaused(Activity activity) {
 
             }
+
             @Override
             public void onActivityStopped(Activity activity) {
             }
+
             @Override
             public void onActivitySaveInstanceState(Activity activity, Bundle outState) {
             }
+
             @Override
             public void onActivityDestroyed(Activity activity) {
             }

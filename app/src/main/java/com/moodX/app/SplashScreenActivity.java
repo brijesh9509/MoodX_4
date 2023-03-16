@@ -1,5 +1,7 @@
 package com.moodX.app;
 
+import static com.moodX.app.utils.Constants.getDeviceId;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -19,6 +21,8 @@ import android.widget.Toast;
 
 import com.moodX.app.database.DatabaseHelper;
 import com.moodX.app.network.apis.ConfigurationApi;
+import com.moodX.app.network.apis.SubscriptionApi;
+import com.moodX.app.network.model.ActiveStatus;
 import com.moodX.app.network.model.ConfigResponse;
 import com.moodX.app.network.model.config.ApkUpdateInfo;
 import com.moodX.app.network.model.config.Configuration;
@@ -38,7 +42,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-
 
 @SuppressLint("CustomSplashScreen")
 public class SplashScreenActivity extends AppCompatActivity {
@@ -161,6 +164,18 @@ public class SplashScreenActivity extends AppCompatActivity {
                             MyAppClass.API_KEY = configuration.getApiKey();
 
                             getConfigurationData();
+
+                            // fetched and save the user active status if user is logged in
+                            if (PreferenceUtils.isLoggedIn(SplashScreenActivity.this)) {
+                                // fetched and save the user active status if user is logged in
+                                // fetched and save the user active status if user is logged in
+                                String userId = PreferenceUtils.getUserId(SplashScreenActivity.this);
+                                if (userId != null) {
+                                    if (!userId.isEmpty()) {
+                                        updateActiveStatus(userId);
+                                    }
+                                }
+                            }
                         } else {
                             showErrorDialog(getString(R.string.error_toast), getString(R.string.failed_to_communicate));
                         }
@@ -351,5 +366,40 @@ public class SplashScreenActivity extends AppCompatActivity {
         if (vpnStatus) {
             helperUtils.showWarningDialog(SplashScreenActivity.this, getString(R.string.vpn_detected), getString(R.string.close_vpn));
         }
+    }
+
+    private void updateActiveStatus(String userId) {
+        Retrofit retrofit = RetrofitClient.getRetrofitInstance();
+        SubscriptionApi subscriptionApi = retrofit.create(SubscriptionApi.class);
+
+        Call<ActiveStatus> call = subscriptionApi.getActiveStatus(MyAppClass.API_KEY, userId,
+                BuildConfig.VERSION_CODE, getDeviceId(this));
+        call.enqueue(new Callback<ActiveStatus>() {
+            @Override
+            public void onResponse(@NonNull Call<ActiveStatus> call, @NonNull Response<ActiveStatus> response) {
+                if (response.code() == 200) {
+                    ActiveStatus activeStatus = response.body();
+                    DatabaseHelper db = new DatabaseHelper(getApplicationContext());
+                    db.deleteAllActiveStatusData();
+                    db.insertActiveStatusData(activeStatus);
+                } else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    SplashScreenActivity.this);
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(SplashScreenActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ActiveStatus> call, @NonNull Throwable t) {
+                t.printStackTrace();
+            }
+        });
+
     }
 }

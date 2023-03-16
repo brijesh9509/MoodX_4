@@ -196,8 +196,8 @@ public class PurchasePlanActivity extends AppCompatActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        /*if (requestCode == PAYPAL_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
+        if (requestCode == PAYPAL_REQUEST_CODE) {
+            /*if (resultCode == RESULT_OK) {
                 PaymentConfirmation confirmation = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
                 if (confirmation != null) {
                     try {
@@ -209,11 +209,11 @@ public class PurchasePlanActivity extends AppCompatActivity
                 } else if (resultCode == Activity.RESULT_CANCELED) {
                     new ToastMsg(this).toastIconError("Cancel");
                 }
-            }
+            }*/
 
-        } else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID) {
+        } /*else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID) {
             new ToastMsg(this).toastIconError("Invalid");
-        } else*/ if (requestCode == PAYTM_REQUEST_CODE && data != null) {
+        } */ else if (requestCode == PAYTM_REQUEST_CODE && data != null) {
             Toast.makeText(this, data.getStringExtra("nativeSdkForMerchantMessage")
                     + data.getStringExtra("response"), Toast.LENGTH_SHORT).show();
         }
@@ -389,8 +389,8 @@ public class PurchasePlanActivity extends AppCompatActivity
             intent.putExtra(PaymentActivity.EXTRA_PAYMENT, payPalPayment);
             startActivityForResult(intent, PAYPAL_REQUEST_CODE);
         }
-    }*/
-
+    }
+*/
     private void initView() {
         noTv = findViewById(R.id.no_tv);
         progressBar = findViewById(R.id.progress_bar);
@@ -545,7 +545,7 @@ public class PurchasePlanActivity extends AppCompatActivity
     }
 
     void processPaytmTransaction(String orderID, String mID, String txnToken,
-                                 String amount,String ccl) {
+                                 String amount, String ccl) {
         try {
             //String host = "https://securegw-stage.paytm.in/"; //TEST
             String host = "https://securegw.paytm.in/";  // LIVE
@@ -556,21 +556,23 @@ public class PurchasePlanActivity extends AppCompatActivity
 
                         @Override
                         public void onTransactionResponse(Bundle bundle) {
-                            JSONObject json = new JSONObject();
-                            Set<String> keys = bundle.keySet();
-                            for (String key : keys) {
-                                try {
-                                    // json.put(key, bundle.get(key)); see edit below
-                                    json.put(key, JSONObject.wrap(bundle.get(key)));
-                                } catch (JSONException e) {
-                                    //Handle exception here
+                            if (bundle != null) {
+                                JSONObject json = new JSONObject();
+                                Set<String> keys = bundle.keySet();
+                                for (String key : keys) {
+                                    try {
+                                        // json.put(key, bundle.get(key)); see edit below
+                                        json.put(key, JSONObject.wrap(bundle.get(key)));
+                                    } catch (JSONException e) {
+                                        //Handle exception here
+                                    }
                                 }
-                            }
-                            Log.e("response", json.toString());
-                            Log.e("TXNID", bundle.get("TXNID").toString());
+                                Log.e("response", json.toString());
+                                Log.e("TXNID", bundle.get("TXNID").toString());
 
-                            if (bundle.get("STATUS").toString().equalsIgnoreCase("TXN_SUCCESS")) {
-                                sendDataToServer(bundle.get("TXNID").toString(), "Paytm");
+                                if (bundle.get("STATUS").toString().equalsIgnoreCase("TXN_SUCCESS")) {
+                                    sendDataToServer(bundle.get("TXNID").toString(), "Paytm");
+                                }
                             }
                         }
 
@@ -606,17 +608,19 @@ public class PurchasePlanActivity extends AppCompatActivity
 
                         @Override
                         public void onTransactionCancel(String s, Bundle bundle) {
-                            JSONObject json = new JSONObject();
-                            Set<String> keys = bundle.keySet();
-                            for (String key : keys) {
-                                try {
-                                    // json.put(key, bundle.get(key)); see edit below
-                                    json.put(key, JSONObject.wrap(bundle.get(key)));
-                                } catch (JSONException e) {
-                                    //Handle exception here
+                            if (bundle != null) {
+                                JSONObject json = new JSONObject();
+                                Set<String> keys = bundle.keySet();
+                                for (String key : keys) {
+                                    try {
+                                        // json.put(key, bundle.get(key)); see edit below
+                                        json.put(key, JSONObject.wrap(bundle.get(key)));
+                                    } catch (JSONException e) {
+                                        //Handle exception here
+                                    }
                                 }
+                                Log.e("Cancel", json.toString());
                             }
-                            Log.e("Cancel", json.toString());
                         }
                     });
 

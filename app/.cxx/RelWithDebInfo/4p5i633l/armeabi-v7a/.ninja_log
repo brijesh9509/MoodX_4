@@ -4,3 +4,10 @@
 0	58	0	clean	bf7f04d26f8701e0
 0	10	0	clean	bf7f04d26f8701e0
 0	39	0	clean	bf7f04d26f8701e0
+0	34	0	clean	bf7f04d26f8701e0
+1	13	0	clean	bf7f04d26f8701e0
+1	46	0	clean	bf7f04d26f8701e0
+27	1171	700698229	CMakeFiles/api_config.dir/api_config.cpp.o	2c801d1bec95df3b
+1171	1986	700698230	F:/AndroidStudioProjects/QfonApp/MoodX_4/app/build/intermediates/cxx/RelWithDebInfo/4p5i633l/obj/armeabi-v7a/libapi_config.so	6f475d56b7e5c099
+14	1304	700698972	CMakeFiles/api_config.dir/api_config.cpp.o	2c801d1bec95df3b
+1304	2221	700698973	F:/AndroidStudioProjects/QfonApp/MoodX_4/app/build/intermediates/cxx/RelWithDebInfo/4p5i633l/obj/armeabi-v7a/libapi_config.so	6f475d56b7e5c099
