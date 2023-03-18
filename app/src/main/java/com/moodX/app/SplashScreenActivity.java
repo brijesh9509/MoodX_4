@@ -33,7 +33,6 @@ import com.moodX.app.utils.MyAppClass;
 import com.moodX.app.utils.PreferenceUtils;
 import com.moodX.app.utils.ApiResources;
 import com.moodX.app.utils.Constants;
-import com.moodX.app.utils.ToastMsg;
 import com.onesignal.OneSignal;
 
 import java.util.Objects;
@@ -51,7 +50,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     private Thread timer;
     private DatabaseHelper db;
     //    private boolean isRestricted = false;
-//    private boolean isUpdate = false;
+    //    private boolean isUpdate = false;
     private boolean vpnStatus = false;
     private HelperUtils helperUtils;
 
@@ -300,7 +299,6 @@ public class SplashScreenActivity extends AppCompatActivity {
                         if (db.getConfigurationData() != null) {
                             timer.start();
                         } else {
-                            new ToastMsg(SplashScreenActivity.this).toastIconError(getString(R.string.error_toast));
                             finish();
                         }
                     } else {
