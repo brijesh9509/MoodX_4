@@ -4,8 +4,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
-
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -19,7 +17,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.moodX.app.widget.RangeSeekBar;
-import com.crystal.crystalrangeseekbar.interfaces.OnRangeSeekbarChangeListener;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.moodX.app.utils.Constants;
 import com.moodX.app.utils.NetworkInst;
