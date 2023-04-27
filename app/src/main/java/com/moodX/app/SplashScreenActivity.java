@@ -28,6 +28,7 @@ import com.moodX.app.network.model.config.ApkUpdateInfo;
 import com.moodX.app.network.model.config.Configuration;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.moodX.app.network.RetrofitClient;
+import com.moodX.app.utils.AESHelper;
 import com.moodX.app.utils.HelperUtils;
 import com.moodX.app.utils.MyAppClass;
 import com.moodX.app.utils.PreferenceUtils;
@@ -77,8 +78,6 @@ public class SplashScreenActivity extends AppCompatActivity {
 
 
         String userId = Objects.requireNonNull(OneSignal.getDeviceState()).getUserId();
-
-        Log.e("debugdebug", "User:" + userId);
     }
 
     @Override
@@ -89,14 +88,9 @@ public class SplashScreenActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splashscreen);
 
-        Log.e("HASH KEY====",MyAppClass.HASH_KEY);
-
         db = new DatabaseHelper(SplashScreenActivity.this);
         helperUtils = new HelperUtils(SplashScreenActivity.this);
         vpnStatus = new HelperUtils(SplashScreenActivity.this).isVpnConnectionAvailable();
-
-        //print keyHash for facebook login
-        // createKeyHash(SplashScreenActivity.this, BuildConfig.APPLICATION_ID);
 
         timer = new Thread() {
             public void run() {
@@ -213,7 +207,8 @@ public class SplashScreenActivity extends AppCompatActivity {
             Retrofit retrofit = RetrofitClient.getRetrofitInstance();
             ConfigurationApi api = retrofit.create(ConfigurationApi.class);
             Call<Configuration> call = api.getConfigurationData(MyAppClass.API_KEY,
-                    BuildConfig.VERSION_CODE, PreferenceUtils.getUserId(this));
+                    BuildConfig.VERSION_CODE, PreferenceUtils.getUserId(this),
+                    BuildConfig.APPLICATION_ID, MyAppClass.HASH_KEY);
             call.enqueue(new Callback<Configuration>() {
                 @Override
                 public void onResponse(@NonNull Call<Configuration> call, @NonNull Response<Configuration> response) {

@@ -25,7 +25,6 @@ import com.moodX.app.utils.PreferenceUtils;
 import com.moodX.app.utils.RtlUtils;
 import com.moodX.app.utils.ToastMsg;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.moodX.app.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +42,7 @@ public class ReplyActivity extends AppCompatActivity {
 
     private List<GetCommentsModel> list = new ArrayList<>();
     private ReplyAdapter replyAdapter;
-    private String strCommentID, strAllReplyURL, videoId;
+    private String strCommentID, videoId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,9 +95,6 @@ public class ReplyActivity extends AppCompatActivity {
 
         strCommentID = getIntent().getStringExtra("commentId");
         videoId = getIntent().getStringExtra("videoId");
-
-        strAllReplyURL = new ApiResources().getGetAllReply() + "&&id=" + strCommentID;
-
 
         btnComment.setOnClickListener(new View.OnClickListener() {
             @Override

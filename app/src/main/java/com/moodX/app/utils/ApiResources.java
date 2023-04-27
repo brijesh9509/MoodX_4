@@ -23,27 +23,14 @@ public class ApiResources {
     public static String USER_PHONE;
 
 
-    String URL = AppConfig.API_SERVER_URL + RetrofitClient.API_URL_EXTENSION;
-
     private static Toast toast;
 
-
-    String searchUrl = URL + "search";
-
-    String getAllReply = URL + "all_replay";
     String termsURL = AppConfig.TERMS_URL;
 
     public String getTermsURL() {
         return termsURL;
     }
 
-    public String getGetAllReply() {
-        return getAllReply;
-    }
-
-    public String getSearchUrl() {
-        return searchUrl;
-    }
 
     public static void openLoginScreen(String mErrorBody,
                                        Context mContext) {

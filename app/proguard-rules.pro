@@ -5,6 +5,10 @@
 -keepattributes JavascriptInterface
 -keepattributes *Annotation*
 
+-keepclassmembers,allowobfuscation class * {
+    @com.google.gson.annotations.SerializedName <fields>;
+}
+
 -dontwarn com.razorpay.**
 -keep class com.razorpay.** {*;}
 

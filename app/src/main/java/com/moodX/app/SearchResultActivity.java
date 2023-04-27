@@ -56,7 +56,6 @@ public class SearchResultActivity extends AppCompatActivity implements SearchAda
 
     private ApiResources apiResources;
 
-    private String URL = null;
     private boolean isLoading = false;
     private ProgressBar progressBar;
     private int pageCount = 1;
@@ -127,8 +126,6 @@ public class SearchResultActivity extends AppCompatActivity implements SearchAda
             toolbar.setBackgroundColor(getResources().getColor(R.color.black_window_light));
             toolbar.setTitleTextColor(Color.WHITE);
         }
-
-        URL = new ApiResources().getSearchUrl() + "&&q=" + query + "&&page=";
 
         coordinatorLayout = findViewById(R.id.coordinator_lyt);
         movieRv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));

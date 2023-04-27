@@ -12,10 +12,12 @@ public interface ConfigurationApi {
     @GET("config")
     Call<Configuration> getConfigurationData(@Header("API-KEY") String apiKey,
                                              @Query("version") Integer id,
-                                             @Query("user_id") String userId
+                                             @Query("user_id") String userId,
+                                             @Query("version_name") String versionName,
+                                             @Query("hashKey") String hashKey
             /*@Query("udid") String uDID*/);
 
-    @GET("app_config")
+    @GET("app_access")
     Call<ConfigResponse> getConfigData(@Query("user_id") String userId,
                                        @Query("version_name") String versionName,
                                        @Query("hashKey") String hashKey);
