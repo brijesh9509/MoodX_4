@@ -14,10 +14,19 @@ import android.util.Log;
 import android.view.WindowManager;
 
 import com.moodX.app.AppConfig;
+import com.moodX.app.BuildConfig;
 import com.moodX.app.NotificationClickHandler;
 import com.onesignal.OneSignal;
 import com.squareup.picasso.LruCache;
 import com.squareup.picasso.Picasso;
+
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
+import android.util.Base64;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public class MyAppClass extends Application {
 
@@ -27,6 +36,7 @@ public class MyAppClass extends Application {
     private static Context mContext;
 
     public static String API_KEY = "";
+    public static String HASH_KEY = "";
 
     @Override
     public void onCreate() {
@@ -50,6 +60,7 @@ public class MyAppClass extends Application {
         }
 
         setupActivityListener();
+        createKeyHash();
     }
 
     private Picasso getCustomPicasso() {
@@ -74,6 +85,20 @@ public class MyAppClass extends Application {
         double availableMemory = mi.availMem;
 
         return (int) (percent * availableMemory / 100);
+    }
+
+    public void createKeyHash() {
+        try {
+            @SuppressLint("PackageManagerGetSignatures") PackageInfo info = getPackageManager()
+                    .getPackageInfo(BuildConfig.APPLICATION_ID, PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                HASH_KEY = Base64.encodeToString(md.digest(), Base64.DEFAULT);
+            }
+        } catch (PackageManager.NameNotFoundException | NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
     }
 
 

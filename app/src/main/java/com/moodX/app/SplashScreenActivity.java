@@ -84,10 +84,12 @@ public class SplashScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splashscreen);
+
+        Log.e("HASH KEY====",MyAppClass.HASH_KEY);
 
         db = new DatabaseHelper(SplashScreenActivity.this);
         helperUtils = new HelperUtils(SplashScreenActivity.this);
@@ -152,7 +154,8 @@ public class SplashScreenActivity extends AppCompatActivity {
         if (!vpnStatus) {
             Retrofit retrofit = RetrofitClient.getRetrofitInstance();
             ConfigurationApi api = retrofit.create(ConfigurationApi.class);
-            Call<ConfigResponse> call = api.getConfigData(PreferenceUtils.getUserId(this));
+            Call<ConfigResponse> call = api.getConfigData(PreferenceUtils.getUserId(this),
+                    BuildConfig.APPLICATION_ID, MyAppClass.HASH_KEY);
             call.enqueue(new Callback<ConfigResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<ConfigResponse> call, @NonNull Response<ConfigResponse> response) {
