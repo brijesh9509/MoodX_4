@@ -4,9 +4,10 @@ apply plugin: 'com.google.gms.google-services'
 //apply plugin: 'com.google.firebase.crashlytics'
 
 android {
+
     signingConfigs {
         release {
-            storeFile file('F:\\AndroidStudioProjects\\QfonApp\\MoodX_4\\keystore.jks')
+            storeFile file('F:\\Flutter\\Demo\\MoodX_4\\keystore.jks')
             keyAlias 'MoodX'
             storePassword 'Moodx!@#456'
             keyPassword 'Moodx!@#456'
@@ -17,11 +18,12 @@ android {
         applicationId "com.moodX.app"
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 12
-        versionName "2.0"
+        versionCode 16
+        versionName "2.1"
         //multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         //vectorDrawables.useSupportLibrary = true
+        resConfigs "en"
 
         externalNativeBuild {
             cmake {

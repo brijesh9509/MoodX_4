@@ -5,11 +5,6 @@ import static com.moodX.app.utils.Constants.getDeviceId;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -19,21 +14,24 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.moodX.app.database.DatabaseHelper;
+import com.moodX.app.network.RetrofitClient;
 import com.moodX.app.network.apis.ConfigurationApi;
 import com.moodX.app.network.apis.SubscriptionApi;
 import com.moodX.app.network.model.ActiveStatus;
 import com.moodX.app.network.model.ConfigResponse;
 import com.moodX.app.network.model.config.ApkUpdateInfo;
 import com.moodX.app.network.model.config.Configuration;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.moodX.app.network.RetrofitClient;
-import com.moodX.app.utils.AESHelper;
+import com.moodX.app.utils.ApiResources;
+import com.moodX.app.utils.Constants;
 import com.moodX.app.utils.HelperUtils;
 import com.moodX.app.utils.MyAppClass;
 import com.moodX.app.utils.PreferenceUtils;
-import com.moodX.app.utils.ApiResources;
-import com.moodX.app.utils.Constants;
 import com.onesignal.OneSignal;
 
 import java.util.Objects;
@@ -149,7 +147,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             Retrofit retrofit = RetrofitClient.getRetrofitInstance();
             ConfigurationApi api = retrofit.create(ConfigurationApi.class);
             Call<ConfigResponse> call = api.getConfigData(PreferenceUtils.getUserId(this),
-                    BuildConfig.APPLICATION_ID, MyAppClass.HASH_KEY);
+                    BuildConfig.APPLICATION_ID,MyAppClass.HASH_KEY);
             call.enqueue(new Callback<ConfigResponse>() {
                 @Override
                 public void onResponse(@NonNull Call<ConfigResponse> call, @NonNull Response<ConfigResponse> response) {
@@ -208,7 +206,7 @@ public class SplashScreenActivity extends AppCompatActivity {
             ConfigurationApi api = retrofit.create(ConfigurationApi.class);
             Call<Configuration> call = api.getConfigurationData(MyAppClass.API_KEY,
                     BuildConfig.VERSION_CODE, PreferenceUtils.getUserId(this),
-                    BuildConfig.APPLICATION_ID, MyAppClass.HASH_KEY);
+                    BuildConfig.APPLICATION_ID,MyAppClass.HASH_KEY);
             call.enqueue(new Callback<Configuration>() {
                 @Override
                 public void onResponse(@NonNull Call<Configuration> call, @NonNull Response<Configuration> response) {

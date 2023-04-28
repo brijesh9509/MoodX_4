@@ -18,4 +18,9 @@
   public void onPayment*(...);
 }
 
--keepclassmembers class com.paytm.pgsdk.paytmWebView$PaytmJavaScriptInterface { public *; }
+-renamesourcefileattribute
+-repackageclasses
+-adaptclassstrings
+-optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*
+-optimizationpasses 5
+-allowaccessmodification

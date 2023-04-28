@@ -14,6 +14,6 @@ public interface HomeContentApi {
                                      @Query("version") Integer id,
                                      @Query("user_id") String userId,
                                      @Query("udid") String uDID,
-                                     @Query("version_name") String versionName,
-                                     @Query("hashKey") String hashKey);
+                                     @Query("app_id") String versionName,
+                                     @Query("secret_key") String sKey);
 }
