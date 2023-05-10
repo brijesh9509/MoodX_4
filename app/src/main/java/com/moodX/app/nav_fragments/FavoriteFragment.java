@@ -97,8 +97,8 @@ public class FavoriteFragment extends Fragment {
         if (activity.isDark) {
             pageTitle.setTextColor(activity.getResources().getColor(R.color.white));
             searchBar.setCardBackgroundColor(activity.getResources().getColor(R.color.black_window_light));
-            menuIv.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_menu));
-            searchIv.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_search_white));
+            menuIv.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_menu));
+            searchIv.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_search_white));
         }
 
     }
@@ -211,7 +211,7 @@ public class FavoriteFragment extends Fragment {
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         FavouriteApi api = retrofit.create(FavouriteApi.class);
         Call<List<Movie>> call = api.getFavoriteList(MyAppClass.API_KEY, userID, pageNum,
-                BuildConfig.VERSION_CODE,getDeviceId(requireContext()));
+                BuildConfig.VERSION_CODE,getDeviceId(activity));
         call.enqueue(new Callback<List<Movie>>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
@@ -252,14 +252,14 @@ public class FavoriteFragment extends Fragment {
                         if (response.errorBody() != null) {
                             try {
                                 ApiResources.openLoginScreen(response.errorBody().string(),
-                                        requireContext());
+                                        activity);
                                 activity.finish();
                             }catch(Exception e){
                                 e.printStackTrace();
                             }
                         }
                     } catch (Exception e) {
-                        Toast.makeText(requireContext(),
+                        Toast.makeText(activity,
                                 e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }

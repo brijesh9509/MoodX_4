@@ -4,10 +4,14 @@
       <root url="file://$PROJECT_DIR$/../Livestream-Clone-Android/caches/transforms-3/8ffd16765936a81991a811011e642125/transformed/databinding-adapters-4.2.2/res" />
       <root url="file://$PROJECT_DIR$/../Livestream-Clone-Android/caches/transforms-3/8ffd16765936a81991a811011e642125/transformed/databinding-adapters-4.2.2/AndroidManifest.xml" />
       <root url="jar://$PROJECT_DIR$/../Livestream-Clone-Android/caches/transforms-3/8ffd16765936a81991a811011e642125/transformed/databinding-adapters-4.2.2/jars/classes.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/cc7498d931077a0e4efb6ccfade3df35/transformed/databinding-adapters-4.2.2/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/cc7498d931077a0e4efb6ccfade3df35/transformed/databinding-adapters-4.2.2/AndroidManifest.xml" />
+      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/cc7498d931077a0e4efb6ccfade3df35/transformed/databinding-adapters-4.2.2/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
       <root url="jar://$PROJECT_DIR$/../Livestream-Clone-Android/caches/modules-2/files-2.1/androidx.databinding/databinding-adapters/4.2.2/2b9d7cac437d2046ecc61befd75392fcd571b716/databinding-adapters-4.2.2-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/modules-2/files-2.1/androidx.databinding/databinding-adapters/4.2.2/2b9d7cac437d2046ecc61befd75392fcd571b716/databinding-adapters-4.2.2-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

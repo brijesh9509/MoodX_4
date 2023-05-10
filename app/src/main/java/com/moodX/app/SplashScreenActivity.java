@@ -73,9 +73,6 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         //check VPN connection is set or not
         vpnStatus = new HelperUtils(SplashScreenActivity.this).isVpnConnectionAvailable();
-
-
-        String userId = Objects.requireNonNull(OneSignal.getDeviceState()).getUserId();
     }
 
     @Override

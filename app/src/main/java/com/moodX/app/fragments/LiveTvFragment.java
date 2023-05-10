@@ -83,13 +83,13 @@ public class LiveTvFragment extends Fragment {
 
         initComponent(view);
 
-        pageTitle.setText(requireContext().getResources().getString(R.string.live_tv));
+        pageTitle.setText(activity.getResources().getString(R.string.live_tv));
 
         if (activity.isDark) {
             pageTitle.setTextColor(activity.getResources().getColor(R.color.white));
             searchBar.setCardBackgroundColor(activity.getResources().getColor(R.color.black_window_light));
-            menuIv.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_menu));
-            searchIv.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_search_white));
+            menuIv.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_menu));
+            searchIv.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_search_white));
         }
     }
 
@@ -143,7 +143,7 @@ public class LiveTvFragment extends Fragment {
         if (new NetworkInst(activity).isNetworkAvailable()) {
             getLiveTvData();
         } else {
-            tvNoItem.setText(requireContext().getString(R.string.no_internet));
+            tvNoItem.setText(activity.getString(R.string.no_internet));
             shimmerFrameLayout.stopShimmer();
             shimmerFrameLayout.setVisibility(View.GONE);
             coordinatorLayout.setVisibility(View.VISIBLE);
@@ -159,7 +159,7 @@ public class LiveTvFragment extends Fragment {
             if (new NetworkInst(activity).isNetworkAvailable()) {
                 getLiveTvData();
             } else {
-                tvNoItem.setText(requireContext().getString(R.string.no_internet));
+                tvNoItem.setText(activity.getString(R.string.no_internet));
                 shimmerFrameLayout.stopShimmer();
                 shimmerFrameLayout.setVisibility(View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
@@ -182,7 +182,7 @@ public class LiveTvFragment extends Fragment {
         String userId = PreferenceUtils.getUserId(activity);
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         LiveTvApi api = retrofit.create(LiveTvApi.class);
-        api.getLiveTvCategories(MyAppClass.API_KEY, BuildConfig.VERSION_CODE, userId, getDeviceId(requireContext())).enqueue(new Callback<List<LiveTvCategory>>() {
+        api.getLiveTvCategories(MyAppClass.API_KEY, BuildConfig.VERSION_CODE, userId, getDeviceId(activity)).enqueue(new Callback<List<LiveTvCategory>>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onResponse(@NonNull Call<List<LiveTvCategory>> call, @NonNull retrofit2.Response<List<LiveTvCategory>> response) {
@@ -228,7 +228,7 @@ public class LiveTvFragment extends Fragment {
                 shimmerFrameLayout.setVisibility(View.GONE);
 
                 coordinatorLayout.setVisibility(View.VISIBLE);
-                tvNoItem.setText(requireContext().getResources().getString(R.string.something_went_text));
+                tvNoItem.setText(activity.getResources().getString(R.string.something_went_text));
 
                 t.printStackTrace();
             }

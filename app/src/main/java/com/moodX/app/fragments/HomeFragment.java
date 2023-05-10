@@ -180,8 +180,8 @@ public class HomeFragment extends Fragment {
         if (activity.isDark) {
             pageTitle.setTextColor(activity.getResources().getColor(R.color.white));
             searchBar.setCardBackgroundColor(activity.getResources().getColor(R.color.black_window_light));
-            menuIv.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_menu));
-            searchIv.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_search_white));
+            menuIv.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_menu));
+            searchIv.setImageDrawable(ContextCompat.getDrawable(activity, R.drawable.ic_search_white));
         }
 
         //----init timer slider--------------------
@@ -522,11 +522,11 @@ public class HomeFragment extends Fragment {
                     try {
                         if (response.errorBody() != null) {
                             ApiResources.openLoginScreen(response.errorBody().string(),
-                                    requireContext());
+                                    activity);
                             activity.finish();
                         }
                     } catch (Exception e) {
-                        Toast.makeText(requireContext(),
+                        Toast.makeText(activity,
                                 e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 } else {

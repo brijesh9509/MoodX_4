@@ -188,11 +188,11 @@ public class GenreFragment extends Fragment {
 
 
     private void getAllGenre(){
-        String userId = PreferenceUtils.getUserId(requireContext());
+        String userId = PreferenceUtils.getUserId(activity);
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         GenreApi api = retrofit.create(GenreApi.class);
         Call<List<AllGenre>> call = api.getGenre(MyAppClass.API_KEY, BuildConfig.VERSION_CODE,userId,
-                getDeviceId(requireContext()));
+                getDeviceId(activity));
         call.enqueue(new Callback<List<AllGenre>>() {
             @Override
             public void onResponse(Call<List<AllGenre>> call, retrofit2.Response<List<AllGenre>> response) {
@@ -221,14 +221,14 @@ public class GenreFragment extends Fragment {
                         if (response.errorBody() != null) {
                             try {
                                 ApiResources.openLoginScreen(response.errorBody().string(),
-                                        requireContext());
+                                        activity);
                                 activity.finish();
                             }catch(Exception e){
                                 e.printStackTrace();
                             }
                         }
                     } catch (Exception e) {
-                        Toast.makeText(requireContext(),
+                        Toast.makeText(activity,
                                 e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }else {
