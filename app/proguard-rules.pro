@@ -5,10 +5,6 @@
 -keepattributes JavascriptInterface
 -keepattributes *Annotation*
 
--keepclassmembers,allowobfuscation class * {
-    @com.google.gson.annotations.SerializedName <fields>;
-}
-
 -dontwarn com.razorpay.**
 -keep class com.razorpay.** {*;}
 
@@ -18,9 +14,6 @@
   public void onPayment*(...);
 }
 
--renamesourcefileattribute
--repackageclasses
--adaptclassstrings
--optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*
--optimizationpasses 5
--allowaccessmodification
+-keepclassmembers,allowobfuscation class * {
+    @com.google.gson.annotations.SerializedName <fields>;
+}

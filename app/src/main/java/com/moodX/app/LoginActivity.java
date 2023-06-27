@@ -26,8 +26,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 
-import com.moodX.app.R;
-
 import com.moodX.app.database.DatabaseHelper;
 import com.moodX.app.network.apis.FirebaseAuthApi;
 import com.moodX.app.network.apis.LoginApi;
@@ -361,11 +359,11 @@ public class LoginActivity extends AppCompatActivity {
                             sendGoogleDataToServer();
 
                         } else {
-                            Toast.makeText(LoginActivity.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(LoginActivity.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
                             progressBar.setVisibility(View.GONE);
                         }
                     } else {
-                        Toast.makeText(LoginActivity.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(LoginActivity.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
                         progressBar.setVisibility(View.GONE);
                     }
                 }
@@ -412,9 +410,9 @@ public class LoginActivity extends AppCompatActivity {
             // Choose authentication providers
             GoogleSignInOptions googleOptions = new GoogleSignInOptions.Builder(
                     GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestIdToken(getString(R.string.default_web_client_id))
-                    .requestEmail()
-                    .requestProfile()
+                    //.requestIdToken(getString(R.string.default_web_client_id))
+                    //.requestEmail()
+                    //.requestProfile()
                     .build();
 
 

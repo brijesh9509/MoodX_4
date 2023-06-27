@@ -6,7 +6,6 @@ import android.app.ActivityManager;
 import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,8 +31,6 @@ public class MyAppClass extends Application {
 
     public static final String NOTIFICATION_CHANNEL_ID = "download_channel_id";
     public static final String NOTIFICATION_CHANNEL_NAME = "download_channel";
-    @SuppressLint("StaticFieldLeak")
-    private static Context mContext;
 
     public static String API_KEY = "";
     public static String HASH_KEY = "";
@@ -43,14 +40,13 @@ public class MyAppClass extends Application {
         super.onCreate();
 
         Picasso.setSingletonInstance(getCustomPicasso());
-        mContext = this;
         createNotificationChannel();
 
         //OneSignal setup
         OneSignal.setLogLevel(OneSignal.LOG_LEVEL.ERROR, OneSignal.LOG_LEVEL.NONE);
         OneSignal.initWithContext(this);
         OneSignal.setAppId(AppConfig.ONE_SIGNAL_APP_ID);
-        OneSignal.setNotificationOpenedHandler(new NotificationClickHandler(mContext));
+        OneSignal.setNotificationOpenedHandler(new NotificationClickHandler(this));
         SharedPreferences preferences = getSharedPreferences("push", MODE_PRIVATE);
         OneSignal.disablePush(!preferences.getBoolean("status", true));
 
@@ -128,10 +124,6 @@ public class MyAppClass extends Application {
     public boolean getFirstTimeOpenStatus() {
         SharedPreferences preferences = getSharedPreferences("push", MODE_PRIVATE);
         return preferences.getBoolean("firstTimeOpen", false);
-    }
-
-    public static Context getContext() {
-        return mContext;
     }
 
     private void setupActivityListener() {

@@ -1,14 +1,11 @@
 <component name="libraryTable">
   <library name="Gradle: com.google.android.exoplayer:extension-rtmp:2.14.1@aar">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/../Livestream-Clone-Android/caches/transforms-3/8a92c418569f052753341767475343d3/transformed/jetified-extension-rtmp-2.14.1/AndroidManifest.xml" />
-      <root url="jar://$PROJECT_DIR$/../Livestream-Clone-Android/caches/transforms-3/8a92c418569f052753341767475343d3/transformed/jetified-extension-rtmp-2.14.1/jars/classes.jar!/" />
-      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/5eada576b6fca41ea830eea16cf6d351/transformed/jetified-extension-rtmp-2.14.1/AndroidManifest.xml" />
-      <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/5eada576b6fca41ea830eea16cf6d351/transformed/jetified-extension-rtmp-2.14.1/jars/classes.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/27f1e4e10f4aacd895c2a43315caa4bb/transformed/jetified-extension-rtmp-2.14.1/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/27f1e4e10f4aacd895c2a43315caa4bb/transformed/jetified-extension-rtmp-2.14.1/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>
-      <root url="jar://$PROJECT_DIR$/../Livestream-Clone-Android/caches/modules-2/files-2.1/com.google.android.exoplayer/extension-rtmp/2.14.1/64b1e214106cf17d83b932414aaabb34057a4e1d/extension-rtmp-2.14.1-sources.jar!/" />
       <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/modules-2/files-2.1/com.google.android.exoplayer/extension-rtmp/2.14.1/64b1e214106cf17d83b932414aaabb34057a4e1d/extension-rtmp-2.14.1-sources.jar!/" />
     </SOURCES>
   </library>

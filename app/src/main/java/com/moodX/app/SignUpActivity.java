@@ -22,8 +22,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.moodX.app.R;
-
 import com.moodX.app.database.DatabaseHelper;
 import com.moodX.app.network.RetrofitClient;
 import com.moodX.app.network.apis.FirebaseAuthApi;
@@ -251,7 +249,7 @@ public class SignUpActivity extends AppCompatActivity {
                         finish();
                         dialog.cancel();
                     }
-                }else if (response.code() == 412) {
+                } else if (response.code() == 412) {
                     try {
                         if (response.errorBody() != null) {
                             ApiResources.openLoginScreen(response.errorBody().string(),
@@ -340,9 +338,9 @@ public class SignUpActivity extends AppCompatActivity {
             // Choose authentication providers
             GoogleSignInOptions googleOptions = new GoogleSignInOptions.Builder(
                     GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestIdToken(getString(R.string.default_web_client_id))
-                    .requestEmail()
-                    .requestProfile()
+                    //.requestIdToken(getString(R.string.default_web_client_id))
+                    //.requestEmail()
+                    //.requestProfile()
                     .build();
 
 
@@ -401,7 +399,7 @@ public class SignUpActivity extends AppCompatActivity {
                         Toast.makeText(SignUpActivity.this,
                                 e.getMessage(), Toast.LENGTH_LONG).show();
                     }
-                }else {
+                } else {
                     progressBar.setVisibility(View.GONE);
                     Toast.makeText(SignUpActivity.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
                 }
@@ -455,7 +453,7 @@ public class SignUpActivity extends AppCompatActivity {
                         updateSubscriptionStatus(user.getUserId());
                     }
 
-                }else if (response.code() == 412) {
+                } else if (response.code() == 412) {
                     try {
                         if (response.errorBody() != null) {
                             ApiResources.openLoginScreen(response.errorBody().string(),
@@ -518,7 +516,7 @@ public class SignUpActivity extends AppCompatActivity {
                         Toast.makeText(SignUpActivity.this,
                                 e.getMessage(), Toast.LENGTH_LONG).show();
                     }
-                }else {
+                } else {
                     progressBar.setVisibility(View.GONE);
                     Toast.makeText(SignUpActivity.this, getString(R.string.something_went_wrong), Toast.LENGTH_SHORT).show();
                 }
