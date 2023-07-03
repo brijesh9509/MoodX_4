@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "1012761226062",
+    "firebase_url": "https://mood-x-default-rtdb.firebaseio.com",
     "project_id": "mood-x",
     "storage_bucket": "mood-x.appspot.com"
   },
@@ -68,6 +69,59 @@
     },
     {
       "client_info": {
+        "mobilesdk_app_id": "1:1012761226062:android:8e6918e7581a3a5b8b0c1f",
+        "android_client_info": {
+          "package_name": "com.mood.prime"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1012761226062-09a1efcndlga2n6ga4n3cq1h9uc0pnd8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mood.prime",
+            "certificate_hash": "6c921bd0eec343466df1d0a95958122270378e5f"
+          }
+        },
+        {
+          "client_id": "1012761226062-adause9dvpbsp80tf3kck1shvdj0md8c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mood.prime",
+            "certificate_hash": "dacaf64ddac5a4963d50e15e3e7e787b6937ce6d"
+          }
+        },
+        {
+          "client_id": "1012761226062-s440sm854kh2vn5bohtpmuioodc3arnt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mood.prime",
+            "certificate_hash": "dcec7235d21bd6c06b23aa98f069efe2d74b4dea"
+          }
+        },
+        {
+          "client_id": "1012761226062-tis26pqf7cl47irt02kgm5am4nmg2bcc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlsLyz8IwQK2gsAvTB3Ll9PI8JJBew37k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1012761226062-tis26pqf7cl47irt02kgm5am4nmg2bcc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:1012761226062:android:ce6edc0a9678da418b0c1f",
         "android_client_info": {
           "package_name": "com.moodX.app"
@@ -75,11 +129,35 @@
       },
       "oauth_client": [
         {
+          "client_id": "1012761226062-07mv8m1qrnud3cn9pcgm3aqd00reu2ko.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.moodX.app",
+            "certificate_hash": "011e1ddac62faf46c51e1d0408ef5518ebf63623"
+          }
+        },
+        {
+          "client_id": "1012761226062-1qdacjjqg377lp6c2st5k3mlth1biih7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.moodX.app",
+            "certificate_hash": "3c35170d5c193d22ae465deb54febd957d21e883"
+          }
+        },
+        {
           "client_id": "1012761226062-luqj7q3tq2b7iagh7r5qsgbf4mb57ant.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.moodX.app",
             "certificate_hash": "f845913821961dd660a67a7bfe5fa85e27e39510"
+          }
+        },
+        {
+          "client_id": "1012761226062-reddo22q4rbgebfg6rjr3ecovavg887s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.moodX.app",
+            "certificate_hash": "6c921bd0eec343466df1d0a95958122270378e5f"
           }
         },
         {
@@ -135,6 +213,35 @@
             "certificate_hash": "f845913821961dd660a67a7bfe5fa85e27e39510"
           }
         },
+        {
+          "client_id": "1012761226062-tis26pqf7cl47irt02kgm5am4nmg2bcc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlsLyz8IwQK2gsAvTB3Ll9PI8JJBew37k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1012761226062-tis26pqf7cl47irt02kgm5am4nmg2bcc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1012761226062:android:7b6398a762803ca18b0c1f",
+        "android_client_info": {
+          "package_name": "com.moodX.video"
+        }
+      },
+      "oauth_client": [
         {
           "client_id": "1012761226062-tis26pqf7cl47irt02kgm5am4nmg2bcc.apps.googleusercontent.com",
           "client_type": 3

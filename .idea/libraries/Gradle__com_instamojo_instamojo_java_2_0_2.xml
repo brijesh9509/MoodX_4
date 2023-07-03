@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Gradle: com.instamojo:instamojo-java:2.0.2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/modules-2/files-2.1/com.instamojo/instamojo-java/2.0.2/1e5e670a4eb08f7b5a761a47b119c3ebdddb92e9/instamojo-java-2.0.2.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/modules-2/files-2.1/com.instamojo/instamojo-java/2.0.2/dc44c080996c6d47067b98b14d419167a15bcaa3/instamojo-java-2.0.2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/modules-2/files-2.1/com.instamojo/instamojo-java/2.0.2/b0124ed25bce0023599b133214a2311aec58928f/instamojo-java-2.0.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

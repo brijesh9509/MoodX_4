@@ -33,6 +33,12 @@ public class RetrofitClient {
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(client)
                     .build();
+
+            /*retrofit = new Retrofit.Builder()
+                    .baseUrl(AppConfig.API_SERVER_URL + API_URL_EXTENSION)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(client)
+                    .build();*/
         }
         return retrofit;
     }

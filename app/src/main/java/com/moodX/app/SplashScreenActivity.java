@@ -27,6 +27,7 @@ import com.moodX.app.network.model.ActiveStatus;
 import com.moodX.app.network.model.ConfigResponse;
 import com.moodX.app.network.model.config.ApkUpdateInfo;
 import com.moodX.app.network.model.config.Configuration;
+import com.moodX.app.utils.AESHelper;
 import com.moodX.app.utils.ApiResources;
 import com.moodX.app.utils.Constants;
 import com.moodX.app.utils.HelperUtils;
@@ -82,6 +83,8 @@ public class SplashScreenActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splashscreen);
+
+        //Log.e("AAAAAAAAAAAAAAAAAA====",AESHelper.encrypt(MyAppClass.HASH_KEY,AppConfig.API_SERVER_URL));
 
         db = new DatabaseHelper(SplashScreenActivity.this);
         helperUtils = new HelperUtils(SplashScreenActivity.this);

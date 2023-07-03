@@ -404,6 +404,8 @@ public class PurchasePlanActivity extends AppCompatActivity
 
         boolean isInAppPurchase = !pac.getProductId().isEmpty();
 
+        //boolean isInAppPurchase=false;
+
         PaymentBottomShitDialog paymentBottomShitDialog = new PaymentBottomShitDialog(isInAppPurchase);
         paymentBottomShitDialog.show(getSupportFragmentManager(), "PaymentBottomShitDialog");
     }
