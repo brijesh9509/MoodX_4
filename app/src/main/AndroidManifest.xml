@@ -43,6 +43,9 @@
         <activity
             android:name="com.moodX.app.WebViewActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name="com.moodX.app.InstamojoWebActivity"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.onesignal.NotificationOpened.DEFAULT"

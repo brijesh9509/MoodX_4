@@ -1,0 +1,16 @@
+# ninja log v5
+1	1249	709506824	CMakeFiles/api_config.dir/api_config.cpp.o	c61ca1df00f3c209
+1255	1653	709506824	F:/AndroidStudioProjects/QfonApp/MoodX_4/app/build/intermediates/cxx/RelWithDebInfo/2c6n1u26/obj/x86_64/libapi_config.so	bd4428cffe83a091
+80	1013	709594058	CMakeFiles/api_config.dir/api_config.cpp.o	c61ca1df00f3c209
+1013	2465	709594060	F:/AndroidStudioProjects/QfonApp/MoodX_4/app/build/intermediates/cxx/RelWithDebInfo/2c6n1u26/obj/x86_64/libapi_config.so	bd4428cffe83a091
+2	541	709594256	CMakeFiles/api_config.dir/api_config.cpp.o	c61ca1df00f3c209
+541	723	709594256	F:/AndroidStudioProjects/QfonApp/MoodX_4/app/build/intermediates/cxx/RelWithDebInfo/2c6n1u26/obj/x86_64/libapi_config.so	bd4428cffe83a091
+0	16	0	clean	bf7f04d26f8701e0
+36	1350	710111855	CMakeFiles/api_config.dir/api_config.cpp.o	c61ca1df00f3c209
+1350	3254	710111857	F:/AndroidStudioProjects/QfonApp/MoodX_4/app/build/intermediates/cxx/RelWithDebInfo/2c6n1u26/obj/x86_64/libapi_config.so	bd4428cffe83a091
+3	569	710112207	CMakeFiles/api_config.dir/api_config.cpp.o	c61ca1df00f3c209
+569	685	710112207	F:/AndroidStudioProjects/QfonApp/MoodX_4/app/build/intermediates/cxx/RelWithDebInfo/2c6n1u26/obj/x86_64/libapi_config.so	bd4428cffe83a091
+2	1428	710113145	CMakeFiles/api_config.dir/api_config.cpp.o	c61ca1df00f3c209
+1429	2137	710113146	F:/AndroidStudioProjects/QfonApp/MoodX_4/app/build/intermediates/cxx/RelWithDebInfo/2c6n1u26/obj/x86_64/libapi_config.so	bd4428cffe83a091
+137	1755	710115677	CMakeFiles/api_config.dir/api_config.cpp.o	c61ca1df00f3c209
+1755	3403	710115679	F:/AndroidStudioProjects/QfonApp/MoodX_4/app/build/intermediates/cxx/RelWithDebInfo/2c6n1u26/obj/x86_64/libapi_config.so	bd4428cffe83a091

@@ -8,6 +8,7 @@ import static com.moodX.app.utils.Constants.RAZOR_PAY;
 import static com.moodX.app.utils.Constants.STRIP;
 import static com.moodX.app.utils.Constants.getDeviceId;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -18,6 +19,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,6 +43,7 @@ import com.moodX.app.network.apis.PaymentApi;
 import com.moodX.app.network.apis.SubscriptionApi;
 import com.moodX.app.network.model.ActiveStatus;
 import com.moodX.app.network.model.AllPackage;
+import com.moodX.app.network.model.InstaMojo2Response;
 import com.moodX.app.network.model.Package;
 import com.moodX.app.network.model.PaytmResponse;
 import com.moodX.app.network.model.config.PaymentConfig;
@@ -247,7 +251,7 @@ public class PurchasePlanActivity extends AppCompatActivity
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 if (response.code() == 200) {
 
-                    updateActiveStatus(userId);
+                    updateActiveStatus();
 
                 } else if (response.code() == 412) {
                     try {
@@ -274,10 +278,11 @@ public class PurchasePlanActivity extends AppCompatActivity
         });
     }
 
-    private void updateActiveStatus(String userId) {
+    private void updateActiveStatus() {
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SubscriptionApi subscriptionApi = retrofit.create(SubscriptionApi.class);
-        Call<ActiveStatus> call = subscriptionApi.getActiveStatus(MyAppClass.API_KEY, userId,
+        Call<ActiveStatus> call = subscriptionApi.getActiveStatus(MyAppClass.API_KEY,
+                PreferenceUtils.getUserId(PurchasePlanActivity.this),
                 BuildConfig.VERSION_CODE, getDeviceId(this));
         call.enqueue(new Callback<ActiveStatus>() {
             @Override
@@ -435,7 +440,9 @@ public class PurchasePlanActivity extends AppCompatActivity
             establishConnection(packageItem.getProductId());
             // establishConnection("30days");
         } else if (paymentMethodName.equalsIgnoreCase(PAYTM)) {
-            getPaytmData(packageItem.getPlanId());
+            //getPaytmData(packageItem.getPlanId());
+
+            getInstamojoData(packageItem.getPlanId());
         }
     }
 
@@ -642,4 +649,81 @@ public class PurchasePlanActivity extends AppCompatActivity
             billingClient.endConnection();
         }
     }
+
+
+    private void getInstamojoData(String productId) {
+        progressBar.setVisibility(View.VISIBLE);
+        final String userId = PreferenceUtils.getUserId(PurchasePlanActivity.this);
+
+        Retrofit retrofit = RetrofitClient.getRetrofitInstance();
+        PaymentApi paymentApi = retrofit.create(PaymentApi.class);
+        Call<InstaMojo2Response> call = paymentApi.getIntaMojoToken(MyAppClass.API_KEY,
+                productId, userId, BuildConfig.VERSION_CODE, getDeviceId(this));
+
+        call.enqueue(new Callback<InstaMojo2Response>() {
+            @Override
+            public void onResponse(@NonNull Call<InstaMojo2Response> call, @NonNull Response<InstaMojo2Response> response) {
+
+                if (response.code() == 200) {
+
+                    Intent intent = new Intent(PurchasePlanActivity.this, InstamojoWebActivity.class);
+                    intent.putExtra("url", response.body().getLongUrl());
+                    someActivityResultLauncher.launch(intent);
+
+                    //initiateSDKPayment(response.body().getOrderId());
+
+                    /*ApiContext context = ApiContext.create(response.body().getClientId(),
+                            response.body().getClientSecret(), ApiContext.Mode.TEST);
+                    Instamojo api = new InstamojoImpl(context);
+
+                    PaymentOrder order = new PaymentOrder();
+                    order.setName("John Smith");
+                    order.setEmail("jsk143fams@gmail.com");
+                    order.setPhone("9723248900");
+                    order.setCurrency("INR");
+                    order.setAmount(Double.parseDouble(response.body().getPaymentRequest().getAmount()));
+                    order.setDescription(response.body().getPaymentRequest().getPurpose());
+                    order.setRedirectUrl(response.body().getPaymentRequest().getRedirectUrl());
+                    //order.setWebhookUrl(response.body().getPaymentRequest().getWebhook());
+                    order.setTransactionId(response.body().getPaymentRequest().getId());
+
+                    try {
+                        PaymentOrderResponse paymentOrderResponse = api.createPaymentOrder(order);
+                        System.out.println(paymentOrderResponse.getPaymentOrder().getStatus());
+
+                    } catch (HTTPException e) {
+                        System.out.println(e.getStatusCode());
+                        System.out.println(e.getMessage());
+                        System.out.println(e.getJsonPayload());
+
+                    } catch (ConnectionException e) {
+                        System.out.println(e.getMessage());
+                    }
+*/
+                } else {
+                    new ToastMsg(PurchasePlanActivity.this).toastIconError(getString(R.string.something_went_wrong));
+                }
+
+                progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<InstaMojo2Response> call, @NonNull Throwable t) {
+                new ToastMsg(PurchasePlanActivity.this).toastIconError(getString(R.string.something_went_wrong));
+                t.printStackTrace();
+                Log.e("PAYMENT", "error: " + t.getLocalizedMessage());
+                progressBar.setVisibility(View.GONE);
+            }
+
+        });
+    }
+
+    ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                    // Here, no request code
+                    updateActiveStatus();
+                }
+            });
 }
