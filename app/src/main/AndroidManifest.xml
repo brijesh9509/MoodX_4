@@ -31,6 +31,9 @@
         tools:replace="android:allowBackup">
 
         <activity
+            android:name="com.moodX.app.PaymentOptionsActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name="com.moodX.app.RazorPayActivity"
             android:screenOrientation="portrait" />
         <activity

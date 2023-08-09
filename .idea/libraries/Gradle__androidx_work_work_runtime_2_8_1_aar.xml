@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: androidx.work:work-runtime:2.8.1@aar">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/d4e2e0be7e866f2a64deae0be2584d9a/transformed/work-runtime-2.8.1/jars/classes.jar!/" />
-      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/d4e2e0be7e866f2a64deae0be2584d9a/transformed/work-runtime-2.8.1/res" />
-      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/d4e2e0be7e866f2a64deae0be2584d9a/transformed/work-runtime-2.8.1/AndroidManifest.xml" />
+      <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/3ec5c68ecf857b5ad013a6f457144d63/transformed/work-runtime-2.8.1/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/3ec5c68ecf857b5ad013a6f457144d63/transformed/work-runtime-2.8.1/res" />
+      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/3ec5c68ecf857b5ad013a6f457144d63/transformed/work-runtime-2.8.1/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

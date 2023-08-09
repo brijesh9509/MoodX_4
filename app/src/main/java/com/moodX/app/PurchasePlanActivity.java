@@ -1,9 +1,11 @@
 package com.moodX.app;
 
 import static com.moodX.app.utils.Constants.GOOGLE_PAY;
+import static com.moodX.app.utils.Constants.INSTAMOJO;
 import static com.moodX.app.utils.Constants.OFFLINE_PAY;
 import static com.moodX.app.utils.Constants.PAYPAL;
 import static com.moodX.app.utils.Constants.PAYTM;
+import static com.moodX.app.utils.Constants.PHONEPE;
 import static com.moodX.app.utils.Constants.RAZOR_PAY;
 import static com.moodX.app.utils.Constants.STRIP;
 import static com.moodX.app.utils.Constants.getDeviceId;
@@ -11,6 +13,7 @@ import static com.moodX.app.utils.Constants.getDeviceId;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,8 +22,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -38,6 +39,7 @@ import com.android.billingclient.api.SkuDetailsParams;
 import com.moodX.app.adapters.PackageAdapter;
 import com.moodX.app.bottomshit.PaymentBottomShitDialog;
 import com.moodX.app.database.DatabaseHelper;
+import com.moodX.app.models.PhonepeResponse;
 import com.moodX.app.network.apis.PackageApi;
 import com.moodX.app.network.apis.PaymentApi;
 import com.moodX.app.network.apis.SubscriptionApi;
@@ -49,6 +51,7 @@ import com.moodX.app.network.model.PaytmResponse;
 import com.moodX.app.network.model.config.PaymentConfig;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.moodX.app.network.RetrofitClient;
+import com.moodX.app.utils.Constants;
 import com.moodX.app.utils.MyAppClass;
 import com.moodX.app.utils.PreferenceUtils;
 import com.moodX.app.utils.ApiResources;
@@ -66,6 +69,7 @@ import com.paytm.pgsdk.PaytmOrder;
 import com.paytm.pgsdk.PaytmPaymentTransactionCallback;
 import com.paytm.pgsdk.TransactionManager;
 
+import com.instamojo.android.Instamojo;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -74,7 +78,8 @@ import retrofit2.Retrofit;
 
 public class PurchasePlanActivity extends AppCompatActivity
         implements PackageAdapter.OnItemClickListener,
-        PaymentBottomShitDialog.OnBottomShitClickListener {
+        PaymentBottomShitDialog.OnBottomShitClickListener,
+        Instamojo.InstamojoPaymentCallback {
 
     private static final String TAG = PurchasePlanActivity.class.getSimpleName();
     private static final int PAYPAL_REQUEST_CODE = 100;
@@ -84,6 +89,8 @@ public class PurchasePlanActivity extends AppCompatActivity
     private ImageView closeIv;
     private RecyclerView packageRv;
     private String currency = "";
+
+    private static final int B2B_PG_REQUEST_CODE = 777;
 
     /*private static final PayPalConfiguration config = new PayPalConfiguration()
             .environment(getPaypalStatus())
@@ -130,6 +137,14 @@ public class PurchasePlanActivity extends AppCompatActivity
         currency = config.getCurrencySymbol();
         packageRv.setHasFixedSize(true);
         packageRv.setLayoutManager(new LinearLayoutManager(this));
+
+        if (config.getInstamojoIsProduction()) {
+            Log.e("11111111111111111111", "111111111111111111");
+            Instamojo.getInstance().initialize(PurchasePlanActivity.this, Instamojo.Environment.PRODUCTION);
+        } else {
+            Log.e("11111111111111111111", "222222222222222222");
+            Instamojo.getInstance().initialize(PurchasePlanActivity.this, Instamojo.Environment.TEST);
+        }
 
         getPurchasePlanInfo();
 
@@ -220,6 +235,11 @@ public class PurchasePlanActivity extends AppCompatActivity
         } */ else if (requestCode == PAYTM_REQUEST_CODE && data != null) {
             Toast.makeText(this, data.getStringExtra("nativeSdkForMerchantMessage")
                     + data.getStringExtra("response"), Toast.LENGTH_SHORT).show();
+        } else if (requestCode == B2B_PG_REQUEST_CODE) {
+
+            showToast("phonepe");
+            //Log.e("PPPPPPPooonneeppee",data.toString());
+
         }
 
         super.onActivityResult(requestCode, resultCode, data);
@@ -251,7 +271,7 @@ public class PurchasePlanActivity extends AppCompatActivity
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 if (response.code() == 200) {
 
-                    updateActiveStatus();
+                    updateActiveStatus(userId);
 
                 } else if (response.code() == 412) {
                     try {
@@ -278,11 +298,10 @@ public class PurchasePlanActivity extends AppCompatActivity
         });
     }
 
-    private void updateActiveStatus() {
+    private void updateActiveStatus(String userId) {
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SubscriptionApi subscriptionApi = retrofit.create(SubscriptionApi.class);
-        Call<ActiveStatus> call = subscriptionApi.getActiveStatus(MyAppClass.API_KEY,
-                PreferenceUtils.getUserId(PurchasePlanActivity.this),
+        Call<ActiveStatus> call = subscriptionApi.getActiveStatus(MyAppClass.API_KEY, userId,
                 BuildConfig.VERSION_CODE, getDeviceId(this));
         call.enqueue(new Callback<ActiveStatus>() {
             @Override
@@ -350,6 +369,111 @@ public class PurchasePlanActivity extends AppCompatActivity
         });
     }
 
+    private void getInstamojoData(String productId) {
+        progressBar.setVisibility(View.VISIBLE);
+        final String userId = PreferenceUtils.getUserId(PurchasePlanActivity.this);
+
+        Retrofit retrofit = RetrofitClient.getRetrofitInstance();
+        PaymentApi paymentApi = retrofit.create(PaymentApi.class);
+        Call<InstaMojo2Response> call = paymentApi.getIntaMojoToken(MyAppClass.API_KEY,
+                productId, userId, BuildConfig.VERSION_CODE, getDeviceId(this));
+
+        call.enqueue(new Callback<InstaMojo2Response>() {
+            @Override
+            public void onResponse(@NonNull Call<InstaMojo2Response> call, @NonNull Response<InstaMojo2Response> response) {
+
+                if (response.code() == 200) {
+                    initiateSDKPayment(response.body().getOrderId());
+
+                    /*ApiContext context = ApiContext.create(response.body().getClientId(),
+                            response.body().getClientSecret(), ApiContext.Mode.TEST);
+                    Instamojo api = new InstamojoImpl(context);
+
+                    PaymentOrder order = new PaymentOrder();
+                    order.setName("John Smith");
+                    order.setEmail("jsk143fams@gmail.com");
+                    order.setPhone("9723248900");
+                    order.setCurrency("INR");
+                    order.setAmount(Double.parseDouble(response.body().getPaymentRequest().getAmount()));
+                    order.setDescription(response.body().getPaymentRequest().getPurpose());
+                    order.setRedirectUrl(response.body().getPaymentRequest().getRedirectUrl());
+                    //order.setWebhookUrl(response.body().getPaymentRequest().getWebhook());
+                    order.setTransactionId(response.body().getPaymentRequest().getId());
+
+                    try {
+                        PaymentOrderResponse paymentOrderResponse = api.createPaymentOrder(order);
+                        System.out.println(paymentOrderResponse.getPaymentOrder().getStatus());
+
+                    } catch (HTTPException e) {
+                        System.out.println(e.getStatusCode());
+                        System.out.println(e.getMessage());
+                        System.out.println(e.getJsonPayload());
+
+                    } catch (ConnectionException e) {
+                        System.out.println(e.getMessage());
+                    }
+*/
+                } else {
+                    new ToastMsg(PurchasePlanActivity.this).toastIconError(getString(R.string.something_went_wrong));
+                }
+
+                progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<InstaMojo2Response> call, @NonNull Throwable t) {
+                new ToastMsg(PurchasePlanActivity.this).toastIconError(getString(R.string.something_went_wrong));
+                t.printStackTrace();
+                Log.e("PAYMENT", "error: " + t.getLocalizedMessage());
+                progressBar.setVisibility(View.GONE);
+            }
+
+        });
+    }
+
+    private void getPhonePeData(String productId) {
+        progressBar.setVisibility(View.VISIBLE);
+        final String userId = PreferenceUtils.getUserId(PurchasePlanActivity.this);
+
+        Retrofit retrofit = RetrofitClient.getRetrofitInstance();
+        PaymentApi paymentApi = retrofit.create(PaymentApi.class);
+        Call<PhonepeResponse> call = paymentApi.getPhonePeToken(MyAppClass.API_KEY,
+                productId, userId, BuildConfig.VERSION_CODE, getDeviceId(this));
+
+        call.enqueue(new Callback<PhonepeResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<PhonepeResponse> call, @NonNull Response<PhonepeResponse> response) {
+
+                if (response.code() == 200) {
+
+                    showToast(response.body().getData().getInstrumentResponse().getIntentUrl());
+
+                    if (response.body().getData().getInstrumentResponse().getIntentUrl() != null) {
+                        Intent intent = new Intent();
+                        intent.setAction(Intent.ACTION_VIEW);
+                        intent.setData(Uri.parse(response.body().getData().getInstrumentResponse().getIntentUrl()));
+                        intent.setPackage("com.phonepe.app");
+                        startActivityForResult(intent, B2B_PG_REQUEST_CODE);
+                    }
+
+                } else {
+                    new ToastMsg(PurchasePlanActivity.this).toastIconError(getString(R.string.something_went_wrong));
+                }
+
+                progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<PhonepeResponse> call, @NonNull Throwable t) {
+                new ToastMsg(PurchasePlanActivity.this).toastIconError(getString(R.string.something_went_wrong));
+                t.printStackTrace();
+                Log.e("PAYMENT", "error: " + t.getLocalizedMessage());
+                progressBar.setVisibility(View.GONE);
+            }
+
+        });
+    }
+
     private void saveActiveStatus(ActiveStatus activeStatus) {
         DatabaseHelper db = new DatabaseHelper(PurchasePlanActivity.this);
         if (db.getActiveStatusCount() > 1) {
@@ -404,15 +528,17 @@ public class PurchasePlanActivity extends AppCompatActivity
     }
 
     @Override
-    public void onItemClick(Package pac) {
-        packageItem = pac;
+    public void onItemClick(Package items) {
+        packageItem = items;
 
-        boolean isInAppPurchase = !pac.getProductId().isEmpty();
+        startActivity(new Intent(PurchasePlanActivity.this, PaymentOptionsActivity.class)
+                .putExtra("package", items)
+                .putExtra("isInAppPurchase",!items.getProductId().isEmpty()));
 
-        //boolean isInAppPurchase=false;
+        /*boolean isInAppPurchase = !pac.getProductId().isEmpty();
 
         PaymentBottomShitDialog paymentBottomShitDialog = new PaymentBottomShitDialog(isInAppPurchase);
-        paymentBottomShitDialog.show(getSupportFragmentManager(), "PaymentBottomShitDialog");
+        paymentBottomShitDialog.show(getSupportFragmentManager(), "PaymentBottomShitDialog");*/
     }
 
     @Override
@@ -440,9 +566,13 @@ public class PurchasePlanActivity extends AppCompatActivity
             establishConnection(packageItem.getProductId());
             // establishConnection("30days");
         } else if (paymentMethodName.equalsIgnoreCase(PAYTM)) {
-            //getPaytmData(packageItem.getPlanId());
-
+            getPaytmData(packageItem.getPlanId());
+        } else if (paymentMethodName.equalsIgnoreCase(INSTAMOJO)) {
             getInstamojoData(packageItem.getPlanId());
+
+            //initiateSDKPayment("0b263ab0-484c-4f64-9936-fa85e1094975");
+        } else if (paymentMethodName.equalsIgnoreCase(PHONEPE)) {
+            getPhonePeData(packageItem.getPlanId());
         }
     }
 
@@ -650,80 +780,88 @@ public class PurchasePlanActivity extends AppCompatActivity
         }
     }
 
-
-    private void getInstamojoData(String productId) {
-        progressBar.setVisibility(View.VISIBLE);
-        final String userId = PreferenceUtils.getUserId(PurchasePlanActivity.this);
-
-        Retrofit retrofit = RetrofitClient.getRetrofitInstance();
-        PaymentApi paymentApi = retrofit.create(PaymentApi.class);
-        Call<InstaMojo2Response> call = paymentApi.getIntaMojoToken(MyAppClass.API_KEY,
-                productId, userId, BuildConfig.VERSION_CODE, getDeviceId(this));
-
-        call.enqueue(new Callback<InstaMojo2Response>() {
-            @Override
-            public void onResponse(@NonNull Call<InstaMojo2Response> call, @NonNull Response<InstaMojo2Response> response) {
-
-                if (response.code() == 200) {
-
-                    Intent intent = new Intent(PurchasePlanActivity.this, InstamojoWebActivity.class);
-                    intent.putExtra("url", response.body().getLongUrl());
-                    someActivityResultLauncher.launch(intent);
-
-                    //initiateSDKPayment(response.body().getOrderId());
-
-                    /*ApiContext context = ApiContext.create(response.body().getClientId(),
-                            response.body().getClientSecret(), ApiContext.Mode.TEST);
-                    Instamojo api = new InstamojoImpl(context);
-
-                    PaymentOrder order = new PaymentOrder();
-                    order.setName("John Smith");
-                    order.setEmail("jsk143fams@gmail.com");
-                    order.setPhone("9723248900");
-                    order.setCurrency("INR");
-                    order.setAmount(Double.parseDouble(response.body().getPaymentRequest().getAmount()));
-                    order.setDescription(response.body().getPaymentRequest().getPurpose());
-                    order.setRedirectUrl(response.body().getPaymentRequest().getRedirectUrl());
-                    //order.setWebhookUrl(response.body().getPaymentRequest().getWebhook());
-                    order.setTransactionId(response.body().getPaymentRequest().getId());
-
-                    try {
-                        PaymentOrderResponse paymentOrderResponse = api.createPaymentOrder(order);
-                        System.out.println(paymentOrderResponse.getPaymentOrder().getStatus());
-
-                    } catch (HTTPException e) {
-                        System.out.println(e.getStatusCode());
-                        System.out.println(e.getMessage());
-                        System.out.println(e.getJsonPayload());
-
-                    } catch (ConnectionException e) {
-                        System.out.println(e.getMessage());
-                    }
-*/
-                } else {
-                    new ToastMsg(PurchasePlanActivity.this).toastIconError(getString(R.string.something_went_wrong));
-                }
-
-                progressBar.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<InstaMojo2Response> call, @NonNull Throwable t) {
-                new ToastMsg(PurchasePlanActivity.this).toastIconError(getString(R.string.something_went_wrong));
-                t.printStackTrace();
-                Log.e("PAYMENT", "error: " + t.getLocalizedMessage());
-                progressBar.setVisibility(View.GONE);
-            }
-
-        });
+    private void initiateSDKPayment(String orderID) {
+        Instamojo.getInstance().initiatePayment(this, orderID, this);
     }
 
-    ActivityResultLauncher<Intent> someActivityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == Activity.RESULT_OK) {
-                    // Here, no request code
-                    updateActiveStatus();
+    @Override
+    public void onInstamojoPaymentComplete(String orderID, String transactionID, String paymentID, String paymentStatus) {
+        Log.d(TAG, "Payment complete");
+        Log.e("aaaaaaaaa=======", "Payment complete. Order ID: " + orderID + ", Transaction ID: " + transactionID
+                + ", Payment ID:" + paymentID + ", Status: " + paymentStatus);
+        /*showToast("Payment complete. Order ID: " + orderID + ", Transaction ID: " + transactionID
+                + ", Payment ID:" + paymentID + ", Status: " + paymentStatus);*/
+
+        // sendDataToServer(paymentID,"instamojo");
+
+        updateActiveStatus();
+    }
+
+    @Override
+    public void onPaymentCancelled() {
+        Log.d(TAG, "Payment cancelled");
+        //showToast("Payment cancelled by user");
+
+        updateActiveStatus();
+    }
+
+    @Override
+    public void onInitiatePaymentFailure(String errorMessage) {
+        Log.d(TAG, "Initiate payment failed");
+        //showToast("Initiating payment failed. Error: " + errorMessage);
+
+        updateActiveStatus();
+    }
+
+    private void updateActiveStatus() {
+        Retrofit retrofit = RetrofitClient.getRetrofitInstance();
+        SubscriptionApi subscriptionApi = retrofit.create(SubscriptionApi.class);
+
+        Call<ActiveStatus> call = subscriptionApi.getActiveStatus(MyAppClass.API_KEY,
+                PreferenceUtils.getUserId(PurchasePlanActivity.this),
+                BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
+        call.enqueue(new Callback<ActiveStatus>() {
+            @Override
+            public void onResponse(@NonNull Call<ActiveStatus> call, @NonNull Response<ActiveStatus> response) {
+                if (response.code() == 200) {
+
+
+                    if (response.body().getStatus().equalsIgnoreCase("active")) {
+                        ActiveStatus activeStatus = response.body();
+                        DatabaseHelper db = new DatabaseHelper(getApplicationContext());
+                        db.deleteAllActiveStatusData();
+                        db.insertActiveStatusData(activeStatus);
+
+                        progressBar.setVisibility(View.GONE);
+                        new ToastMsg(PurchasePlanActivity.this).toastIconSuccess(getResources().getString(R.string.payment_success));
+                        Intent intent = new Intent(PurchasePlanActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+
+                } else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    PurchasePlanActivity.this);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(PurchasePlanActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 }
-            });
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ActiveStatus> call, @NonNull Throwable t) {
+                t.printStackTrace();
+            }
+        });
+
+    }
+
+    private void showToast(final String message) {
+        runOnUiThread(() -> Toast.makeText(getBaseContext(), message, Toast.LENGTH_LONG).show());
+    }
 }

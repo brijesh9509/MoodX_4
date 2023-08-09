@@ -2,6 +2,7 @@ package com.moodX.app.network.model;
 
 import com.google.gson.annotations.SerializedName;
 
+
 public class InstaMojo2Response {
 
     @SerializedName("amount")

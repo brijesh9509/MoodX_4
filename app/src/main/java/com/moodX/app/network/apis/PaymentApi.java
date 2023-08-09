@@ -1,6 +1,7 @@
 package com.moodX.app.network.apis;
 
 
+import com.moodX.app.models.PhonepeResponse;
 import com.moodX.app.network.model.InstaMojo2Response;
 import com.moodX.app.network.model.PaytmResponse;
 
@@ -39,4 +40,11 @@ public interface PaymentApi {
                                               @Query("user_id") String userId,
                                               @Query("version") Integer vId,
                                               @Query("udid") String uDID);
+
+    @GET("phonepe_transaction_initiate")
+    Call<PhonepeResponse> getPhonePeToken(@Header("API-KEY") String apiKey,
+                                          @Query("plan_id") String planId,
+                                          @Query("user_id") String userId,
+                                          @Query("version") Integer vId,
+                                          @Query("udid") String uDID);
 }

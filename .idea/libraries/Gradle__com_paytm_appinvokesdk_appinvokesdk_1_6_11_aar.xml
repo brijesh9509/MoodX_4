@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.paytm.appinvokesdk:appinvokesdk:1.6.11@aar">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/f56ff951702bf5a8853276607bc9a58e/transformed/jetified-appinvokesdk-1.6.11/AndroidManifest.xml" />
-      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/f56ff951702bf5a8853276607bc9a58e/transformed/jetified-appinvokesdk-1.6.11/res" />
-      <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/f56ff951702bf5a8853276607bc9a58e/transformed/jetified-appinvokesdk-1.6.11/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/bb4f2dfd3b0b598c8231173f546bf051/transformed/jetified-appinvokesdk-1.6.11/AndroidManifest.xml" />
+      <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/bb4f2dfd3b0b598c8231173f546bf051/transformed/jetified-appinvokesdk-1.6.11/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/bb4f2dfd3b0b598c8231173f546bf051/transformed/jetified-appinvokesdk-1.6.11/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

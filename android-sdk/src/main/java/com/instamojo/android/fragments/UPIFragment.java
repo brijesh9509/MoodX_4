@@ -50,7 +50,7 @@ public class UPIFragment extends BaseFragment implements View.OnClickListener {
     private PaymentDetailsActivity parentActivity;
     private View preVPALayout, postVPALayout, verifyPayment;
     private UPISubmissionResponse upiSubmissionResponse;
-    private Handler handler = new Handler();
+    private final Handler handler = new Handler();
     private String mUPIStatusURL;
 
     @Override

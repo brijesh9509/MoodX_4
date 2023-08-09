@@ -15,10 +15,10 @@ import java.util.List;
 
 public class Constants {
 
+
     public static final String ADMOB = "admob";
     public static final String START_APP = "startApp";
     public static final String NETWORK_AUDIENCE = "fan";
-
 
     public static final String PAYPAL = "paypal";
     public static final String STRIP = "strip";
@@ -26,6 +26,8 @@ public class Constants {
     public static final String OFFLINE_PAY = "offline_pay";
     public static final String GOOGLE_PAY = "google_pay";
     public static final String PAYTM = "paytm";
+    public static final String INSTAMOJO = "instamojo";
+    public static final String PHONEPE = "phonePe";
 
     public static String workId;
 

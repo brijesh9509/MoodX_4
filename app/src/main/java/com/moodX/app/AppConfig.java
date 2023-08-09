@@ -20,6 +20,7 @@ public class AppConfig {
 
     public static final String WP_URL = "http://tiny.cc/llp-whatsapp";
     public static final String TELEGRAM_URL = "http://tiny.cc/llp-telegram";
+    public static final String TOLL_WEB_URL = "http://tiny.cc/helpcall";
 
     //paypal payment status
     public static final boolean PAYPAL_ACCOUNT_LIVE = true;
