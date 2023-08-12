@@ -367,7 +367,7 @@ public class SplashScreenActivity extends AppCompatActivity {
         SubscriptionApi subscriptionApi = retrofit.create(SubscriptionApi.class);
 
         Call<ActiveStatus> call = subscriptionApi.getActiveStatus(MyAppClass.API_KEY, userId,
-                BuildConfig.VERSION_CODE, getDeviceId(this));
+                BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
         call.enqueue(new Callback<ActiveStatus>() {
             @Override
             public void onResponse(@NonNull Call<ActiveStatus> call, @NonNull Response<ActiveStatus> response) {

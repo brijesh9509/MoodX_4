@@ -30,9 +30,9 @@ android {
             keyPassword 'Moodx!@#456'
         }
     }
-    compileSdkVersion 33
     defaultConfig {
         applicationId "com.moodX.video"
+        compileSdk 33
         minSdkVersion 21
         targetSdkVersion 33
         versionCode 26

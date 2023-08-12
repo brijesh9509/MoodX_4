@@ -12,7 +12,6 @@ import static com.moodX.app.utils.Constants.SERVER_TYPE;
 import static com.moodX.app.utils.Constants.STREAM_URL;
 import static com.moodX.app.utils.Constants.YOUTUBE;
 import static com.moodX.app.utils.Constants.YOUTUBE_LIVE;
-import static com.moodX.app.utils.Constants.getDeviceId;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -156,6 +155,7 @@ import com.moodX.app.network.apis.SingleDetailsApi;
 import com.moodX.app.network.apis.SingleDetailsTVApi;
 import com.moodX.app.network.model.FavoriteModel;
 import com.moodX.app.network.model.User;
+import com.moodX.app.utils.Constants;
 import com.moodX.app.utils.HelperUtils;
 import com.moodX.app.utils.MyAppClass;
 import com.moodX.app.utils.PreferenceUtils;
@@ -936,7 +936,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
             ReportApi api = retrofit.create(ReportApi.class);
             Call<ResponseBody> call = api.submitReport(MyAppClass.API_KEY, categoryType, id, videoReport,
                     audioReport, subtitleReport, messageReport, BuildConfig.VERSION_CODE, userId,
-                    getDeviceId(DetailsActivity.this));
+                    Constants.getDeviceId(DetailsActivity.this));
             call.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
@@ -1746,7 +1746,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         FavouriteApi api = retrofit.create(FavouriteApi.class);
         Call<FavoriteModel> call = api.addToFavorite(MyAppClass.API_KEY, userId, id, BuildConfig.VERSION_CODE,
-                getDeviceId(DetailsActivity.this));
+                Constants.getDeviceId(DetailsActivity.this));
         call.enqueue(new Callback<FavoriteModel>() {
             @Override
             public void onResponse(@NonNull Call<FavoriteModel> call, @NonNull retrofit2.Response<FavoriteModel> response) {
@@ -1805,7 +1805,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SingleDetailsTVApi api = retrofit.create(SingleDetailsTVApi.class);
         Call<SingleDetailsTV> call = api.getSingleDetails(MyAppClass.API_KEY, vtype, vId, BuildConfig.VERSION_CODE, userId,
-                getDeviceId(DetailsActivity.this));
+                Constants.getDeviceId(DetailsActivity.this));
         call.enqueue(new Callback<SingleDetailsTV>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
@@ -1972,7 +1972,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SingleDetailsApi api = retrofit.create(SingleDetailsApi.class);
         Call<SingleDetails> call = api.getSingleDetails(MyAppClass.API_KEY, vtype, vId, BuildConfig.VERSION_CODE, userId,
-                getDeviceId(DetailsActivity.this));
+                Constants.getDeviceId(DetailsActivity.this));
         call.enqueue(new Callback<SingleDetails>() {
             @SuppressLint({"SetTextI18n", "NotifyDataSetChanged"})
             @Override
@@ -2182,7 +2182,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SingleDetailsApi api = retrofit.create(SingleDetailsApi.class);
         Call<SingleDetails> call = api.getSingleDetails(MyAppClass.API_KEY, vtype, vId, BuildConfig.VERSION_CODE, userId,
-                getDeviceId(DetailsActivity.this));
+                Constants.getDeviceId(DetailsActivity.this));
         call.enqueue(new Callback<SingleDetails>() {
             @SuppressLint({"SetTextI18n", "NotifyDataSetChanged"})
             @Override
@@ -2363,7 +2363,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         FavouriteApi api = retrofit.create(FavouriteApi.class);
         Call<FavoriteModel> call = api.verifyFavoriteList(MyAppClass.API_KEY, userId, id, BuildConfig.VERSION_CODE,
-                getDeviceId(DetailsActivity.this));
+                Constants.getDeviceId(DetailsActivity.this));
         call.enqueue(new Callback<FavoriteModel>() {
             @Override
             public void onResponse(@NonNull Call<FavoriteModel> call, @NonNull retrofit2.Response<FavoriteModel> response) {
@@ -2393,7 +2393,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         FavouriteApi api = retrofit.create(FavouriteApi.class);
         Call<FavoriteModel> call = api.removeFromFavorite(MyAppClass.API_KEY, userId, id, BuildConfig.VERSION_CODE,
-                getDeviceId(DetailsActivity.this));
+                Constants.getDeviceId(DetailsActivity.this));
         call.enqueue(new Callback<FavoriteModel>() {
             @Override
             public void onResponse(@NonNull Call<FavoriteModel> call, @NonNull retrofit2.Response<FavoriteModel> response) {
@@ -2431,7 +2431,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         CommentApi api = retrofit.create(CommentApi.class);
         Call<PostCommentModel> call = api.postComment(MyAppClass.API_KEY, videoId, userId, comments, BuildConfig.VERSION_CODE,
-                getDeviceId(DetailsActivity.this));
+                Constants.getDeviceId(DetailsActivity.this));
         call.enqueue(new Callback<PostCommentModel>() {
             @Override
             public void onResponse(@NonNull Call<PostCommentModel> call, @NonNull retrofit2.Response<PostCommentModel> response) {
@@ -2458,7 +2458,7 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         CommentApi api = retrofit.create(CommentApi.class);
         Call<List<GetCommentsModel>> call = api.getAllComments(MyAppClass.API_KEY, id, BuildConfig.VERSION_CODE, userId,
-                getDeviceId(DetailsActivity.this));
+                Constants.getDeviceId(DetailsActivity.this));
         call.enqueue(new Callback<List<GetCommentsModel>>() {
             @SuppressLint("NotifyDataSetChanged")
             @Override

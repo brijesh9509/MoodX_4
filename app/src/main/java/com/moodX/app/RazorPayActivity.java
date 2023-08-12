@@ -108,7 +108,7 @@ public class RazorPayActivity extends AppCompatActivity implements PaymentResult
         PaymentApi paymentApi = retrofit.create(PaymentApi.class);
         Call<ResponseBody> call = paymentApi.savePayment(MyAppClass.API_KEY, aPackage.getPlanId(),
                 databaseHelper.getUserData().getUserId(), amountPaidInRupee,
-                token, "RazorPay", BuildConfig.VERSION_CODE, getDeviceId(this));
+                token, "RazorPay", BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
@@ -151,7 +151,7 @@ public class RazorPayActivity extends AppCompatActivity implements PaymentResult
 
         Call<ActiveStatus> call = subscriptionApi.getActiveStatus(MyAppClass.API_KEY,
                 PreferenceUtils.getUserId(RazorPayActivity.this),
-                BuildConfig.VERSION_CODE, getDeviceId(this));
+                BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
         call.enqueue(new Callback<ActiveStatus>() {
             @Override
             public void onResponse(@NonNull Call<ActiveStatus> call, @NonNull Response<ActiveStatus> response) {

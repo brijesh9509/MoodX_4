@@ -172,7 +172,7 @@ public class PurchasePlanActivity extends AppCompatActivity
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         final PackageApi packageApi = retrofit.create(PackageApi.class);
         Call<AllPackage> call = packageApi.getAllPackage(MyAppClass.API_KEY, BuildConfig.VERSION_CODE,
-                PreferenceUtils.getUserId(this), getDeviceId(this));
+                PreferenceUtils.getUserId(this), Constants.getDeviceId(this));
         call.enqueue(new Callback<AllPackage>() {
             @Override
             public void onResponse(@NonNull Call<AllPackage> call, @NonNull Response<AllPackage> response) {
@@ -264,7 +264,7 @@ public class PurchasePlanActivity extends AppCompatActivity
         PaymentApi paymentApi = retrofit.create(PaymentApi.class);
         Call<ResponseBody> call = paymentApi.savePayment(MyAppClass.API_KEY,
                 packageItem.getPlanId(), userId, packageItem.getPrice(),
-                payId, paymentMethod, BuildConfig.VERSION_CODE, getDeviceId(this));
+                payId, paymentMethod, BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -302,7 +302,7 @@ public class PurchasePlanActivity extends AppCompatActivity
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SubscriptionApi subscriptionApi = retrofit.create(SubscriptionApi.class);
         Call<ActiveStatus> call = subscriptionApi.getActiveStatus(MyAppClass.API_KEY, userId,
-                BuildConfig.VERSION_CODE, getDeviceId(this));
+                BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
         call.enqueue(new Callback<ActiveStatus>() {
             @Override
             public void onResponse(@NonNull Call<ActiveStatus> call, @NonNull Response<ActiveStatus> response) {
@@ -341,7 +341,7 @@ public class PurchasePlanActivity extends AppCompatActivity
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         PaymentApi paymentApi = retrofit.create(PaymentApi.class);
         Call<PaytmResponse> call = paymentApi.getPaytmToken(MyAppClass.API_KEY,
-                productId, userId, BuildConfig.VERSION_CODE, getDeviceId(this));
+                productId, userId, BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
 
         call.enqueue(new Callback<PaytmResponse>() {
             @Override
@@ -376,7 +376,7 @@ public class PurchasePlanActivity extends AppCompatActivity
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         PaymentApi paymentApi = retrofit.create(PaymentApi.class);
         Call<InstaMojo2Response> call = paymentApi.getIntaMojoToken(MyAppClass.API_KEY,
-                productId, userId, BuildConfig.VERSION_CODE, getDeviceId(this));
+                productId, userId, BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
 
         call.enqueue(new Callback<InstaMojo2Response>() {
             @Override
@@ -437,8 +437,11 @@ public class PurchasePlanActivity extends AppCompatActivity
 
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         PaymentApi paymentApi = retrofit.create(PaymentApi.class);
-        Call<PhonepeResponse> call = paymentApi.getPhonePeToken(MyAppClass.API_KEY,
-                productId, userId, BuildConfig.VERSION_CODE, getDeviceId(this));
+        Call<PhonepeResponse> call = null;
+        if (android.os.Build.VERSION.SDK_INT >= 34) {
+            call = paymentApi.getPhonePeToken(MyAppClass.API_KEY,
+                    productId, userId, BuildConfig.VERSION_CODE, Constants.getDeviceId(PurchasePlanActivity.this));
+        }
 
         call.enqueue(new Callback<PhonepeResponse>() {
             @Override
@@ -824,8 +827,6 @@ public class PurchasePlanActivity extends AppCompatActivity
             @Override
             public void onResponse(@NonNull Call<ActiveStatus> call, @NonNull Response<ActiveStatus> response) {
                 if (response.code() == 200) {
-
-
                     if (response.body().getStatus().equalsIgnoreCase("active")) {
                         ActiveStatus activeStatus = response.body();
                         DatabaseHelper db = new DatabaseHelper(getApplicationContext());
@@ -838,7 +839,6 @@ public class PurchasePlanActivity extends AppCompatActivity
                         startActivity(intent);
                         finish();
                     }
-
                 } else if (response.code() == 412) {
                     try {
                         if (response.errorBody() != null) {
@@ -858,7 +858,6 @@ public class PurchasePlanActivity extends AppCompatActivity
                 t.printStackTrace();
             }
         });
-
     }
 
     private void showToast(final String message) {

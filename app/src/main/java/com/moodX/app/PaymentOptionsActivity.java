@@ -207,7 +207,7 @@ public class PaymentOptionsActivity extends AppCompatActivity
         PaymentApi paymentApi = retrofit.create(PaymentApi.class);
         Call<ResponseBody> call = paymentApi.savePayment(MyAppClass.API_KEY,
                 packageItem.getPlanId(), userId, packageItem.getPrice(),
-                payId, paymentMethod, BuildConfig.VERSION_CODE, getDeviceId(this));
+                payId, paymentMethod, BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -247,7 +247,7 @@ public class PaymentOptionsActivity extends AppCompatActivity
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SubscriptionApi subscriptionApi = retrofit.create(SubscriptionApi.class);
         Call<ActiveStatus> call = subscriptionApi.getActiveStatus(MyAppClass.API_KEY, userId,
-                BuildConfig.VERSION_CODE, getDeviceId(this));
+                BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
         call.enqueue(new Callback<ActiveStatus>() {
             @Override
             public void onResponse(@NonNull Call<ActiveStatus> call, @NonNull Response<ActiveStatus> response) {
@@ -286,7 +286,7 @@ public class PaymentOptionsActivity extends AppCompatActivity
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         PaymentApi paymentApi = retrofit.create(PaymentApi.class);
         Call<PaytmResponse> call = paymentApi.getPaytmToken(MyAppClass.API_KEY,
-                productId, userId, BuildConfig.VERSION_CODE, getDeviceId(this));
+                productId, userId, BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
 
         call.enqueue(new Callback<PaytmResponse>() {
             @Override
@@ -323,7 +323,7 @@ public class PaymentOptionsActivity extends AppCompatActivity
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         PaymentApi paymentApi = retrofit.create(PaymentApi.class);
         Call<InstaMojo2Response> call = paymentApi.getIntaMojoToken(MyAppClass.API_KEY,
-                productId, userId, BuildConfig.VERSION_CODE, getDeviceId(this));
+                productId, userId, BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
 
         call.enqueue(new Callback<InstaMojo2Response>() {
             @Override
@@ -392,7 +392,7 @@ public class PaymentOptionsActivity extends AppCompatActivity
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         PaymentApi paymentApi = retrofit.create(PaymentApi.class);
         Call<PhonepeResponse> call = paymentApi.getPhonePeToken(MyAppClass.API_KEY,
-                productId, userId, BuildConfig.VERSION_CODE, getDeviceId(this));
+                productId, userId, BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
 
         call.enqueue(new Callback<PhonepeResponse>() {
             @Override
@@ -897,7 +897,7 @@ public class PaymentOptionsActivity extends AppCompatActivity
 
         Call<ActiveStatus> call = subscriptionApi.getActiveStatus(MyAppClass.API_KEY,
                 PreferenceUtils.getUserId(PaymentOptionsActivity.this),
-                BuildConfig.VERSION_CODE, getDeviceId(this));
+                BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
         call.enqueue(new Callback<ActiveStatus>() {
             @Override
             public void onResponse(@NonNull Call<ActiveStatus> call, @NonNull Response<ActiveStatus> response) {
