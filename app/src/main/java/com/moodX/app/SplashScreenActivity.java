@@ -1,9 +1,8 @@
 package com.moodX.app;
 
-import static com.moodX.app.utils.Constants.getDeviceId;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -33,9 +32,10 @@ import com.moodX.app.utils.Constants;
 import com.moodX.app.utils.HelperUtils;
 import com.moodX.app.utils.MyAppClass;
 import com.moodX.app.utils.PreferenceUtils;
-import com.onesignal.OneSignal;
 
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -85,6 +85,8 @@ public class SplashScreenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splashscreen);
 
         //Log.e("AAAAAAAAAAAAAAAAAA====",AESHelper.encrypt(MyAppClass.HASH_KEY,AppConfig.API_SERVER_URL));
+
+        Log.e("verifyInstallerId",""+verifyInstallerId(this));
 
         db = new DatabaseHelper(SplashScreenActivity.this);
         helperUtils = new HelperUtils(SplashScreenActivity.this);
@@ -395,5 +397,17 @@ public class SplashScreenActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    boolean verifyInstallerId(Context context) {
+        // A list with valid installers package name
+        List<String> validInstallers = new ArrayList<>(Arrays.asList("com.android.vending", "com.google.android.feedback"));
+
+        // The package name of the app that has installed your app
+        final String installer = context.getPackageManager().getInstallerPackageName(context.getPackageName());
+        //final String installer = context.getPackageManager().getInstallerPackageName("com.whatsapp");
+
+        // true if your app has been downloaded from Play Store
+        return installer != null && validInstallers.contains(installer);
     }
 }
