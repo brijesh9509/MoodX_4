@@ -117,6 +117,8 @@ public class PaymentOptionsActivity extends AppCompatActivity
         packageItem = (Package) getIntent().getSerializableExtra("package");
         isInAppPurchase = getIntent().getBooleanExtra("isInAppPurchase", false);
 
+        //isInAppPurchase=false;   //TODO
+
         initView();
 
         // ---------- start paypal service ----------

@@ -22,6 +22,7 @@ repositories {
 }
 
 android {
+
     signingConfigs {
         release {
             storeFile file('F:\\AndroidStudioProjects\\QfonApp\\MoodX_4\\keystore.jks')
@@ -31,12 +32,13 @@ android {
         }
     }
     defaultConfig {
-        applicationId "com.moodX.video"
+        //applicationId "com.moodX.video"   //MoodX 5
+        applicationId "com.moodX.vidz"      //MoodX 6
         compileSdk 33
         minSdkVersion 21
         targetSdkVersion 33
         versionCode 26
-        versionName "1.1"
+        versionName "1.0"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         resConfigs 'en'
@@ -46,6 +48,7 @@ android {
                 cppFlags ""
             }
         }
+
         signingConfig signingConfigs.release
     }
     buildTypes {
