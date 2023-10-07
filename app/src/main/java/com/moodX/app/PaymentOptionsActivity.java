@@ -30,7 +30,13 @@ import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.ConsumeParams;
+import com.android.billingclient.api.ConsumeResponseListener;
+import com.android.billingclient.api.ProductDetails;
+import com.android.billingclient.api.ProductDetailsResponseListener;
 import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.QueryProductDetailsParams;
+import com.android.billingclient.api.QueryPurchasesParams;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -62,11 +68,13 @@ import com.moodX.app.utils.MyAppClass;
 import com.moodX.app.utils.PreferenceUtils;
 import com.moodX.app.utils.RtlUtils;
 import com.moodX.app.utils.ToastMsg;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+
 public class PaymentOptionsActivity extends AppCompatActivity
         implements
         Instamojo.InstamojoPaymentCallback {
@@ -117,7 +125,7 @@ public class PaymentOptionsActivity extends AppCompatActivity
         packageItem = (Package) getIntent().getSerializableExtra("package");
         isInAppPurchase = getIntent().getBooleanExtra("isInAppPurchase", false);
 
-        //isInAppPurchase=false;   //TODO
+        //isInAppPurchase = true;   //TODO
 
         initView();
 
@@ -133,21 +141,36 @@ public class PaymentOptionsActivity extends AppCompatActivity
                 .enablePendingPurchases()
                 .setListener(
                         (billingResult, list) -> {
-                            if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && list != null) {
 
+                            if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && list != null) {
                                 for (Purchase purchase : list) {
                                     verifySubPurchase(purchase);
                                 }
                             }
-
                         }
                 ).build();
 
         //start the connection after initializing the billing client
-        //establishConnection();
 
 
         Log.e("AAAAA===", getInstalledUPIApps().toString());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+       /* billingClient.queryPurchasesAsync(
+                QueryPurchasesParams.newBuilder().setProductType(BillingClient.ProductType.SUBS).build(),
+                (billingResult, list) -> {
+                    if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                        for (Purchase purchase : list) {
+                            if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED && !purchase.isAcknowledged()) {
+                                verifySubPurchase(purchase);
+                            }
+                        }
+                    }
+                }
+        );*/
     }
 
     @Override
@@ -549,35 +572,35 @@ public class PaymentOptionsActivity extends AppCompatActivity
 
         if (isUPIAppInstalled("com.phonepe.app") && config.getPhonepe_enable()) {
             phonePeBtn.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             phonePeBtn.setVisibility(View.GONE);
         }
 
         if (isUPIAppInstalled("com.google.android.apps.nbu.paisa.user")
                 && config.getPhonepe_enable() && config.getPhonepe_is_production()) {
             gPayBtn.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             gPayBtn.setVisibility(View.GONE);
         }
 
         if (isUPIAppInstalled("net.one97.paytm")
                 && config.getPhonepe_enable() && config.getPhonepe_is_production()) {
             paytmUpiBtn.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             paytmUpiBtn.setVisibility(View.GONE);
         }
 
         if (isUPIAppInstalled("in.org.npci.upiapp")
                 && config.getPhonepe_enable() && config.getPhonepe_is_production()) {
             bhimBtn.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             bhimBtn.setVisibility(View.GONE);
         }
 
         if (isUPIAppInstalled("in.amazon.mShop.android.shopping")
                 && config.getPhonepe_enable() && config.getPhonepe_is_production()) {
             amazonBtn.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             amazonBtn.setVisibility(View.GONE);
         }
 
@@ -604,7 +627,9 @@ public class PaymentOptionsActivity extends AppCompatActivity
         });
 
         googlePlay_btn.setOnClickListener(view1 -> {
-            establishConnection(packageItem.getProductId());
+            //establishConnection(packageItem.getProductId());
+            establishConnection();
+
         });
 
         paytm_btn.setOnClickListener(view1 -> {
@@ -656,15 +681,15 @@ public class PaymentOptionsActivity extends AppCompatActivity
 
     }
 
-    void establishConnection(String productId) {
+    void establishConnection() {
 
         billingClient.startConnection(new BillingClientStateListener() {
             @Override
             public void onBillingSetupFinished(@NonNull BillingResult billingResult) {
                 if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                     // The BillingClient is ready. You can query purchases here.
-                    showProducts(productId);
-
+                    //showProducts(productId);
+                    GetSubPurchasesNEWINAPP();
                 }
             }
 
@@ -672,86 +697,9 @@ public class PaymentOptionsActivity extends AppCompatActivity
             public void onBillingServiceDisconnected() {
                 // Try to restart the connection on the next request to
                 // Google Play by calling the startConnection() method.
-                establishConnection(productId);
+                establishConnection();
             }
         });
-    }
-
-    void showProducts(String productId) {
-
-        List<String> skuList = new ArrayList<>();
-        skuList.add(productId);
-        SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
-        params.setSkusList(skuList).setType(BillingClient.SkuType.SUBS);
-        billingClient.querySkuDetailsAsync(params.build(),
-                (billingResult, skuDetailsList) -> {
-                    if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && skuDetailsList != null) {
-                        // Process the result.
-                        Log.e("skuDetailsList", skuDetailsList.toString());
-                        for (SkuDetails skuDetails : skuDetailsList) {
-                            if (skuDetails.getSku().equals(productId)) {
-                                //Now update the UI
-                                launchPurchaseFlow(skuDetails);
-                            }
-                        }
-                    }
-                });
-    }
-
-    void launchPurchaseFlow(SkuDetails skuDetails) {
-        BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
-                .setSkuDetails(skuDetails)
-                .build();
-        billingClient.launchBillingFlow(PaymentOptionsActivity.this, billingFlowParams);
-    }
-
-    void verifySubPurchase(Purchase purchases) {
-        Log.e("purchases", purchases.toString());
-
-        AcknowledgePurchaseParams acknowledgePurchaseParams = AcknowledgePurchaseParams
-                .newBuilder()
-                .setPurchaseToken(purchases.getPurchaseToken())
-                .build();
-
-        billingClient.acknowledgePurchase(acknowledgePurchaseParams, billingResult -> {
-            if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                //Toast.makeText(SubscriptionActivity.this, "Item Consumed", Toast.LENGTH_SHORT).show();
-                // Handle the success of the consume operation.
-                //user prefs to set premium
-                //Toast.makeText(PurchasePlanActivity.this, "You are a premium user now", Toast.LENGTH_SHORT).show();
-                //updateUser();
-
-                //Setting premium to 1
-                // 1 - premium
-                //0 - no premium
-            }
-        });
-
-       /* Log.e(TAG, "Purchase Token: " + purchases.getPurchaseToken());
-        Log.e(TAG, "Purchase Time: " + purchases.getPurchaseTime());
-        Log.e(TAG, "Purchase OrderID: " + purchases.getOrderId());*/
-
-        sendDataToServer(purchases.getOrderId(), "inApp");
-    }
-
-    protected void onResume() {
-        super.onResume();
-
-        billingClient.queryPurchasesAsync(
-                BillingClient.SkuType.SUBS,
-                (billingResult, list) -> {
-                    if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                        for (Purchase purchase : list) {
-
-                            Log.e("purchase", purchase.toString());
-                            if (purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED && !purchase.isAcknowledged()) {
-                                verifySubPurchase(purchase);
-                            }
-                        }
-                    }
-                }
-        );
-
     }
 
     void processPaytmTransaction(String orderID, String mID, String txnToken,
@@ -970,5 +918,103 @@ public class PaymentOptionsActivity extends AppCompatActivity
         }
 
         return false;
+    }
+
+    void GetSubPurchasesNEWINAPP() {
+        ArrayList<QueryProductDetailsParams.Product> productList = new ArrayList<>();
+
+        productList.add(
+                QueryProductDetailsParams.Product.newBuilder()
+                        .setProductId(packageItem.getProductId())
+                        .setProductType(BillingClient.ProductType.SUBS)
+                        .build()
+        );
+
+        QueryProductDetailsParams params = QueryProductDetailsParams.newBuilder()
+                .setProductList(productList)
+                .build();
+
+
+        billingClient.queryProductDetailsAsync(params, new ProductDetailsResponseListener() {
+            @Override
+            public void onProductDetailsResponse(@NonNull BillingResult billingResult, @NonNull List<ProductDetails> list) {
+                if (list.size() > 0) {
+                    LaunchSubPurchase(list.get(0));
+                } else {
+                    Toast.makeText(PaymentOptionsActivity.this, "No subscription available", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+    }
+
+    void LaunchSubPurchase(ProductDetails productDetails) {
+        assert productDetails.getSubscriptionOfferDetails() != null;
+        ArrayList<BillingFlowParams.ProductDetailsParams> productList = new ArrayList<>();
+
+        productList.add(
+                BillingFlowParams.ProductDetailsParams.newBuilder()
+                        .setProductDetails(productDetails)
+                        .setOfferToken(productDetails.getSubscriptionOfferDetails().get(0).getOfferToken())
+                        .build()
+        );
+
+        BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
+                .setProductDetailsParamsList(productList)
+                .build();
+
+        billingClient.launchBillingFlow(this, billingFlowParams);
+    }
+    void verifySubPurchasee(Purchase purchases) {
+        Log.e("purchases", purchases.toString());
+
+        AcknowledgePurchaseParams acknowledgePurchaseParams = AcknowledgePurchaseParams
+                .newBuilder()
+                .setPurchaseToken(purchases.getPurchaseToken())
+                .build();
+
+        billingClient.acknowledgePurchase(acknowledgePurchaseParams, billingResult -> {
+            if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                //Toast.makeText(SubscriptionActivity.this, "Item Consumed", Toast.LENGTH_SHORT).show();
+                // Handle the success of the consume operation.
+                //user prefs to set premium
+                //Toast.makeText(PurchasePlanActivity.this, "You are a premium user now", Toast.LENGTH_SHORT).show();
+                //updateUser();
+
+                //Setting premium to 1
+                // 1 - premium
+                //0 - no premium
+            }
+        });
+
+       /* Log.e(TAG, "Purchase Token: " + purchases.getPurchaseToken());
+        Log.e(TAG, "Purchase Time: " + purchases.getPurchaseTime());
+        Log.e(TAG, "Purchase OrderID: " + purchases.getOrderId());*/
+
+        sendDataToServer(purchases.getOrderId(), "inApp");
+    }
+
+    void verifySubPurchase(Purchase purchases) {
+        if (!purchases.isAcknowledged()) {
+            billingClient.acknowledgePurchase(AcknowledgePurchaseParams
+                    .newBuilder()
+                    .setPurchaseToken(purchases.getPurchaseToken())
+                    .build(), billingResult -> {
+
+                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+
+                   /* String pId="";
+                    for (String pur : purchases.getProducts()) {
+                        if (pur.equalsIgnoreCase(packageItem.getProductId())) {
+                            pId = purchases.getOrderId();
+                        }
+                    }*/
+
+
+                }
+            });
+
+            sendDataToServer(purchases.getOrderId(),"inApp");
+        }
     }
 }

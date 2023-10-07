@@ -1,7 +1,6 @@
 package com.moodX.app.network;
 
 import com.moodX.app.AppConfig;
-import com.moodX.app.BuildConfig;
 import com.moodX.app.utils.AESHelper;
 import com.moodX.app.utils.MyAppClass;
 
@@ -30,17 +29,17 @@ public class RetrofitClient {
         if (retrofit == null) {
 
 
-                retrofit = new Retrofit.Builder()
+                /*retrofit = new Retrofit.Builder()
                         .baseUrl(AppConfig.API_SERVER_URL + API_URL_EXTENSION)
                         .addConverterFactory(GsonConverterFactory.create())
                         .client(client)
-                        .build();
+                        .build();*/
 
-                /*retrofit = new Retrofit.Builder()
+                retrofit = new Retrofit.Builder()
                         .baseUrl(AESHelper.decrypt(MyAppClass.HASH_KEY,AppConfig.API_SERVER_URL) + API_URL_EXTENSION)
                         .addConverterFactory(GsonConverterFactory.create())
                         .client(client)
-                        .build();*/
+                        .build();
 
         }
         return retrofit;

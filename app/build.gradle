@@ -37,7 +37,7 @@ android {
         compileSdk 33
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 26
+        versionCode 35
         versionName "1.0"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
@@ -168,7 +168,7 @@ dependencies {
     implementation 'com.google.android.exoplayer:extension-cast:2.7.3'
     //implementation 'com.github.HaarigerHarald:android-youtubeExtractor:master-SNAPSHOT'
 
-    implementation 'com.android.billingclient:billing:4.1.0'
+    implementation 'com.android.billingclient:billing:6.0.1'
     //implementation "com.android.billingclient:billing:5.0.0"
 
     implementation 'com.paytm.appinvokesdk:appinvokesdk:1.6.11'
