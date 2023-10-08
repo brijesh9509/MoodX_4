@@ -1,0 +1,1 @@
+F:\AndroidStudioProjects\QfonApp\MoodX_4\app\build\intermediates\cxx\RelWithDebInfo\1nt3w1o4\obj\arm64-v8a
