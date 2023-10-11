@@ -1,7 +1,5 @@
 package com.moodX.app;
 
-import static com.moodX.app.utils.Constants.getDeviceId;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -30,28 +28,12 @@ import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
-import com.android.billingclient.api.ConsumeParams;
-import com.android.billingclient.api.ConsumeResponseListener;
 import com.android.billingclient.api.ProductDetails;
 import com.android.billingclient.api.ProductDetailsResponseListener;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.QueryProductDetailsParams;
-import com.android.billingclient.api.QueryPurchasesParams;
-import com.android.billingclient.api.SkuDetails;
-import com.android.billingclient.api.SkuDetailsParams;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.instamojo.android.Instamojo;
-import com.paytm.pgsdk.PaytmOrder;
-import com.paytm.pgsdk.PaytmPaymentTransactionCallback;
-import com.paytm.pgsdk.TransactionManager;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
 import com.moodX.app.database.DatabaseHelper;
 import com.moodX.app.models.PhonepeResponse;
 import com.moodX.app.network.RetrofitClient;
@@ -68,6 +50,16 @@ import com.moodX.app.utils.MyAppClass;
 import com.moodX.app.utils.PreferenceUtils;
 import com.moodX.app.utils.RtlUtils;
 import com.moodX.app.utils.ToastMsg;
+import com.paytm.pgsdk.PaytmOrder;
+import com.paytm.pgsdk.PaytmPaymentTransactionCallback;
+import com.paytm.pgsdk.TransactionManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -965,34 +957,6 @@ public class PaymentOptionsActivity extends AppCompatActivity
 
         billingClient.launchBillingFlow(this, billingFlowParams);
     }
-    void verifySubPurchasee(Purchase purchases) {
-        Log.e("purchases", purchases.toString());
-
-        AcknowledgePurchaseParams acknowledgePurchaseParams = AcknowledgePurchaseParams
-                .newBuilder()
-                .setPurchaseToken(purchases.getPurchaseToken())
-                .build();
-
-        billingClient.acknowledgePurchase(acknowledgePurchaseParams, billingResult -> {
-            if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                //Toast.makeText(SubscriptionActivity.this, "Item Consumed", Toast.LENGTH_SHORT).show();
-                // Handle the success of the consume operation.
-                //user prefs to set premium
-                //Toast.makeText(PurchasePlanActivity.this, "You are a premium user now", Toast.LENGTH_SHORT).show();
-                //updateUser();
-
-                //Setting premium to 1
-                // 1 - premium
-                //0 - no premium
-            }
-        });
-
-       /* Log.e(TAG, "Purchase Token: " + purchases.getPurchaseToken());
-        Log.e(TAG, "Purchase Time: " + purchases.getPurchaseTime());
-        Log.e(TAG, "Purchase OrderID: " + purchases.getOrderId());*/
-
-        sendDataToServer(purchases.getOrderId(), "inApp");
-    }
 
     void verifySubPurchase(Purchase purchases) {
         if (!purchases.isAcknowledged()) {
@@ -1014,7 +978,7 @@ public class PaymentOptionsActivity extends AppCompatActivity
                 }
             });
 
-            sendDataToServer(purchases.getOrderId(),"inApp");
+            sendDataToServer(purchases.getOrderId(), "inApp");
         }
     }
 }
