@@ -437,11 +437,8 @@ public class PurchasePlanActivity extends AppCompatActivity
 
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         PaymentApi paymentApi = retrofit.create(PaymentApi.class);
-        Call<PhonepeResponse> call = null;
-        if (android.os.Build.VERSION.SDK_INT >= 34) {
-            call = paymentApi.getPhonePeToken(MyAppClass.API_KEY,
-                    productId, userId, BuildConfig.VERSION_CODE, Constants.getDeviceId(PurchasePlanActivity.this));
-        }
+        Call<PhonepeResponse> call = paymentApi.getPhonePeToken(MyAppClass.API_KEY,
+                productId, userId, BuildConfig.VERSION_CODE, getDeviceId(this), "UPI_INTENT", "");
 
         call.enqueue(new Callback<PhonepeResponse>() {
             @Override

@@ -41,10 +41,20 @@ public interface PaymentApi {
                                               @Query("version") Integer vId,
                                               @Query("udid") String uDID);
 
+    /*@GET("phonepe_transaction_initiate")
+    Call<PhonepeResponse> getPhonePeToken(@Header("API-KEY") String apiKey,
+                                          @Query("plan_id") String planId,
+                                          @Query("user_id") String userId,
+                                          @Query("version") Integer vId,
+                                          @Query("udid") String uDID);*/
+
     @GET("phonepe_transaction_initiate")
     Call<PhonepeResponse> getPhonePeToken(@Header("API-KEY") String apiKey,
                                           @Query("plan_id") String planId,
                                           @Query("user_id") String userId,
                                           @Query("version") Integer vId,
-                                          @Query("udid") String uDID);
+                                          @Query("udid") String uDID,
+                                          @Query("intent") String intent,
+                                          @Query("bankId") String bankId);
 }
+

@@ -1,5 +1,7 @@
 package com.moodX.app;
 
+import static com.moodX.app.utils.Constants.getDeviceId;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -224,7 +226,7 @@ public class PaymentOptionsActivity extends AppCompatActivity
         PaymentApi paymentApi = retrofit.create(PaymentApi.class);
         Call<ResponseBody> call = paymentApi.savePayment(MyAppClass.API_KEY,
                 packageItem.getPlanId(), userId, packageItem.getPrice(),
-                payId, paymentMethod, BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
+                payId, paymentMethod, BuildConfig.VERSION_CODE, getDeviceId(this));
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -264,7 +266,7 @@ public class PaymentOptionsActivity extends AppCompatActivity
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         SubscriptionApi subscriptionApi = retrofit.create(SubscriptionApi.class);
         Call<ActiveStatus> call = subscriptionApi.getActiveStatus(MyAppClass.API_KEY, userId,
-                BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
+                BuildConfig.VERSION_CODE, getDeviceId(this));
         call.enqueue(new Callback<ActiveStatus>() {
             @Override
             public void onResponse(@NonNull Call<ActiveStatus> call, @NonNull Response<ActiveStatus> response) {
@@ -303,7 +305,7 @@ public class PaymentOptionsActivity extends AppCompatActivity
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         PaymentApi paymentApi = retrofit.create(PaymentApi.class);
         Call<PaytmResponse> call = paymentApi.getPaytmToken(MyAppClass.API_KEY,
-                productId, userId, BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
+                productId, userId, BuildConfig.VERSION_CODE, getDeviceId(this));
 
         call.enqueue(new Callback<PaytmResponse>() {
             @Override
@@ -340,7 +342,7 @@ public class PaymentOptionsActivity extends AppCompatActivity
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         PaymentApi paymentApi = retrofit.create(PaymentApi.class);
         Call<InstaMojo2Response> call = paymentApi.getIntaMojoToken(MyAppClass.API_KEY,
-                productId, userId, BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
+                productId, userId, BuildConfig.VERSION_CODE, getDeviceId(this));
 
         call.enqueue(new Callback<InstaMojo2Response>() {
             @Override
@@ -402,14 +404,20 @@ public class PaymentOptionsActivity extends AppCompatActivity
         });
     }
 
+
     private void getPhonePeData(String productId, String appPackageName) {
         progressBar.setVisibility(View.VISIBLE);
         final String userId = PreferenceUtils.getUserId(PaymentOptionsActivity.this);
 
         Retrofit retrofit = RetrofitClient.getRetrofitInstance();
         PaymentApi paymentApi = retrofit.create(PaymentApi.class);
+
+        /*Call<PhonepeResponse> call = paymentApi.getPhonePeToken(MyAppClass.API_KEY,
+                productId, userId, BuildConfig.VERSION_CODE, Constants.getDeviceId(this));*/
         Call<PhonepeResponse> call = paymentApi.getPhonePeToken(MyAppClass.API_KEY,
-                productId, userId, BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
+                productId, userId, BuildConfig.VERSION_CODE, getDeviceId(this), "UPI_INTENT", "");
+
+        //UPI_INTENT//PAY_PAGE//NET_BANKING
 
         call.enqueue(new Callback<PhonepeResponse>() {
             @Override
@@ -418,12 +426,61 @@ public class PaymentOptionsActivity extends AppCompatActivity
                 if (response.code() == 200) {
 
                     if (response.body() != null) {
+
                         if (response.body().getData().getInstrumentResponse().getIntentUrl() != null) {
                             Intent intent = new Intent();
                             intent.setAction(Intent.ACTION_VIEW);
                             intent.setData(Uri.parse(response.body().getData().getInstrumentResponse().getIntentUrl()));
                             intent.setPackage(appPackageName);
                             startActivityForResult(intent, B2B_PG_REQUEST_CODE);
+                        }
+                    }
+
+                } else {
+                    new ToastMsg(PaymentOptionsActivity.this).toastIconError(getString(R.string.something_went_wrong));
+                }
+
+                progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<PhonepeResponse> call, @NonNull Throwable t) {
+                new ToastMsg(PaymentOptionsActivity.this).toastIconError(getString(R.string.something_went_wrong));
+                t.printStackTrace();
+                Log.e("PAYMENT", "error: " + t.getLocalizedMessage());
+                progressBar.setVisibility(View.GONE);
+            }
+
+        });
+    }
+
+
+    private void getPhonePeAllInOneData(String productId) {
+        progressBar.setVisibility(View.VISIBLE);
+        final String userId = PreferenceUtils.getUserId(PaymentOptionsActivity.this);
+
+        Retrofit retrofit = RetrofitClient.getRetrofitInstance();
+        PaymentApi paymentApi = retrofit.create(PaymentApi.class);
+
+        /*Call<PhonepeResponse> call = paymentApi.getPhonePeToken(MyAppClass.API_KEY,
+                productId, userId, BuildConfig.VERSION_CODE, Constants.getDeviceId(this));*/
+        Call<PhonepeResponse> call = paymentApi.getPhonePeToken(MyAppClass.API_KEY,
+                productId, userId, BuildConfig.VERSION_CODE, getDeviceId(this), "PAY_PAGE", "");
+
+        //UPI_INTENT//PAY_PAGE//NET_BANKING
+
+        call.enqueue(new Callback<PhonepeResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<PhonepeResponse> call, @NonNull Response<PhonepeResponse> response) {
+
+                if (response.code() == 200) {
+
+                    if (response.body() != null) {
+
+                        if (response.body().getData().getInstrumentResponse().getRedirectInfoResponse().getUrl() != null) {
+                            Intent intent = new Intent(PaymentOptionsActivity.this, WebViewActivity.class);
+                            intent.putExtra("url", response.body().getData().getInstrumentResponse().getRedirectInfoResponse().getUrl());
+                            startActivity(intent);
                         }
                     }
 
@@ -498,7 +555,7 @@ public class PaymentOptionsActivity extends AppCompatActivity
         DatabaseHelper databaseHelper = new DatabaseHelper(this);
         PaymentConfig config = databaseHelper.getConfigurationData().getPaymentConfig();
         CardView paypalBt, stripBt, razorpayBt, offlineBtn, googlePlay_btn,
-                paytm_btn, instamojo_btn, phonePeBtn, gPayBtn, paytmUpiBtn,
+                paytm_btn, instamojo_btn, phonePeBtn,phonePeAllInOneBtn, gPayBtn, paytmUpiBtn,
                 bhimBtn, amazonBtn;
         paypalBt = findViewById(R.id.paypal_btn);
         stripBt = findViewById(R.id.stripe_btn);
@@ -507,6 +564,7 @@ public class PaymentOptionsActivity extends AppCompatActivity
         googlePlay_btn = findViewById(R.id.googlePlay_btn);
         instamojo_btn = findViewById(R.id.instamojo_btn);
         phonePeBtn = findViewById(R.id.phonePeBtn);
+        phonePeAllInOneBtn = findViewById(R.id.phonePeAllInOneBtn);
         paytm_btn = findViewById(R.id.paytm_btn);
         gPayBtn = findViewById(R.id.gPayBtn);
         paytmUpiBtn = findViewById(R.id.paytmUpiBtn);
@@ -561,6 +619,10 @@ public class PaymentOptionsActivity extends AppCompatActivity
         }
         //config.setPhonepe_enable(false);
         //config.setPhonepe_is_production(false);
+
+        if(!config.getPhonepe_enable()){
+            phonePeAllInOneBtn.setVisibility(View.GONE);
+        }
 
         if (isUPIAppInstalled("com.phonepe.app") && config.getPhonepe_enable()) {
             phonePeBtn.setVisibility(View.VISIBLE);
@@ -630,6 +692,10 @@ public class PaymentOptionsActivity extends AppCompatActivity
 
         instamojo_btn.setOnClickListener(view1 -> {
             getInstamojoData(packageItem.getPlanId());
+        });
+
+        phonePeAllInOneBtn.setOnClickListener(view1 -> {
+            getPhonePeAllInOneData(packageItem.getPlanId());
         });
 
         phonePeBtn.setOnClickListener(view1 -> {
@@ -786,9 +852,9 @@ public class PaymentOptionsActivity extends AppCompatActivity
     protected void onDestroy() {
         super.onDestroy();
         //stopService(new Intent(this, PayPalService.class));
-        if (billingClient != null) {
+        /*if (billingClient != null) {
             billingClient.endConnection();
-        }
+        }*/
     }
 
     private void initiateSDKPayment(String orderID) {
@@ -839,7 +905,7 @@ public class PaymentOptionsActivity extends AppCompatActivity
 
         Call<ActiveStatus> call = subscriptionApi.getActiveStatus(MyAppClass.API_KEY,
                 PreferenceUtils.getUserId(PaymentOptionsActivity.this),
-                BuildConfig.VERSION_CODE, Constants.getDeviceId(this));
+                BuildConfig.VERSION_CODE, getDeviceId(this));
         call.enqueue(new Callback<ActiveStatus>() {
             @Override
             public void onResponse(@NonNull Call<ActiveStatus> call, @NonNull Response<ActiveStatus> response) {

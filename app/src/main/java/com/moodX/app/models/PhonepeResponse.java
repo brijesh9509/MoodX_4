@@ -2,7 +2,7 @@ package com.moodX.app.models;
 
 import com.google.gson.annotations.SerializedName;
 
-public class PhonepeResponse {
+public class PhonepeResponse{
 
 	@SerializedName("code")
 	private String code;

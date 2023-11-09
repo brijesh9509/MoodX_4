@@ -9,10 +9,10 @@
 //std::string SERVER_URL = "fQ/9Se6b206wmEbqY3kfw840Ovx3OepVdbkvqpJUVpo=]SrE4XYS3+j9JBNqW2Qo/bw==]j3oWvcVoWy+Ef8tS8ouMa9WLszcK1iZnJJjzDtkdR80dQG5y9fgM9mCDCi8BSeTt";
 
 //RELEASE MoodX 6 RELEASE
-std::string SERVER_URL = "hAadF+EsVkbIZEuYd9aGgA6ab4eAQ0SJNBB+ccKwnTg=]qO6qVYSBVnw21laYRILCIw==]eisd86ExF1mqFG0YTAFYAR/O3TWWTM6miIZwEgba4mjhtdKL7Nimpj4JFuT5eQzZ";
+//std::string SERVER_URL = "hAadF+EsVkbIZEuYd9aGgA6ab4eAQ0SJNBB+ccKwnTg=]qO6qVYSBVnw21laYRILCIw==]eisd86ExF1mqFG0YTAFYAR/O3TWWTM6miIZwEgba4mjhtdKL7Nimpj4JFuT5eQzZ";
 
 
-//std::string SERVER_URL = "https://www.moodx.vip/md_be/login/rest-api";
+std::string SERVER_URL = "https://www.moodx.vip/md_be/login/rest-api";
 
 std::string PURCHASE_CODE = "xxxxxxxxxxxxxxx";
 std::string ONESIGNAL_APP_ID = "2c7cfedd-ec19-42bd-bf8c-fe2fa4fc6106";
