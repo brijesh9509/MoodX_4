@@ -1,18 +1,26 @@
 package com.moodX.app;
 
+import static com.moodX.app.network.RetrofitClient.API_URL_EXTENSION;
+
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
+
+import com.moodX.app.utils.AESHelper;
+import com.moodX.app.utils.MyAppClass;
 
 
 public class WebViewActivity extends AppCompatActivity {
 
     private WebView webView;
 
-
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,7 +33,31 @@ public class WebViewActivity extends AppCompatActivity {
         webView.setWebChromeClient(new WebChromeClient());
         WebSettings webSettings = webView.getSettings();
         webSettings.setJavaScriptEnabled(true);
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                //String currentUrl = url;
+                Log.e("currentUrl", ": " + url);
+                view.loadUrl(url);
+
+                return true;
+            }
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                Log.e("onPageFinished", ": " + url);
+                /*if (url.equalsIgnoreCase(AESHelper.decrypt(MyAppClass.HASH_KEY, AppConfig.API_SERVER_URL) + API_URL_EXTENSION + "phonepe_transaction_callback_response")) {
+                    finish();
+                }*/
+                /*if (url.equalsIgnoreCase(AppConfig.API_SERVER_URL + API_URL_EXTENSION + "phonepe_transaction_callback_response")) {
+                    finish();
+                }*/
+                super.onPageFinished(view, url);
+            }
+        });
+
         webView.loadUrl(s);
 
     }
+
 }
+

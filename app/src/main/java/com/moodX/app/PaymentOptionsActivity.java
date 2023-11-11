@@ -165,6 +165,9 @@ public class PaymentOptionsActivity extends AppCompatActivity
                     }
                 }
         );*/
+
+        String userId = PreferenceUtils.getUserId(PaymentOptionsActivity.this);
+        updateActiveStatus(userId);
     }
 
     @Override
@@ -271,8 +274,10 @@ public class PaymentOptionsActivity extends AppCompatActivity
             @Override
             public void onResponse(@NonNull Call<ActiveStatus> call, @NonNull Response<ActiveStatus> response) {
                 if (response.code() == 200) {
-                    ActiveStatus activiStatus = response.body();
-                    saveActiveStatus(activiStatus);
+                    ActiveStatus activeStatus = response.body();
+                    if(activeStatus.getStatus().equalsIgnoreCase("active")){
+                        saveActiveStatus(activeStatus);
+                    }
                 } else if (response.code() == 412) {
                     try {
                         if (response.errorBody() != null) {

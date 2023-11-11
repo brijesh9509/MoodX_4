@@ -12,7 +12,7 @@
 //std::string SERVER_URL = "hAadF+EsVkbIZEuYd9aGgA6ab4eAQ0SJNBB+ccKwnTg=]qO6qVYSBVnw21laYRILCIw==]eisd86ExF1mqFG0YTAFYAR/O3TWWTM6miIZwEgba4mjhtdKL7Nimpj4JFuT5eQzZ";
 
 
-std::string SERVER_URL = "https://www.moodx.vip/md_be/login/rest-api";
+std::string SERVER_URL = "https://www.moodx.vip/md_be/project/rest-api";
 
 std::string PURCHASE_CODE = "xxxxxxxxxxxxxxx";
 std::string ONESIGNAL_APP_ID = "2c7cfedd-ec19-42bd-bf8c-fe2fa4fc6106";
