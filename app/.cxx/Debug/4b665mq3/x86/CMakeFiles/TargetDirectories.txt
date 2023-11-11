@@ -1,3 +1,0 @@
-F:/AndroidNative/BGD/Mood/app/.cxx/Debug/4b665mq3/x86/CMakeFiles/api_config.dir
-F:/AndroidNative/BGD/Mood/app/.cxx/Debug/4b665mq3/x86/CMakeFiles/edit_cache.dir
-F:/AndroidNative/BGD/Mood/app/.cxx/Debug/4b665mq3/x86/CMakeFiles/rebuild_cache.dir

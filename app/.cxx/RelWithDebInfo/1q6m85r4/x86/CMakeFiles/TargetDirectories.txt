@@ -1,3 +1,0 @@
-F:/AndroidNative/BGD/MoodX_4/app/.cxx/RelWithDebInfo/1q6m85r4/x86/CMakeFiles/api_config.dir
-F:/AndroidNative/BGD/MoodX_4/app/.cxx/RelWithDebInfo/1q6m85r4/x86/CMakeFiles/edit_cache.dir
-F:/AndroidNative/BGD/MoodX_4/app/.cxx/RelWithDebInfo/1q6m85r4/x86/CMakeFiles/rebuild_cache.dir

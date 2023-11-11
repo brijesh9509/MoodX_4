@@ -1,7 +1,0 @@
-# ninja log v5
-1	7652	682872135	CMakeFiles/api_config.dir/api_config.cpp.o	9163a779dd99fd6a
-7655	8576	682872136	F:/AndroidNative/BGD/MoodX_4/app/build/intermediates/cxx/Debug/2w495k3b/obj/arm64-v8a/libapi_config.so	1dee35b8b1ff71b9
-6	22	0	clean	6f45ba1bad46d958
-194	5521	682873004	CMakeFiles/api_config.dir/api_config.cpp.o	9163a779dd99fd6a
-5521	5994	682873005	F:/AndroidNative/BGD/MoodX_4/app/build/intermediates/cxx/Debug/2w495k3b/obj/arm64-v8a/libapi_config.so	1dee35b8b1ff71b9
-0	13	0	clean	6f45ba1bad46d958

@@ -1,7 +1,0 @@
-# ninja log v5
-1	12286	677420352	CMakeFiles/api_config.dir/api_config.cpp.o	37e00bce87dfd0f5
-12288	15416	677420355	E:/ANDROID_NATIVE/BGD/FlizApp/app/build/intermediates/cxx/Debug/111s5o2s/obj/arm64-v8a/libapi_config.so	1cb45cfe1fb49236
-24	4647	677420846	CMakeFiles/api_config.dir/api_config.cpp.o	37e00bce87dfd0f5
-4647	5932	677420847	E:/ANDROID_NATIVE/BGD/FlizApp/app/build/intermediates/cxx/Debug/111s5o2s/obj/arm64-v8a/libapi_config.so	1cb45cfe1fb49236
-2	1159	677420902	CMakeFiles/api_config.dir/api_config.cpp.o	37e00bce87dfd0f5
-1159	1957	677420903	E:/ANDROID_NATIVE/BGD/FlizApp/app/build/intermediates/cxx/Debug/111s5o2s/obj/arm64-v8a/libapi_config.so	1cb45cfe1fb49236

@@ -616,7 +616,7 @@ public class SignUpActivity extends AppCompatActivity {
                     //sendGoogleDataToServer();
 
                 } else {
-                    //empty
+                    //empty b
                     //googleSignIn();
                 }
             } else {

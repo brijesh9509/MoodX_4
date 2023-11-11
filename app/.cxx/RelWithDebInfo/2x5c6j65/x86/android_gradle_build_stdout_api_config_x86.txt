@@ -1,2 +1,0 @@
-ninja: Entering directory `F:\AndroidStudioProjects\QfonApp\Fliz App\app\.cxx\RelWithDebInfo\2x5c6j65\x86'
-ninja: no work to do.

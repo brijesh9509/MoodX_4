@@ -1,3 +1,0 @@
-F:/Flutter/Demo/MoodX_4/app/.cxx/RelWithDebInfo/353z4k38/arm64-v8a/CMakeFiles/api_config.dir
-F:/Flutter/Demo/MoodX_4/app/.cxx/RelWithDebInfo/353z4k38/arm64-v8a/CMakeFiles/edit_cache.dir
-F:/Flutter/Demo/MoodX_4/app/.cxx/RelWithDebInfo/353z4k38/arm64-v8a/CMakeFiles/rebuild_cache.dir

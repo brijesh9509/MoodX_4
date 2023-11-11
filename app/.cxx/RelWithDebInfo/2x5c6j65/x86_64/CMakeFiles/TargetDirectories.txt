@@ -1,3 +1,0 @@
-F:/AndroidStudioProjects/QfonApp/Fliz App/app/.cxx/RelWithDebInfo/2x5c6j65/x86_64/CMakeFiles/api_config.dir
-F:/AndroidStudioProjects/QfonApp/Fliz App/app/.cxx/RelWithDebInfo/2x5c6j65/x86_64/CMakeFiles/edit_cache.dir
-F:/AndroidStudioProjects/QfonApp/Fliz App/app/.cxx/RelWithDebInfo/2x5c6j65/x86_64/CMakeFiles/rebuild_cache.dir

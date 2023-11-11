@@ -1,9 +1,0 @@
-# ninja log v5
-1	2862	679524819	CMakeFiles/api_config.dir/api_config.cpp.o	5921a8fc46b84f23
-2864	3313	679524820	F:/AndroidStudioProjects/QfonApp/MoodX/app/build/intermediates/cxx/RelWithDebInfo/366to2a6/obj/x86/libapi_config.so	fe31dfd57481843d
-0	12	0	clean	bf7f04d26f8701e0
-2	789	679525187	CMakeFiles/api_config.dir/api_config.cpp.o	5921a8fc46b84f23
-789	1410	679525187	F:/AndroidStudioProjects/QfonApp/MoodX/app/build/intermediates/cxx/RelWithDebInfo/366to2a6/obj/x86/libapi_config.so	fe31dfd57481843d
-1	33	0	clean	bf7f04d26f8701e0
-1	26	0	clean	bf7f04d26f8701e0
-0	12	0	clean	bf7f04d26f8701e0

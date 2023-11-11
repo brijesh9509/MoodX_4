@@ -1,2 +1,0 @@
-ninja: Entering directory `F:\AndroidNative\BGD\Mood\app\.cxx\Debug\4b665mq3\x86_64'
-ninja: no work to do.

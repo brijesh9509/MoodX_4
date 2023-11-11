@@ -1,7 +1,0 @@
-Executable : F:\AndroidSDK\Sdk\cmake\3.10.2.4988404\bin\ninja.exe
-arguments : 
--C
-F:\AndroidStudioProjects\QfonApp\MoodX_2\app\.cxx\Debug\5r4z3p5s\arm64-v8a
-api_config
-jvmArgs : 
-

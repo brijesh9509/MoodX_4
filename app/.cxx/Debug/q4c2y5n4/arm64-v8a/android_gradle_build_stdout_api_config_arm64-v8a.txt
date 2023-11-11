@@ -1,2 +1,0 @@
-ninja: Entering directory `F:\AndroidNative\BGD\FlizApp\app\.cxx\Debug\q4c2y5n4\arm64-v8a'
-ninja: no work to do.

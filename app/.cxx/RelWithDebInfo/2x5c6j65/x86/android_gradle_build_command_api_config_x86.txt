@@ -1,7 +1,0 @@
-Executable : F:\AndroidSDK\Sdk\cmake\3.10.2.4988404\bin\ninja.exe
-arguments : 
--C
-F:\AndroidStudioProjects\QfonApp\Fliz App\app\.cxx\RelWithDebInfo\2x5c6j65\x86
-api_config
-jvmArgs : 
-

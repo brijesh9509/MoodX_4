@@ -1,2 +1,0 @@
-ninja: Entering directory `F:\AndroidStudioProjects\QfonApp\MoodX_2\app\.cxx\Debug\5r4z3p5s\arm64-v8a'
-ninja: no work to do.
