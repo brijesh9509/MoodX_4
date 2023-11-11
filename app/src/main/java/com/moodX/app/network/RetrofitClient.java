@@ -28,7 +28,6 @@ public class RetrofitClient {
 
         if (retrofit == null) {
 
-
                 retrofit = new Retrofit.Builder()
                         .baseUrl(AppConfig.API_SERVER_URL + API_URL_EXTENSION)
                         .addConverterFactory(GsonConverterFactory.create())

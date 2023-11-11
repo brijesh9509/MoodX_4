@@ -84,7 +84,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splashscreen);
 
-        //Log.e("AAAAAAAAAAAAAAAAAA====",AESHelper.encrypt(MyAppClass.HASH_KEY,AppConfig.API_SERVER_URL));
+        Log.e("AAAAAAAAAAAAAAAAAA====",AESHelper.encrypt(MyAppClass.HASH_KEY,AppConfig.API_SERVER_URL));
 
         //Log.e("verifyInstallerId",""+verifyInstallerId(this));
 

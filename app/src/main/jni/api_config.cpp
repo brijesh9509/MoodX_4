@@ -1,21 +1,20 @@
 #include <jni.h>
 #include <string>
 
-//RELEASE MoodX 5 LIVE
-//std::string SERVER_URL = "Saylz5i7CLbAjaNAAXt4I39DasUrcxgW5lI8PfVft7s=]UXGL00JLJb1DSjqZznTwCw==]AvqTZS8ZIVz+gQ+CB1fh7C7YaijyoTSbyNFrAOVaCa5pquf+BbaSBcXXlqDNZ81P";
 
+//POST com.app.moodX
+//std::string SERVER_URL = "QfZf7+T+NeFcL1ryPSG94WjaCudXwBIgaqUXa515iek=]hCa/eADoFOqD+kJI5lk24w==]Lw8Kj6wWpmljjK6QMZVv1OuFPZSwSWjFDNB5K2rXkVTM5SjDIEsmrImH1LWNvH3u";
 
-//RELEASE MoodX 6 POST
-//std::string SERVER_URL = "fQ/9Se6b206wmEbqY3kfw840Ovx3OepVdbkvqpJUVpo=]SrE4XYS3+j9JBNqW2Qo/bw==]j3oWvcVoWy+Ef8tS8ouMa9WLszcK1iZnJJjzDtkdR80dQG5y9fgM9mCDCi8BSeTt";
-
-//RELEASE MoodX 6 RELEASE
+//RELEASE com.app.moodX
 //std::string SERVER_URL = "hAadF+EsVkbIZEuYd9aGgA6ab4eAQ0SJNBB+ccKwnTg=]qO6qVYSBVnw21laYRILCIw==]eisd86ExF1mqFG0YTAFYAR/O3TWWTM6miIZwEgba4mjhtdKL7Nimpj4JFuT5eQzZ";
 
 
 std::string SERVER_URL = "https://www.moodx.vip/md_be/project/rest-api";
 
 std::string PURCHASE_CODE = "xxxxxxxxxxxxxxx";
-std::string ONESIGNAL_APP_ID = "2c7cfedd-ec19-42bd-bf8c-fe2fa4fc6106";
+
+//std::string ONESIGNAL_APP_ID = "2c7cfedd-ec19-42bd-bf8c-fe2fa4fc6106"; //com.moodX.video
+std::string ONESIGNAL_APP_ID = "a1882b56-1639-48e6-9564-afd0dbf8f84f";  //com.app.moodX
 
 
 //WARNING: ==>> Don't change anything below.

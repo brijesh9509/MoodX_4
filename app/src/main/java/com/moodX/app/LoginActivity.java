@@ -1,9 +1,12 @@
 package com.moodX.app;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -21,6 +24,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
@@ -69,6 +73,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private GoogleSignInClient mGoogleSignInClient;
 
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         RtlUtils.setScreenDirection(this);
@@ -178,6 +183,17 @@ public class LoginActivity extends AppCompatActivity {
         googleAuthButton.setOnClickListener(v -> signIn());
 
         supportLinkClick();
+
+        if (Build.VERSION.SDK_INT >= 32) {
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_NOTIFICATION_POLICY) == PackageManager.PERMISSION_GRANTED)
+                return;
+            ActivityResultLauncher<String> launcher = registerForActivityResult(
+                    new ActivityResultContracts.RequestPermission(), isGranted -> {
+
+                    }
+            );
+            launcher.launch(Manifest.permission.POST_NOTIFICATIONS);
+        }
     }
 
     private void signIn() {

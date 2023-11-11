@@ -25,7 +25,7 @@ android {
 
     signingConfigs {
         release {
-            storeFile file('F:\\AndroidStudioProjects\\QfonApp\\MoodX_4\\keystore.jks')
+            storeFile file('C:\\Users\\Administrator\\AndroidStudioProjects\\MoodX_4\\keystore_com_app_moodX.jks')
             keyAlias 'MoodX'
             storePassword 'Moodx!@#456'
             keyPassword 'Moodx!@#456'
@@ -33,12 +33,13 @@ android {
     }
     defaultConfig {
         //applicationId "com.moodX.video"   //MoodX 5
-        applicationId "com.moodX.vidz"      //MoodX 6
+        //applicationId "com.moodX.vidz"      //MoodX 6
+        applicationId "com.app.moodX"      //MoodX 1
         compileSdk 33
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 36
-        versionName "1.1"
+        versionCode 6
+        versionName "1.0.1"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
         resConfigs 'en'

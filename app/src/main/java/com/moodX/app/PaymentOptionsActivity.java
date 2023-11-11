@@ -69,6 +69,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+/** @noinspection ALL*/
 public class PaymentOptionsActivity extends AppCompatActivity
         implements
         Instamojo.InstamojoPaymentCallback {
@@ -483,7 +484,7 @@ public class PaymentOptionsActivity extends AppCompatActivity
                     if (response.body() != null) {
 
                         if (response.body().getData().getInstrumentResponse().getRedirectInfoResponse().getUrl() != null) {
-                            Intent intent = new Intent(PaymentOptionsActivity.this, WebViewActivity.class);
+                            Intent intent = new Intent(PaymentOptionsActivity.this, WebViewPhonePeActivity.class);
                             intent.putExtra("url", response.body().getData().getInstrumentResponse().getRedirectInfoResponse().getUrl());
                             startActivity(intent);
                         }
