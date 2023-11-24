@@ -619,6 +619,7 @@ public class PaymentOptionsActivity extends AppCompatActivity
         if (!isInAppPurchase) {
             googlePlay_btn.setVisibility(View.GONE);
         }
+        googlePlay_btn.setVisibility(View.GONE);
 
         if (!config.getInstamojoEnable()) {
             instamojo_btn.setVisibility(View.GONE);

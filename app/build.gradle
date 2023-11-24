@@ -25,7 +25,7 @@ android {
 
     signingConfigs {
         release {
-            storeFile file('C:\\Users\\Administrator\\AndroidStudioProjects\\MoodX_4\\keystore_com_app_moodX.jks')
+            storeFile file('F:\\AndroidStudioProjects\\QfonApp\\MoodX_4\\keystore_com_app_moodX.jks')
             keyAlias 'MoodX'
             storePassword 'Moodx!@#456'
             keyPassword 'Moodx!@#456'

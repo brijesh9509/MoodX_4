@@ -44,13 +44,13 @@ public class WebViewPhonePeActivity extends AppCompatActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 Log.e("onPageFinished", ": " + url);
-                /*if (url.equalsIgnoreCase(AESHelper.decrypt(MyAppClass.HASH_KEY, AppConfig.API_SERVER_URL) + API_URL_EXTENSION + "phonepe_transaction_callback_response")) {
-                    finish();
-                }*/
-
-                if (url.equalsIgnoreCase(AppConfig.API_SERVER_URL + API_URL_EXTENSION + "phonepe_transaction_callback_response")) {
+                if (url.equalsIgnoreCase(AESHelper.decrypt(MyAppClass.HASH_KEY, AppConfig.API_SERVER_URL) + API_URL_EXTENSION + "phonepe_transaction_callback_response")) {
                     finish();
                 }
+
+                /*if (url.equalsIgnoreCase(AppConfig.API_SERVER_URL + API_URL_EXTENSION + "phonepe_transaction_callback_response")) {
+                    finish();
+                }*/
                 super.onPageFinished(view, url);
             }
         });

@@ -3,13 +3,13 @@
 
 
 //POST com.app.moodX
-//std::string SERVER_URL = "QfZf7+T+NeFcL1ryPSG94WjaCudXwBIgaqUXa515iek=]hCa/eADoFOqD+kJI5lk24w==]Lw8Kj6wWpmljjK6QMZVv1OuFPZSwSWjFDNB5K2rXkVTM5SjDIEsmrImH1LWNvH3u";
+std::string SERVER_URL = "QfZf7+T+NeFcL1ryPSG94WjaCudXwBIgaqUXa515iek=]hCa/eADoFOqD+kJI5lk24w==]Lw8Kj6wWpmljjK6QMZVv1OuFPZSwSWjFDNB5K2rXkVTM5SjDIEsmrImH1LWNvH3u";
 
 //RELEASE com.app.moodX
 //std::string SERVER_URL = "hAadF+EsVkbIZEuYd9aGgA6ab4eAQ0SJNBB+ccKwnTg=]qO6qVYSBVnw21laYRILCIw==]eisd86ExF1mqFG0YTAFYAR/O3TWWTM6miIZwEgba4mjhtdKL7Nimpj4JFuT5eQzZ";
 
 
-std::string SERVER_URL = "https://www.moodx.vip/md_be/project/rest-api";
+//std::string SERVER_URL = "https://www.moodx.vip/md_be/project/rest-api";
 
 std::string PURCHASE_CODE = "xxxxxxxxxxxxxxx";
 
