@@ -1,11 +1,11 @@
 <component name="libraryTable">
-  <library name="Gradle: com.google.android.exoplayer:exoplayer-common:2.14.1@aar">
+  <library name="Gradle: com.google.android.exoplayer:exoplayer-common:2.14.1@aar" external-system-id="GRADLE">
     <ANNOTATIONS>
-      <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/f985cb957075e945060add145c28ed42/transformed/jetified-exoplayer-common-2.14.1/annotations.zip!/" />
+      <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/f8d7f64726461602def6e554980a19cf/transformed/jetified-exoplayer-common-2.14.1/annotations.zip!/" />
     </ANNOTATIONS>
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/f985cb957075e945060add145c28ed42/transformed/jetified-exoplayer-common-2.14.1/jars/classes.jar!/" />
-      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/f985cb957075e945060add145c28ed42/transformed/jetified-exoplayer-common-2.14.1/AndroidManifest.xml" />
+      <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/f8d7f64726461602def6e554980a19cf/transformed/jetified-exoplayer-common-2.14.1/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/f8d7f64726461602def6e554980a19cf/transformed/jetified-exoplayer-common-2.14.1/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

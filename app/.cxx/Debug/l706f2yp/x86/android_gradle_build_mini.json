@@ -1,0 +1,33 @@
+{
+  "buildFiles": [
+    "F:\\AndroidStudioProjects\\QfonApp\\MoodX_4\\app\\src\\main\\jni\\CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "F:\\AndroidSDK\\Sdk\\cmake\\3.10.2.4988404\\bin\\ninja.exe",
+      "-C",
+      "F:\\AndroidStudioProjects\\QfonApp\\MoodX_4\\app\\.cxx\\Debug\\l706f2yp\\x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "F:\\AndroidSDK\\Sdk\\cmake\\3.10.2.4988404\\bin\\ninja.exe",
+    "-C",
+    "F:\\AndroidStudioProjects\\QfonApp\\MoodX_4\\app\\.cxx\\Debug\\l706f2yp\\x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "api_config-Debug-x86": {
+      "artifactName": "api_config",
+      "buildCommandComponents": [
+        "F:\\AndroidSDK\\Sdk\\cmake\\3.10.2.4988404\\bin\\ninja.exe",
+        "-C",
+        "F:\\AndroidStudioProjects\\QfonApp\\MoodX_4\\app\\.cxx\\Debug\\l706f2yp\\x86",
+        "api_config"
+      ],
+      "abi": "x86",
+      "output": "F:\\AndroidStudioProjects\\QfonApp\\MoodX_4\\app\\build\\intermediates\\cxx\\Debug\\l706f2yp\\obj\\x86\\libapi_config.so",
+      "runtimeFiles": []
+    }
+  }
+}

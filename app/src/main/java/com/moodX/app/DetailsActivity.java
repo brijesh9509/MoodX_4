@@ -753,12 +753,29 @@ public class DetailsActivity extends AppCompatActivity implements CastPlayer.Ses
         });
 
         trailerBt.setOnClickListener(v -> {
-            if (trailerUrl != null && !trailerUrl.equalsIgnoreCase("")) {
+            /*if (trailerUrl != null && !trailerUrl.equalsIgnoreCase("")) {
                 serverType = YOUTUBE;
                 mediaUrl = trailerUrl;
                 CommonModels commonModels = new CommonModels();
                 commonModels.setStremURL(trailerUrl);
                 commonModels.setServerType(YOUTUBE);
+                descriptionLayout.setVisibility(GONE);
+                lPlay.setVisibility(VISIBLE);
+                releasePlayer();
+                preparePlayer(commonModels);
+            }*/
+            if (trailerUrl != null && !trailerUrl.equalsIgnoreCase("")) {
+
+                serverType = "";
+                if (!listServer.isEmpty()) {
+                    if (listServer.size() == 1) {
+                        serverType=listServer.get(0).getServerType();
+                    }
+                }
+                mediaUrl = trailerUrl;
+                CommonModels commonModels = new CommonModels();
+                commonModels.setStremURL(trailerUrl);
+                commonModels.setServerType(serverType);
                 descriptionLayout.setVisibility(GONE);
                 lPlay.setVisibility(VISIBLE);
                 releasePlayer();

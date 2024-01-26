@@ -2,6 +2,7 @@ package com.moodX.app.network.model.config;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+
 public class PaymentConfig {
     @SerializedName("currency_symbol")
     @Expose
@@ -60,6 +61,12 @@ public class PaymentConfig {
     @SerializedName("phonepe_is_production")
     @Expose
     private Boolean phonepe_is_production;
+    @SerializedName("easebuzz_enable")
+    @Expose
+    private Boolean easebuzzEnable;
+    @SerializedName("easebuzz_is_production")
+    @Expose
+    private Boolean easebuzz_is_production;
 
     public Boolean getPhonepe_enable() {
         return phonepe_enable;
@@ -235,5 +242,21 @@ public class PaymentConfig {
 
     public void setInstamojoIsProduction(Boolean instamojoIsProduction) {
         this.instamojoIsProduction = instamojoIsProduction;
+    }
+
+    public Boolean getEasebuzzEnable() {
+        return easebuzzEnable;
+    }
+
+    public void setEasebuzzEnable(Boolean easebuzzEnable) {
+        this.easebuzzEnable = easebuzzEnable;
+    }
+
+    public Boolean getEasebuzz_is_production() {
+        return easebuzz_is_production;
+    }
+
+    public void setEasebuzz_is_production(Boolean easebuzz_is_production) {
+        this.easebuzz_is_production = easebuzz_is_production;
     }
 }

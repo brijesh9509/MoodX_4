@@ -1,9 +1,9 @@
 <component name="libraryTable">
-  <library name="Gradle: androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1@aar">
+  <library name="Gradle: androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1@aar" external-system-id="GRADLE">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/dac049ccc16f5daec7e71cab7bc6914e/transformed/jetified-lifecycle-viewmodel-ktx-2.6.1/res" />
-      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/dac049ccc16f5daec7e71cab7bc6914e/transformed/jetified-lifecycle-viewmodel-ktx-2.6.1/AndroidManifest.xml" />
-      <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/dac049ccc16f5daec7e71cab7bc6914e/transformed/jetified-lifecycle-viewmodel-ktx-2.6.1/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/fbfaa06d447ed8b42e864da39a258b01/transformed/jetified-lifecycle-viewmodel-ktx-2.6.1/res" />
+      <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/fbfaa06d447ed8b42e864da39a258b01/transformed/jetified-lifecycle-viewmodel-ktx-2.6.1/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/fbfaa06d447ed8b42e864da39a258b01/transformed/jetified-lifecycle-viewmodel-ktx-2.6.1/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

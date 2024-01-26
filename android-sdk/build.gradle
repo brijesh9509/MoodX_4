@@ -25,12 +25,12 @@ android {
             keyPassword 'Moodx!@#456'
         }
     }
-    compileSdkVersion 33
     defaultConfig {
+        compileSdk 33
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode sdkVersionCode
-        versionName sdkVersion
+        versionCode 1
+        versionName "1.0"
         vectorDrawables.useSupportLibrary = true
         consumerProguardFiles 'proguard-rules.pro'
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
@@ -44,22 +44,15 @@ android {
             buildConfigField("String","VERSION_NAME","\"${defaultConfig.versionName}\"")
         }
         debug {
-            debuggable true
             testCoverageEnabled true
             buildConfigField("int", "VERSION_CODE", "${defaultConfig.versionCode}")
             buildConfigField("String","VERSION_NAME","\"${defaultConfig.versionName}\"")
         }
     }
     packagingOptions {
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/NOTICE.txt'
-        exclude '.readme'
-    }
-    lintOptions {
-        abortOnError true
-        ignoreWarnings false
-        textReport true
-        textOutput 'stdout'
+        resources {
+            excludes += ['META-INF/LICENSE.txt', 'META-INF/NOTICE.txt', '.readme']
+        }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -74,6 +67,16 @@ android {
         unitTests {
             includeAndroidResources = true
         }
+    }
+    namespace 'com.instamojo.android'
+    lint {
+        abortOnError true
+        ignoreWarnings false
+        textOutput file('stdout')
+        textReport true
+    }
+    buildFeatures {
+        buildConfig true
     }
 
 

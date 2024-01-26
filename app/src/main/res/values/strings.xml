@@ -345,7 +345,10 @@
     <string name="international_amp_domestic_debit_credit_cards"><![CDATA[International & Domestic, Debit/Credit Cards]]></string>
     <string name="domestic_debit_credit_cards_amp_net_banking"><![CDATA[Domestic Debit/Credit Cards & Net Banking]]></string>
     <string name="instamojo_upi">Instamojo UPI</string>
-    <string name="lbl_phonepe_all_in_one">PhonePe All In One</string>
+    <!--<string name="easebuzz_payment">Easebuzz Payment</string>-->
+    <string name="easebuzz_payment">Pay 1 (UPI/Net Banking/Cards)</string>
+    <!--<string name="lbl_phonepe_all_in_one">PhonePe All In One</string>-->
+    <string name="lbl_phonepe_all_in_one">Pay 2 (UPI/Net Banking/Cards)</string>
     <string name="lbl_phonepe">PhonePe UPI</string>
     <string name="lbl_toll_free">Need Help? Click Here!</string>
 </resources>

@@ -22,7 +22,7 @@ import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     public static final String DATABASE_NAME = "moodXDB";
 
     //config table
@@ -64,6 +64,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String PAYMENT_CONFIG_PAYTM_ENABLE = "paytm_enable";
     private static final String PAYMENT_CONFIG_PHONEPE_ENABLE = "phonepe_enable";
     private static final String PAYMENT_CONFIG_PHONEPE_IS_PRODUCTION_ENABLE = "phonepe_is_production";
+    private static final String PAYMENT_CONFIG_EASEBUZZ_ENABLE = "easebuzz_enable";
+    private static final String PAYMENT_CONFIG_EASEBUZZ_IS_PRODUCTION_ENABLE = "easebuzz_is_production";
     private static final String PAYMENT_CONFIG_INSTAMOJO_ENABLE = "instamojo_enable";
     private static final String PAYMENT_CONFIG_INSTAMOJO_IS_PRODUCTION = "instamojo_is_production";
 
@@ -175,6 +177,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 PAYMENT_CONFIG_PAYTM_ENABLE + " INTEGER DEFAULT 0," +
                 PAYMENT_CONFIG_PHONEPE_ENABLE + " INTEGER DEFAULT 0," +
                 PAYMENT_CONFIG_PHONEPE_IS_PRODUCTION_ENABLE + " INTEGER DEFAULT 0," +
+                PAYMENT_CONFIG_EASEBUZZ_ENABLE + " INTEGER DEFAULT 0," +
+                PAYMENT_CONFIG_EASEBUZZ_IS_PRODUCTION_ENABLE + " INTEGER DEFAULT 0," +
                 PAYMENT_CONFIG_INSTAMOJO_ENABLE + " INTEGER DEFAULT 0," +
                 PAYMENT_CONFIG_INSTAMOJO_IS_PRODUCTION + " INTEGER DEFAULT 0," +
                 PAYMENT_CONFIG_CURRENCY + " TEXT" + ")";
@@ -222,6 +226,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(PAYMENT_CONFIG_PAYTM_ENABLE, configuration.getPaymentConfig().getPaytmEnable());
         contentValues.put(PAYMENT_CONFIG_PHONEPE_ENABLE, configuration.getPaymentConfig().getPhonepe_enable());
         contentValues.put(PAYMENT_CONFIG_PHONEPE_IS_PRODUCTION_ENABLE, configuration.getPaymentConfig().getPhonepe_is_production());
+        contentValues.put(PAYMENT_CONFIG_EASEBUZZ_ENABLE, configuration.getPaymentConfig().getEasebuzzEnable());
+        contentValues.put(PAYMENT_CONFIG_EASEBUZZ_IS_PRODUCTION_ENABLE, configuration.getPaymentConfig().getEasebuzz_is_production());
         contentValues.put(PAYMENT_CONFIG_INSTAMOJO_ENABLE, configuration.getPaymentConfig().getInstamojoEnable());
         contentValues.put(PAYMENT_CONFIG_INSTAMOJO_IS_PRODUCTION, configuration.getPaymentConfig().getInstamojoIsProduction());
 
@@ -278,6 +284,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     paymentConfig.setPaytmEnable(cursor.getInt(cursor.getColumnIndex(PAYMENT_CONFIG_PAYTM_ENABLE)) > 0);
                     paymentConfig.setPhonepe_enable(cursor.getInt(cursor.getColumnIndex(PAYMENT_CONFIG_PHONEPE_ENABLE)) > 0);
                     paymentConfig.setPhonepe_is_production(cursor.getInt(cursor.getColumnIndex(PAYMENT_CONFIG_PHONEPE_IS_PRODUCTION_ENABLE)) > 0);
+                    paymentConfig.setEasebuzzEnable(cursor.getInt(cursor.getColumnIndex(PAYMENT_CONFIG_EASEBUZZ_ENABLE)) > 0);
+                    paymentConfig.setEasebuzz_is_production(cursor.getInt(cursor.getColumnIndex(PAYMENT_CONFIG_EASEBUZZ_IS_PRODUCTION_ENABLE)) > 0);
                     paymentConfig.setInstamojoEnable(cursor.getInt(cursor.getColumnIndex(PAYMENT_CONFIG_INSTAMOJO_ENABLE)) > 0);
                     paymentConfig.setInstamojoIsProduction(cursor.getInt(cursor.getColumnIndex(PAYMENT_CONFIG_INSTAMOJO_IS_PRODUCTION)) > 0);
                     // paymentConfig.setRazorpayExchangeRate(cursor.getString(cursor.getColumnIndex(PAYMENT_CONFIG_RAZORPAY_EXCHANGE_RATE)));
@@ -357,6 +365,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(PAYMENT_CONFIG_PAYTM_ENABLE, configuration.getPaymentConfig().getPaytmEnable());
         contentValues.put(PAYMENT_CONFIG_PHONEPE_ENABLE, configuration.getPaymentConfig().getPhonepe_enable());
         contentValues.put(PAYMENT_CONFIG_PHONEPE_IS_PRODUCTION_ENABLE, configuration.getPaymentConfig().getPhonepe_is_production());
+        contentValues.put(PAYMENT_CONFIG_EASEBUZZ_ENABLE, configuration.getPaymentConfig().getEasebuzzEnable());
+        contentValues.put(PAYMENT_CONFIG_EASEBUZZ_IS_PRODUCTION_ENABLE, configuration.getPaymentConfig().getEasebuzz_is_production());
         contentValues.put(PAYMENT_CONFIG_INSTAMOJO_ENABLE, configuration.getPaymentConfig().getInstamojoEnable());
         contentValues.put(PAYMENT_CONFIG_INSTAMOJO_IS_PRODUCTION, configuration.getPaymentConfig().getInstamojoIsProduction());
 

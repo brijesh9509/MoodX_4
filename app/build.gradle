@@ -38,11 +38,11 @@ android {
         compileSdk 33
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode 6
-        versionName "1.0.1"
+        versionCode 44
+        versionName "1.1.2"
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
-        resConfigs 'en'
+        resourceConfigurations += ['en']
 
         externalNativeBuild {
             cmake {
@@ -54,7 +54,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             //shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -79,19 +79,26 @@ android {
     namespace 'com.moodX.app'
 
     packagingOptions {
-        exclude("META-INF/DEPENDENCIES")
-        exclude("META-INF/LICENSE")
-        exclude("META-INF/LICENSE.txt")
-        exclude("META-INF/license.txt")
-        exclude("META-INF/NOTICE")
-        exclude("META-INF/NOTICE.txt")
-        exclude("META-INF/notice.txt")
-        exclude("META-INF/ASL2.0")
-        exclude("META-INF/*.kotlin_module")
+        jniLibs {
+            excludes += ['*/res/**']
+        }
+        resources {
+            excludes += ['META-INF/DEPENDENCIES', 'META-INF/LICENSE', 'META-INF/LICENSE.txt', 'META-INF/NOTICE.txt']
+        }
     }
+
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    /*dexOptions {
+        javaMaxHeapSize "4g"
+    }*/
 }
 
 dependencies {
+    implementation files('libs/peb-lib-android-x.aar')
     implementation project(":android-sdk")
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
     implementation 'androidx.navigation:navigation-fragment:2.6.0'

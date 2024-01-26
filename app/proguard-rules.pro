@@ -17,3 +17,9 @@
 -keepclassmembers,allowobfuscation class * {
     @com.google.gson.annotations.SerializedName <fields>;
 }
+
+-repackageclasses
+
+-keep class com.google.android.exoplayer2.ext.av1.** { *; }
+
+-keepclassmembers class com.easebuzz.payment.kit.**{ *; }

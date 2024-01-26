@@ -1,9 +1,9 @@
 <component name="libraryTable">
-  <library name="Gradle: androidx.constraintlayout:constraintlayout:2.1.4@aar">
+  <library name="Gradle: androidx.constraintlayout:constraintlayout:2.1.4@aar" external-system-id="GRADLE">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/34ba06b1e5e5f48042d7c84d455b69d3/transformed/constraintlayout-2.1.4/AndroidManifest.xml" />
-      <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/34ba06b1e5e5f48042d7c84d455b69d3/transformed/constraintlayout-2.1.4/jars/classes.jar!/" />
-      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/34ba06b1e5e5f48042d7c84d455b69d3/transformed/constraintlayout-2.1.4/res" />
+      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/9470208139c4eca390ff588afca51ea4/transformed/constraintlayout-2.1.4/AndroidManifest.xml" />
+      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/9470208139c4eca390ff588afca51ea4/transformed/constraintlayout-2.1.4/res" />
+      <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/9470208139c4eca390ff588afca51ea4/transformed/constraintlayout-2.1.4/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

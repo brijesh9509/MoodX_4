@@ -361,6 +361,54 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/easebuzz_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/dimen_10dp"
+                    android:layout_marginVertical="@dimen/dimen_4dp"
+                    app:cardCornerRadius="5sp"
+                    app:contentPaddingBottom="@dimen/dimen_8dp"
+                    app:contentPaddingLeft="@dimen/dimen_16dp"
+                    app:contentPaddingRight="@dimen/dimen_16dp"
+                    app:contentPaddingTop="@dimen/dimen_8dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:layout_width="@dimen/dimen_60dp"
+                                android:layout_height="@dimen/dimen_40dp"
+                                android:background="@color/white"
+                                app:srcCompat="@drawable/debit_credit_card_icon"
+                                tools:ignore="ImageContrastCheck" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/dimen_16dp"
+                                android:gravity="center"
+                                android:text="@string/easebuzz_payment"
+                                android:textSize="16sp" />
+                        </LinearLayout>
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:layout_width="@dimen/dimen_20dp"
+                            android:layout_height="@dimen/dimen_40dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerInParent="true"
+                            app:srcCompat="@drawable/baseline_arrow_forward_ios_24" />
+
+                    </RelativeLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
                     android:id="@+id/instamojo_btn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -436,7 +484,7 @@
                                 android:layout_height="@dimen/dimen_40dp"
                                 android:background="@color/white"
                                 android:padding="@dimen/dimen_8dp"
-                                app:srcCompat="@drawable/phonepe_icon"
+                                app:srcCompat="@drawable/debit_credit_card_icon"
                                 tools:ignore="ImageContrastCheck" />
 
                             <TextView

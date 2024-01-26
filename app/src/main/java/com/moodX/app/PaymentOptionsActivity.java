@@ -18,6 +18,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -34,6 +36,7 @@ import com.android.billingclient.api.ProductDetails;
 import com.android.billingclient.api.ProductDetailsResponseListener;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.QueryProductDetailsParams;
+import com.easebuzz.payment.kit.PWECouponsActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.instamojo.android.Instamojo;
 import com.moodX.app.database.DatabaseHelper;
@@ -42,12 +45,12 @@ import com.moodX.app.network.RetrofitClient;
 import com.moodX.app.network.apis.PaymentApi;
 import com.moodX.app.network.apis.SubscriptionApi;
 import com.moodX.app.network.model.ActiveStatus;
+import com.moodX.app.network.model.EaseBuzzResponse;
 import com.moodX.app.network.model.InstaMojo2Response;
 import com.moodX.app.network.model.Package;
 import com.moodX.app.network.model.PaytmResponse;
 import com.moodX.app.network.model.config.PaymentConfig;
 import com.moodX.app.utils.ApiResources;
-import com.moodX.app.utils.Constants;
 import com.moodX.app.utils.MyAppClass;
 import com.moodX.app.utils.PreferenceUtils;
 import com.moodX.app.utils.RtlUtils;
@@ -69,7 +72,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-/** @noinspection ALL*/
+/**
+ * @noinspection ALL
+ */
 public class PaymentOptionsActivity extends AppCompatActivity
         implements
         Instamojo.InstamojoPaymentCallback {
@@ -276,7 +281,7 @@ public class PaymentOptionsActivity extends AppCompatActivity
             public void onResponse(@NonNull Call<ActiveStatus> call, @NonNull Response<ActiveStatus> response) {
                 if (response.code() == 200) {
                     ActiveStatus activeStatus = response.body();
-                    if(activeStatus.getStatus().equalsIgnoreCase("active")){
+                    if (activeStatus.getStatus().equalsIgnoreCase("active")) {
                         saveActiveStatus(activeStatus);
                     }
                 } else if (response.code() == 412) {
@@ -409,6 +414,114 @@ public class PaymentOptionsActivity extends AppCompatActivity
 
         });
     }
+
+    private void getEaseBuzzToken(String productId) {
+        DatabaseHelper databaseHelper = new DatabaseHelper(this);
+        PaymentConfig config = databaseHelper.getConfigurationData().getPaymentConfig();
+
+        progressBar.setVisibility(View.VISIBLE);
+        Retrofit retrofit = RetrofitClient.getRetrofitInstance();
+        PaymentApi subscriptionApi = retrofit.create(PaymentApi.class);
+        final String userId = PreferenceUtils.getUserId(PaymentOptionsActivity.this);
+        Call<EaseBuzzResponse> call = subscriptionApi.getEaseBuzzToken(MyAppClass.API_KEY,
+                productId, userId, BuildConfig.VERSION_CODE, getDeviceId(this));
+        call.enqueue(new Callback<EaseBuzzResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<EaseBuzzResponse> call, @NonNull Response<EaseBuzzResponse> response) {
+                if (response.code() == 200) {
+                    EaseBuzzResponse activeStatus = response.body();
+                    if (activeStatus.getStatus() == 200) {
+                        // saveActiveStatus(activeStatus);
+                        Intent intentProceed = new Intent(PaymentOptionsActivity.this, PWECouponsActivity.class);
+                        intentProceed.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT); // This is mandatory flag
+                        intentProceed.putExtra("access_key", activeStatus.getData());
+
+                        String easeBuzzENV = "";
+                        if (config.getEasebuzz_is_production()) {
+                            easeBuzzENV = "production";
+                        } else {
+                            easeBuzzENV = "test";
+                        }
+
+                        intentProceed.putExtra("pay_mode", easeBuzzENV);
+                        //intentProceed.putExtra("pay_mode","production");
+                        pweActivityResultLauncher.launch(intentProceed);
+                    }
+                } else if (response.code() == 412) {
+                    try {
+                        if (response.errorBody() != null) {
+                            ApiResources.openLoginScreen(response.errorBody().string(),
+                                    PaymentOptionsActivity.this);
+                            finish();
+                        }
+                    } catch (Exception e) {
+                        Toast.makeText(PaymentOptionsActivity.this,
+                                e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    new ToastMsg(PaymentOptionsActivity.this).toastIconError("Something went wrong.");
+                }
+                progressBar.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<EaseBuzzResponse> call, @NonNull Throwable t) {
+                new ToastMsg(PaymentOptionsActivity.this).toastIconError(t.getMessage());
+                t.printStackTrace();
+                progressBar.setVisibility(View.GONE);
+            }
+        });
+
+    }
+
+    private ActivityResultLauncher<Intent> pweActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    Intent data = result.getData();
+                    if (data != null) {
+                        String payment_result = data.getStringExtra("result");
+                        String payment_response = data.getStringExtra("payment_response");
+                        try {
+                            Log.e("payment_response", payment_response);
+                            Log.e("payment_result", payment_result);
+
+                            if (payment_result.equalsIgnoreCase("payment_successfull")) {
+                                JSONObject job = new JSONObject(payment_response);
+
+                                sendDataToServer(job.getString("txnid"), "Easebuzz");
+                            } else if (payment_result.equalsIgnoreCase("payment_failed")) {
+                                Toast.makeText(PaymentOptionsActivity.this, "Payment Failed", Toast.LENGTH_LONG).show();
+                            } else if (payment_result.equalsIgnoreCase("txn_session_timeout")) {
+                                Toast.makeText(PaymentOptionsActivity.this, "Session Timeout. Try Again", Toast.LENGTH_LONG).show();
+                            } else if (payment_result.equalsIgnoreCase("back_pressed")) {
+
+                            } else if (payment_result.equalsIgnoreCase("user_cancelled")) {
+
+                            } else if (payment_result.equalsIgnoreCase("error_server_error")) {
+                                Toast.makeText(PaymentOptionsActivity.this, "Easebuzz Server Error. Try Again", Toast.LENGTH_LONG).show();
+                            } else if (payment_result.equalsIgnoreCase("error_noretry")) {
+
+                            } else if (payment_result.equalsIgnoreCase("invalid_input_data")) {
+                                Toast.makeText(PaymentOptionsActivity.this, "Input Data Invalid", Toast.LENGTH_LONG).show();
+                            } else if (payment_result.equalsIgnoreCase("retry_fail_error")) {
+                                Toast.makeText(PaymentOptionsActivity.this, "Payment Failed", Toast.LENGTH_LONG).show();
+                            } else if (payment_result.equalsIgnoreCase("trxn_not_allowed")) {
+                                Toast.makeText(PaymentOptionsActivity.this, "trxn not allowed", Toast.LENGTH_LONG).show();
+                            } else if (payment_result.equalsIgnoreCase("bank_back_pressed")) {
+
+                            } else {
+                                Toast.makeText(PaymentOptionsActivity.this, "Other Reason", Toast.LENGTH_LONG).show();
+                            }
+
+                            //
+                            // Handle response here
+                        } catch (Exception e) {
+                            // Handle exception here
+                        }
+                    }
+                }
+            });
 
 
     private void getPhonePeData(String productId, String appPackageName) {
@@ -561,7 +674,7 @@ public class PaymentOptionsActivity extends AppCompatActivity
         DatabaseHelper databaseHelper = new DatabaseHelper(this);
         PaymentConfig config = databaseHelper.getConfigurationData().getPaymentConfig();
         CardView paypalBt, stripBt, razorpayBt, offlineBtn, googlePlay_btn,
-                paytm_btn, instamojo_btn, phonePeBtn,phonePeAllInOneBtn, gPayBtn, paytmUpiBtn,
+                paytm_btn, instamojo_btn, easebuzz_btn, phonePeBtn, phonePeAllInOneBtn, gPayBtn, paytmUpiBtn,
                 bhimBtn, amazonBtn;
         paypalBt = findViewById(R.id.paypal_btn);
         stripBt = findViewById(R.id.stripe_btn);
@@ -569,6 +682,7 @@ public class PaymentOptionsActivity extends AppCompatActivity
         offlineBtn = findViewById(R.id.offline_btn);
         googlePlay_btn = findViewById(R.id.googlePlay_btn);
         instamojo_btn = findViewById(R.id.instamojo_btn);
+        easebuzz_btn = findViewById(R.id.easebuzz_btn);
         phonePeBtn = findViewById(R.id.phonePeBtn);
         phonePeAllInOneBtn = findViewById(R.id.phonePeAllInOneBtn);
         paytm_btn = findViewById(R.id.paytm_btn);
@@ -616,6 +730,10 @@ public class PaymentOptionsActivity extends AppCompatActivity
             paytm_btn.setVisibility(View.GONE);
         }
 
+        if (!config.getEasebuzzEnable()) {
+            easebuzz_btn.setVisibility(View.GONE);
+        }
+
         if (!isInAppPurchase) {
             googlePlay_btn.setVisibility(View.GONE);
         }
@@ -627,7 +745,7 @@ public class PaymentOptionsActivity extends AppCompatActivity
         //config.setPhonepe_enable(false);
         //config.setPhonepe_is_production(false);
 
-        if(!config.getPhonepe_enable()){
+        if (!config.getPhonepe_enable()) {
             phonePeAllInOneBtn.setVisibility(View.GONE);
         }
 
@@ -643,6 +761,7 @@ public class PaymentOptionsActivity extends AppCompatActivity
         } else {
             gPayBtn.setVisibility(View.GONE);
         }
+        gPayBtn.setVisibility(View.GONE);
 
         if (isUPIAppInstalled("net.one97.paytm")
                 && config.getPhonepe_enable() && config.getPhonepe_is_production()) {
@@ -699,6 +818,17 @@ public class PaymentOptionsActivity extends AppCompatActivity
 
         instamojo_btn.setOnClickListener(view1 -> {
             getInstamojoData(packageItem.getPlanId());
+        });
+
+        easebuzz_btn.setOnClickListener(view1 -> {
+            getEaseBuzzToken(packageItem.getPlanId());
+
+            /*Intent intentProceed = new Intent(PaymentOptionsActivity.this, PWECouponsActivity.class);
+            intentProceed.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT); // This is mandatory flag
+            intentProceed.putExtra("access_key", "e3e22aa074138dd509b771291d1a02599a986b5b59e47f142843debfdd877b62");
+            intentProceed.putExtra("pay_mode", "production");
+            //intentProceed.putExtra("pay_mode","production");
+            pweActivityResultLauncher.launch(intentProceed);*/
         });
 
         phonePeAllInOneBtn.setOnClickListener(view1 -> {

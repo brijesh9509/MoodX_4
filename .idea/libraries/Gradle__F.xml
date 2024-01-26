@@ -1,7 +1,9 @@
 <component name="libraryTable">
-  <library name="Gradle: F">
+  <library name="Gradle: F" external-system-id="GRADLE">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/app/libs/YouTubeAndroidPlayerApi.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/184f48da744188b2f5c18edf85c2d8c2/transformed/jetified-peb-lib-android-x/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/184f48da744188b2f5c18edf85c2d8c2/transformed/jetified-peb-lib-android-x/res" />
+      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/184f48da744188b2f5c18edf85c2d8c2/transformed/jetified-peb-lib-android-x/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

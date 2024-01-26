@@ -1,9 +1,9 @@
 <component name="libraryTable">
-  <library name="Gradle: com.mikhaellopez:circularimageview:4.3.1@aar">
+  <library name="Gradle: com.mikhaellopez:circularimageview:4.3.1@aar" external-system-id="GRADLE">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/df6eaa03caf28c61a1f480729dd21052/transformed/jetified-circularimageview-4.3.1/res" />
-      <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/df6eaa03caf28c61a1f480729dd21052/transformed/jetified-circularimageview-4.3.1/jars/classes.jar!/" />
-      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/df6eaa03caf28c61a1f480729dd21052/transformed/jetified-circularimageview-4.3.1/AndroidManifest.xml" />
+      <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/f73ddfac004e974c3bc036eb7ce4f4e3/transformed/jetified-circularimageview-4.3.1/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/f73ddfac004e974c3bc036eb7ce4f4e3/transformed/jetified-circularimageview-4.3.1/res" />
+      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/f73ddfac004e974c3bc036eb7ce4f4e3/transformed/jetified-circularimageview-4.3.1/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

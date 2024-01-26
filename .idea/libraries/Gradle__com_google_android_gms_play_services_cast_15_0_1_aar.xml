@@ -1,9 +1,9 @@
 <component name="libraryTable">
-  <library name="Gradle: com.google.android.gms:play-services-cast:15.0.1@aar">
+  <library name="Gradle: com.google.android.gms:play-services-cast:15.0.1@aar" external-system-id="GRADLE">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/858c09c777adbdd520b76f171111847d/transformed/jetified-play-services-cast-15.0.1/res" />
-      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/858c09c777adbdd520b76f171111847d/transformed/jetified-play-services-cast-15.0.1/AndroidManifest.xml" />
-      <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/858c09c777adbdd520b76f171111847d/transformed/jetified-play-services-cast-15.0.1/jars/classes.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/52c92aa82af86bc198438d472d993307/transformed/jetified-play-services-cast-15.0.1/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/52c92aa82af86bc198438d472d993307/transformed/jetified-play-services-cast-15.0.1/res" />
+      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/52c92aa82af86bc198438d472d993307/transformed/jetified-play-services-cast-15.0.1/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

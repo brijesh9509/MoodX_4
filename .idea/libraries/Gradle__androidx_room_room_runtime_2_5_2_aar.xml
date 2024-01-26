@@ -1,9 +1,9 @@
 <component name="libraryTable">
-  <library name="Gradle: androidx.room:room-runtime:2.5.2@aar">
+  <library name="Gradle: androidx.room:room-runtime:2.5.2@aar" external-system-id="GRADLE">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/b7f05708f4df59f7ea494ca3fcdc0901/transformed/room-runtime-2.5.2/res" />
-      <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/b7f05708f4df59f7ea494ca3fcdc0901/transformed/room-runtime-2.5.2/jars/classes.jar!/" />
-      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/b7f05708f4df59f7ea494ca3fcdc0901/transformed/room-runtime-2.5.2/AndroidManifest.xml" />
+      <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/fad40341dacdf2e46eee3ce570d81717/transformed/room-runtime-2.5.2/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/fad40341dacdf2e46eee3ce570d81717/transformed/room-runtime-2.5.2/AndroidManifest.xml" />
+      <root url="file://$PROJECT_DIR$/../../../Android Gradle/caches/transforms-3/fad40341dacdf2e46eee3ce570d81717/transformed/room-runtime-2.5.2/res" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

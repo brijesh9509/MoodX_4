@@ -2,6 +2,7 @@ package com.moodX.app.network.apis;
 
 
 import com.moodX.app.models.PhonepeResponse;
+import com.moodX.app.network.model.EaseBuzzResponse;
 import com.moodX.app.network.model.InstaMojo2Response;
 import com.moodX.app.network.model.PaytmResponse;
 
@@ -56,5 +57,12 @@ public interface PaymentApi {
                                           @Query("udid") String uDID,
                                           @Query("intent") String intent,
                                           @Query("bankId") String bankId);
+
+    @GET("easebuzz_transaction_initiate")
+    Call<EaseBuzzResponse> getEaseBuzzToken(@Header("API-KEY") String apiKey,
+                                            @Query("plan_id") String planId,
+                                            @Query("user_id") String userId,
+                                            @Query("version") Integer vId,
+                                            @Query("udid") String uDID);
 }
 

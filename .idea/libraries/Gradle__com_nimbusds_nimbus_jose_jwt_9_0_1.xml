@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="Gradle: com.nimbusds:nimbus-jose-jwt:9.0.1">
+  <library name="Gradle: com.nimbusds:nimbus-jose-jwt:9.0.1" external-system-id="GRADLE">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/../../../Android Gradle/caches/modules-2/files-2.1/com.nimbusds/nimbus-jose-jwt/9.0.1/cbc770a9061f2c63ff8d1e0ae441138d47c67286/nimbus-jose-jwt-9.0.1.jar!/" />
     </CLASSES>

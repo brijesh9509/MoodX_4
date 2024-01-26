@@ -4,15 +4,15 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.moodX.vidz",
+  "applicationId": "com.app.moodX",
   "variantName": "release",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 27,
-      "versionName": "1.0",
+      "versionCode": 44,
+      "versionName": "1.1.2",
       "outputFile": "app-release.apk"
     }
   ],
